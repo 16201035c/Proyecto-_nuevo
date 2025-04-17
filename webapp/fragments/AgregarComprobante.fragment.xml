@@ -44,7 +44,7 @@
                                         </form:label>
                                         <form:fields>
                                             <Select 
-                                            id="cSelectedTipoDocumento" 
+                                            id="cSelectedTipoDocumento1" 
                                             forceSelection="true" 
                                             selectedKey="{Proyect>/Key_comprobante}" 
                                             showSecondaryValues="true"
@@ -62,7 +62,7 @@
                                             <Label text="Tipo Doc. Identidad" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                                         </form:label>
                                         <form:fields>
-                                            <Select id="select" forceSelection="false" selectedKey="{Proyect>/tipoNif}" items="{Proyect>/datostipoDoc}" change="changeTipoDoc"
+                                            <Select id="select1" forceSelection="false" selectedKey="{Proyect>/tipoNif}" items="{Proyect>/datostipoDoc}" change="changeTipoDoc"
                                                 editable="{Proyect>/Editable_Tipo}" >
                                                 <core:ListItem key="{Proyect>TIPO}" text="{Proyect>TIPO}" />
                                             </Select>
@@ -73,7 +73,7 @@
                                             <Label text="Nro. Doc. Identidad" class="sapUiSmallMarginTop"/>
                                         </form:label>
                                         <form:fields>
-                                            <Input id="idRuc" type="Number" value="{Proyect>/ruc}" required="true" maxLength="{Proyect>/cantidad}" editable="{Proyect>/visbleCampoRUC}"
+                                            <Input id="idRuc1" type="Number" value="{Proyect>/ruc}" required="true" maxLength="{Proyect>/cantidad}" editable="{Proyect>/visbleCampoRUC}"
                                                 valueState="{Proyect>/rucValState}" valueStateText="{Proyect>/rucValStateText}" placeholder="Escribir" class="sapUiSmallMarginTop"
                                                 liveChange="changeNroDoc"/>
                                             <!--<Button press="livechangeIden" type="Unstyled"  width="5rem" />-->
@@ -114,42 +114,11 @@
                                                 visible="true"/>
                                         </form:label>
                                         <form:fields>
-                                            <TextArea id="idMotivo" value="{Proyect>/Glosa}" name="{Proyect>/dataDetSolcER/concepto}" class="sapUiSmallMarginTop" placeholder=""
+                                            <TextArea id="idMotivo1" value="{Proyect>/Glosa}" name="{Proyect>/dataDetSolcER/concepto}" class="sapUiSmallMarginTop" placeholder=""
                                                 textAlign="Initial" textDirection="Inherit" rows="1" maxLength="50" change="changeMotivo" wrapping="None" editable="{Proyect>/visbleCampo}"
                                                 valueState="{Proyect>/estadoglos}" valueStateText="{Proyect>/GlosaValueSt}"></TextArea>
                                         </form:fields>
                                     </form:FormElement>
-                                    <!-- <form:FormElement visible="{Proyect>/VisibleReferencia}">
-                                        <form:label>
-                                            <Label text="Referencia a Factura" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </form:label>
-                                        <form:fields>
-                                            <MaskInput id="idFactura" mask="CCCCC-CCCCCCCCC" editable="{Proyect>/HABILI_FACTURA}" placeholderSymbol="_" placeholder="YYYY-ZZZZZZZZZZ"
-                                                change="changeFactura" valueState="{Proyect>/compValState}" valueStateText="{Proyect>/compValStateText}">
-                                                <rules>
-                                                    <MaskInputRule maskFormatSymbol="C" regex="[A-Z,0-9]"/>
-                                                </rules>
-                                            </MaskInput>
-                                        </form:fields>
-                                    </form:FormElement>
-                                    <form:FormElement visible="{Proyect>/visible_Campo}">
-                                        <form:label>
-                                            <Label text="Orden Interna" class="sapUiSmallMarginTop" design="Standard" width="100%" required="false" textAlign="Begin"
-                                                textDirection="Inherit" visible="true"/>
-                                        </form:label>
-                                        <form:fields>
-                                            <Input value="{Proyect>/Orden_Interna}" class="sapUiSmallMarginTop" change="changeOrde_Interna" editable="{Proyect>/HABILI_CAMPO}" maxLength="10" />
-                                        </form:fields>
-                                    </form:FormElement>
-                                    <form:FormElement visible="{Proyect>/visible_Campo}">
-                                        <form:label>
-                                            <Label text="Número de viaje" class="sapUiSmallMarginTop" design="Standard" width="100%" required="false" textAlign="Begin"
-                                                textDirection="Inherit" visible="true"/>
-                                        </form:label>
-                                        <form:fields>
-                                            <Input value="{Proyect>/Numero_viaje}" class="sapUiSmallMarginTop" maxLength="15" change="changeNumero_Viaje" editable="{Proyect>/HABILI_CAMPO}"/>
-                                        </form:fields>
-                                    </form:FormElement> -->
                                 </form:formElements>
                                 <form:title/>
                             </form:FormContainer>
@@ -162,9 +131,7 @@
             </IconTabFilter>
             <IconTabFilter id="DesgloseNuevo" key="keyTabDesgloce" press="validaTabDesgloceCR" icon="sap-icon://documents" text="Desglose de Gastos"
                 class="colortabs" design="Horizontal">
-                <content>
-            
-
+                <content>            
                 <Table items="{path:'Proyect>/DataGlosa' , sorter:{path: 'POSIC', descending: true}}">
                 <headerToolbar>
                     <OverflowToolbar>

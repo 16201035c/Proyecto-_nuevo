@@ -1,5 +1,12 @@
-<mvc:View controllerName="rendicionER.controller.RendicionConER" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
-	xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns="sap.m">
+<mvc:View controllerName="rendicionER.controller.RendicionConER"
+ xmlns:mvc="sap.ui.core.mvc" 
+ displayBlock="true"
+	xmlns:fb="sap.ui.comp.filterbar" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:ui="sap.ui.table"
+	 xmlns:core="sap.ui.core"
+	 xmlns:u="sap.ui.unified" 
+	  xmlns="sap.m">
 	<!--<Shell id="shell">-->
 	<!--	<App id="app">-->
 	<!--		<pages>-->
@@ -58,6 +65,11 @@
 											visible="{Proyect>/VisibleAgregar}" iconDensityAware="false"/>
 										<Button text="Eliminar" press="quitarGrupos" type="Reject" icon="sap-icon://less" iconFirst="true" width="auto"
 											enabled="{Proyect>/enableElim}" visible="{Proyect>/VisibleEliminar}" iconDensityAware="false"/>
+										<Button icon="sap-icon://excel-attachment" tooltip="Exportar a Excel" visible="true"/>
+										<u:FileUploader id="fileUploader1" name="myFileUpload" sameFilenameAllowed="true" icon="sap-icon://upload" change="handleUploadComplete2"
+										uploadUrl="upload/" buttonOnly="true" fileType="xlsx" buttonText="Importar" tooltip="Agregar Excel"
+										visible="{midata>/botonesTablaPropiedades/btnEdit}"/>
+										
 									</content>
 								</OverflowToolbar>
 							
@@ -129,6 +141,13 @@
 
 			</VBox>
 		</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button text="Guardar" icon="sap-icon://accept" type="Accept" id="btnGuardar" tooltip="Aceptar" press="onPressEditarDetalle"/>
+				<Button text="Cancelar" icon="sap-icon://sys-cancel" type="Reject" id="btnCancelar" tooltip="Rechazar" press="onPressCancelarDetalle"/>
+			</Toolbar>
+		</footer>
 		<headerContent>
 			<Button text="" press="onGoHome" type="Emphasized" icon="sap-icon://home" iconFirst="true" width="auto" enabled="true" visible="true"
 				iconDensityAware="false"/>

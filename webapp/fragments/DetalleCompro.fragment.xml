@@ -1,0 +1,78 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout"
+	xmlns:ui="sap.ui.table" xmlns:u="sap.ui.unified" xmlns:html="http://www.w3.org/1999/xhtml">
+	
+	<Dialog horizontalScrolling="true" showHeader="true" state="None" stretch="false" title="Detalle" type="Standard"
+		verticalScrolling="true" contentHeight="auto" contentWidth="auto">
+		<content>
+			
+			<VBox width="auto">
+				<items>
+					
+					<!-- <HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="Center" renderType="Div" displayInline="false" >
+						<items>
+							<RadioButtonGroup id="rbg3" columns="5" valueState="None" >
+								<RadioButton id="idProcentaje" text="Porcentaje" select="pressRadioP" />
+								<RadioButton id="idImporte" text="Importe" select="pressRadioI"/>
+							</RadioButtonGroup>
+						</items>
+					</HBox> -->
+					         <Table items="{path:'Proyect>/DetalleGlosa' , sorter:{path: 'POSIC', descending: true}}">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                          
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="3rem">
+                        <Text text="Número"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Tipo Gasto"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Cuenta Bancaria"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Indicador Impuestos"/>
+                    </Column>
+                    
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Base imponible"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Center" minScreenWidth="Large" width="auto">
+                        <Text text="Igv"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Inafecto"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Total"/>
+                    </Column>
+                    
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <Text text="{Proyect>POSIC}" textAlign="Begin"/>
+						<Input value="{Proyect>COD_CONT}" textAlign="Begin" type="Text"    editable="{Proyect>/editableBaseI}"/>
+                        <Input value="{Proyect>IND_IMP}" textAlign="Begin" type="Text"    editable="{Proyect>/editableBaseI}"/>
+                        <Input value="{Proyect>IND_IMP}" textAlign="Begin" type="Text"  change="pressBaseImponibleyInafecto"  editable="{Proyect>/editableBaseI}"/>
+                     	<Input value="{Proyect>BASE_IMP}" textAlign="Begin" type="Number"  change="pressBaseImponibleyInafecto"  editable="{Proyect>/editableBaseI}"/>
+                        <Input value="{Proyect>IGV}" width="100%" textAlign="Right" type="Number"  change="changeIgv" editable="{Proyect>/editableBaseIGV}"/>
+                        <Input value="{Proyect>INAFECTO}" textAlign="Begin"  type="Number" editable="{Proyect>/editableInafecto}" change="pressBaseImponibleyInafecto"/>
+                        <Text text="{Proyect>TOTAL}" textAlign="Begin"/>
+                    
+                    </ColumnListItem>
+                </items>
+            </Table>
+					
+				</items>	
+			</VBox>	
+		</content>
+		<buttons>       
+			<Button text="Cancelar" type="Reject" icon="sap-icon://cancel" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="cerrardetalle"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

@@ -1,6 +1,15 @@
-<mvc:View controllerName="rendicionER.controller.DetalleSolicitudConER" xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" xmlns:fb="sap.ui.comp.filterbar"
-	xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns="sap.m"
+<mvc:View controllerName="rendicionER.controller.DetalleSolicitudConER"
+ xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc"
+	 displayBlock="true" 
+	 xmlns:f="sap.f" 
+	 xmlns:form="sap.ui.layout.form" 
+	 xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:l="sap.ui.layout" 
+	xmlns:ui="sap.ui.table"
+	 xmlns:core="sap.ui.core"
+	  xmlns:u="sap.ui.unified" 
+	  xmlns="sap.m"
 	xmlns:semantic="sap.m.semantic">
 	<u:SplitContainer id="mySplitContainer" showSecondaryContent="false">
 		<u:secondaryContent>

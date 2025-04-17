@@ -18,6 +18,7 @@ sap.ui.define([
 	var urlPage = "";
 	var ValidacionlevObs= false;
 	var ValidacionRendiEr= false;
+	var arrayguardar_comp	 =[];
 
 	return BaseController.extend("rendicionER.controller.RendicionConER", {
 		onInit: function () {
@@ -105,14 +106,16 @@ sap.ui.define([
 						
 			        }
 			        
-			     this.limpiar();
-				this.servicioIgv();
-				this.selectSociedad();
-				this.userlog();
-				this.selecTipo_Comprobante();
-				this.filtroceco();
-				this.tipoGasto();
-				this.ValidacionTipoCambio();
+				that.limpiar();
+				that.servicioIgv();
+				that.selectSociedad();
+				that.userlog();
+				that.selecTipo_Comprobante();
+				that.filtroceco();
+				that.tipoGasto();
+				that.ListaGastosCr();
+				that.listaIndicador();
+				that.ValidacionTipoCambio();
 				ModelProyect.setProperty("/DatosComprobantes",[]);
 				ModelProyect.setProperty("/KeySociedad","300");
 				ModelProyect.setProperty("/seleccion_CECO","id1");
@@ -121,8 +124,8 @@ sap.ui.define([
 				ModelProyect.setSizeLimit(9999999999999999999999);//nuevo 22/06/2022
 				vista.getModel("contadorGlobal").setProperty("/contador", 1);
 				
-				this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-				this.oRouter.getTarget("RendicionConER").attachDisplay(jQuery.proxy(this.userlog, this));
+				that.oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+				that.oRouter.getTarget("RendicionConER").attachDisplay(jQuery.proxy(that.userlog, that));
 				
 				consBusc = true;
 			
@@ -130,7 +133,386 @@ sap.ui.define([
 			
 				
 		},
+
+		cerrarImputacion:function(){
+			this.AgregarComprobante.close();
+		},
+
+		cerrardetalle:function(){//17/04/2025
+			this.AbrirDeta.close();
+		},
+
+
+		pressDetalle:function(oEvent){//17/04/2025
+			var oView = this.getView();
+			var ModelProyect = oView.getModel("Proyect");
+			var detalle = oEvent.getSource().oParent.oBindingContexts.Proyect.sPath;
+			var detalleSelec  = ModelProyect.getProperty(detalle).desglose;
+			ModelProyect.setProperty("/DetalleGlosa", detalleSelec);
+
+			if (!this.AbrirDeta) {
+				this.AbrirDeta = sap.ui.xmlfragment("rendicionER.fragments.DetalleCompro", this);
+				oView.addDependent(this.AbrirDeta);
+			}
+			
+			this.AbrirDeta.open();	
+		},
+
+		pressBaseImponibleyInafecto: function (oEvent) {//17/04/2025
+			var datos						= "";
+			var vista						= this.getView();
+			var suma						= 0;
+			var calculo 					= "";
+			var ModelProyect				= vista.getModel("Proyect");
+			var Igvprueba					= parseFloat("18");
+			var idBaseImp					= oEvent.mParameters.value;
+			var impuesto					= "";		
+			var seleccion					= oEvent.getSource().oParent.oBindingContexts.Proyect.sPath;
+			var seleBaseImp 				= ModelProyect.getProperty(seleccion);
+			var subTotal					= ModelProyect.getProperty("/subTotal");
+			var ImporteSolic				= ModelProyect.getProperty("/importe");
+			var calculoimp					= "";
+			var sumaBase					= 0;
+			var sumatotal					= 0;
+			var impuestoC					= 0;
+			var sumafinal					= 0;
+			var totalbaseImp				= 0;
+			var sumatoria					= 0;
+			var sumaTodoTotal				= 0;
+			var sumaTotal					= 0;
+			var baseImp 					= 0;
+			var calculototal				= 0;
+			var condicion					= false;
+			var acumulador					= 0;
+			var totalFixed					= 0;
+			var datos_selecciones			=ModelProyect.getProperty("/datos_selecciones");//21/07/2022
+			var DataGlosa					= ModelProyect.getProperty("/DataGlosa");
+			
+			// DataComprobanteConfirmacion.forEach(function(items2){
+				DataGlosa.forEach(function (items, index) {
+				condicion = false;
+
+				if (items.POSIC === seleBaseImp.POSIC) {
+					
+					
+					// si el indicador es diferente a c0 , que realize la suma de base imponible,igv y inafecto.
+					if (items.BASE_IMP === "") {
+						items.BASE_IMP = "0.00";
+					} else {
+						items.BASE_IMP = parseFloat(items.BASE_IMP).toFixed(2);
+						if (isNaN(items.BASE_IMP) || items.BASE_IMP === "0") {
+							items.BASE_IMP = "0.00";
+						}
+					}
+					if (items.IGV === "") {
+						items.IGV = "0.00";
+					} else {
+						items.IGV = parseFloat(items.IGV).toFixed(2);
+						if (isNaN(items.IGV) || items.IGV === "0") {
+							items.IGV = "0.00";
+						}
+					}
+					if (items.INAFECTO === "") {
+						items.INAFECTO = "0.00";
+					} else {
+						items.INAFECTO = parseFloat(items.INAFECTO).toFixed(2);
+						if (isNaN(items.INAFECTO) || items.INAFECTO === "0") {
+							items.IGV = "0.00";
+						}
+					}
+
+					if (seleBaseImp.IND_IMP !== "C0") {
+						if(seleBaseImp.IND_IMP === "C2"){//05/09/2022
+						items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
+						impuesto = parseFloat(seleBaseImp.BASE_IMP) * Igvprueba;
+						calculoimp = impuesto / 100;
+						}else{
+						items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
+						impuesto = parseFloat(seleBaseImp.BASE_IMP) * Igvprueba;
+						calculoimp = impuesto / 100;	
+							
+						}
+						items.IGV = calculoimp.toString();
+						items.INAFECTO = parseFloat(seleBaseImp.INAFECTO).toFixed(2);
+
+						calculototal += parseFloat(seleBaseImp.BASE_IMP); //importe
+						calculototal += parseFloat(seleBaseImp.IGV);
+						calculototal += parseFloat(seleBaseImp.INAFECTO);
+						items.TOTAL = calculototal.toFixed(2);
+
+						var calculo_totalF = "";
+						if (seleBaseImp.INAFECTO !== "0.00") {
+							calculo_totalF = (parseFloat(items.TOTAL) - parseFloat(seleBaseImp.INAFECTO));
+						} else {
+							calculo_totalF = parseFloat(items.TOTAL);
+						}
+						items.IGV = (calculo_totalF - parseFloat(items.BASE_IMP)).toFixed(2);
+
+						if (parseFloat(seleBaseImp.INAFECTO).toFixed(2) === "0.00") {
+							sumatotal += parseFloat(seleBaseImp.BASE_IMP);
+							sumatotal += parseFloat(seleBaseImp.IGV);
+							items.TOTAL = parseFloat(sumatotal).toFixed(2);
+						}
+
+						items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
+
+						baseImp += parseFloat(items.BASE_IMP);
+						condicion = true;
+					} else if (seleBaseImp.IND_IMP === "C0") {
+						condicion = true;
+						items.INAFECTO = parseFloat(seleBaseImp.INAFECTO).toFixed(2);
+						//parseFloat(seleBaseImp.INAFECTO).toFixed(2);
+						items.BASE_IMP = "0.00";
+						items.IGV = "0.00";
+						items.TOTAL = parseFloat(seleBaseImp.INAFECTO).toFixed(2);
+
+						baseImp += parseFloat(items.BASE_IMP);
+						impuestoC = "0.00";
+					}
+				
+				}
+
+				if (!condicion) {
+					baseImp += parseFloat(items.BASE_IMP);
+
+				}
+				if (impuestoC === "0.00") {
+					impuestoC = "0.00";
+					sumatoria += parseFloat(items.INAFECTO);
+				} else {
+
+					impuestoC += parseFloat(items.IGV); //((baseImp * Igvprueba)/100);
+					sumatoria += parseFloat(items.INAFECTO);
+					sumaTotal = sumatoria;
+
+				}
+
+			});
+
+			ModelProyect.refresh(true);
+
+			if (impuestoC === "0.00") {
+				sumaTodoTotal = sumatoria;
+			} else {
+				sumaTodoTotal = parseFloat(baseImp) + parseFloat(impuestoC) + parseFloat(sumatoria);
+				var calculo_Totales = "";
+				if (parseFloat(sumatoria) !== "0.00") {
+					calculo_Totales = sumaTodoTotal - parseFloat(sumatoria);
+				} else {
+					calculo_Totales = sumaTodoTotal;
+				}
+				impuestoC = (calculo_Totales - parseFloat(baseImp)).toFixed(2);
+			}
+
+			totalFixed = parseFloat(sumaTodoTotal).toFixed(2);
+			// DataComprobanteConfirmacion.forEach(function (items2) {
+			// 	if (items2.keySeg === datos_selecciones.keySeg) {//21/07/2022
+			// 		items2.validacion_guardado= false;
+			// 		items2.totalImpu = parseFloat(impuestoC).toFixed(2);
+			// 		items2.totalImp = parseFloat(baseImp).toFixed(2);
+			// 		items2.totalNoGr = parseFloat(sumatoria).toFixed(2);
+			// 		items2.totales = totalFixed;
+					
+					
+			// 	}
+			// 	ModelProyect.refresh(true);
+			// 	// acumulador += parseFloat(totalFixed);
+			// 	//	acumulador += parseFloat(items2.total);
+
+			// });
+			// DataComprobanteConfirmacion.forEach(function (items_02) { //agregado por claudia//18/07/2022
+			// if(items_02.keySeg === datos_selecciones.keySeg){//21/07/2022
+			// 	items_02.desglose.forEach(function (items_03) {
+				
+			// 	if(items_03.POSIC === seleBaseImp.POSIC){
+			// 	if(items_03.IND_IMP !== "C0"){
+			// 	if(items_03.imputacion.length > 0){
+			// 	items_03.imputacion.forEach(function(obj){
+			// 	var formateo_porcentaje	= parseFloat(obj.porcentajeII) / 100;
+			// 		obj.IMP= (formateo_porcentaje * items_03.BASE_IMP).toFixed(2) ;	
+			// 		obj.IMP_TOTAL = items_03.BASE_IMP;
+					
+			// 	});	
+					
+			// 	}
+			// 	}else{
+			// 	if(items_03.imputacion.length > 0){
+			// 	items_03.imputacion.forEach(function(obj){
+			// 	var formateo_porcentaje	= parseFloat(obj.porcentajeII) / 100;
+			// 		obj.IMP= (formateo_porcentaje * items_03.INAFECTO).toFixed(2) ;	
+			// 		obj.IMP_TOTAL =  items_03.INAFECTO;
+					
+			// 	});	
+					
+			// 	}	
+			// 	}	
+			// 	}	
+					
+			// 	});
+			// }
+			// });
+			
+			// DataComprobanteConfirmacion.forEach(function (items_021) {//21/07/2022
+			// items_021.desglose.forEach(function (items_032) {
+			// acumulador += parseFloat(items_032.TOTAL);	
+			// });
+			// });
+			
+			// var resta_saldo = parseFloat(acumulador) - parseFloat(ImporteSolic) ;// cambio 04/06/2022
 		
+			// ModelProyect.setProperty("/ImporteRend", acumulador.toFixed(2));
+			// if (parseFloat(ImporteSolic) < acumulador) {   // cambio de 04/06/2022
+			// 	ModelProyect.setProperty("/estado_saldo", "Success");
+			// } else {
+			// 	ModelProyect.setProperty("/estado_saldo", "Error");
+			// }
+			// ModelProyect.setProperty("/subTotalComp", totalFixed);
+			// ModelProyect.setProperty("/subTotal", baseImp.toFixed(2));
+			// ModelProyect.setProperty("/impueDet", impuestoC);
+
+			// // ModelProyect.setProperty("/impueDet",impuesto.toFixed(2));
+			// ModelProyect.setProperty("/noGrabada", sumatoria.toFixed(2));
+			// ModelProyect.setProperty("/Saldo", parseFloat(resta_saldo).toFixed(2));
+
+			// ModelProyect.setProperty("/subTotalComp",sumafinal.toFixed(2));
+
+		},
+
+		changeIndicador: function (args) {//17/04/2025
+			var oView						= this.getView();
+			var ModelProyect				= oView.getModel("Proyect");
+			var selectInd					= args.getSource().oParent.oBindingContexts.Proyect.sPath;
+			var selecIndicador				= ModelProyect.getProperty(selectInd);
+			var AgregarComprobantes = ModelProyect.getProperty("/AgregarComprobantes");
+			var subTotal					= ModelProyect.getProperty("/subTotal");
+			var impueDet					= ModelProyect.getProperty("/impueDet");
+			var subTotalComp				= ModelProyect.getProperty("/subTotalComp");
+			var noGrabada					= ModelProyect.getProperty("/noGrabada");
+			var impuesto01					= 0;
+			var IGV 						= ModelProyect.getProperty("/IGV");
+			var igv0						= parseFloat(IGV);
+			var importe_Solic				= ModelProyect.getProperty("/importe");
+			var calcular_Saldo				= 0;
+			var contador_calculado			= 0;
+			var datos_selecciones			=ModelProyect.getProperty("/datos_selecciones");//26/07/2022
+			var datosIndicador				= ModelProyect.getProperty("/datosIndicador");
+			
+			// AgregarComprobantes.forEach(function (items2) {
+			// 	if (items2.keySeg === selecIndicador.POSIC.toString()) {//26/07/2022
+			// 		items2.validacion_guardado= false;
+			// 		items2.desglose.forEach(function (items, index) {
+			// 		datosIndicador.forEach(function(clñ){
+			// 		if(clñ.INDICADOR === selecIndicador.IND_IMP){
+						
+			// 			ModelProyect.setProperty("/IGV",clñ.PORCENTAJE);		
+			// 			}	
+			// 		});		
+						
+			// 			items.IND_IMP = selecIndicador.IND_IMP;
+			// 			items.NUEVO_IND= items.IND_IMP;
+						
+
+			// 			if (selecIndicador.IND_IMP === "C0") {
+
+			// 				items2.totalImp 			= "0.00";//17/07/2022
+			// 				impuesto01					= "0.00";
+			// 				// impuesto01					=	impuesto01/100;
+			// 				items2.totalImpu			= parseFloat(impuesto01).toFixed(2);
+			// 				items2.totalNoGr			= "0.00";
+			// 				items2.totales				= "0.00";
+			// 				items2.SaldoTotal			= "0.00";
+			// 				items2.ImporteRendido		= "0.00";
+			// 				items.validacionBase		= false;
+			// 				items.validacionIGV			=false;
+			// 				items.validacionInafecto	= true;
+			// 				items.validacionIndicador	= true;
+			// 				items.enableImputa			= true;
+			// 				items.BASE_IMP				= "0.00";
+			// 				items.IGV					= "0.00";
+			// 				items.INAFECTO				= "0.00";
+			// 				items.TOTAL 				= "0.00";
+			// 				ModelProyect.refresh(true);
+			// 			} else {
+
+			// 				items2.totalImp 				= "0.00";
+			// 				impuesto01						= "0.00";
+			// 				items2.totalImpu				= parseFloat(impuesto01).toFixed(2);
+			// 				items2.totalNoGr				 = "0.00";
+			// 				items2.totales					= "0.00";
+			// 				items2.SaldoTotal				= "0.00";
+			// 				items2.ImporteRendido			= "0.00";
+			// 				items.validacionBase			= true;
+			// 				items.validacionInafecto		= true;
+			// 				items.validacionIndicador		= true;
+			// 				items.validacionIGV				=true;
+			// 				items.enableImputa				= true;
+			// 				items.BASE_IMP					= "0.00";
+			// 				items.IGV						= "0.00";
+			// 				items.INAFECTO					= "0.00";
+			// 				items.TOTAL 					= "0.00";
+			// 			}
+
+			// 		});
+			// 		ModelProyect.setProperty("/subTotal", items2.totalImp);
+			// 		ModelProyect.setProperty("/impueDet", items2.totalImpu);
+			// 		ModelProyect.setProperty("/subTotalComp", items2.totales);
+			// 		ModelProyect.setProperty("/noGrabada", items2.totalNoGr);
+
+			// 	}
+
+			// 	//-------Calculando el importe rendido al cambiar el indicador.
+
+			// 	contador_calculado += parseFloat(items2.totales);
+
+			// });
+			// calcular_Saldo = contador_calculado  - parseFloat(importe_Solic); 
+
+			// if (parseFloat(importe_Solic) < contador_calculado) {
+			// 	ModelProyect.setProperty("/estado_saldo", "Success");
+			// } else if (contador_calculado.toFixed(2) === "0.00") {
+			// 	ModelProyect.setProperty("/estado_saldo", "None");
+			// } else {
+			// 	ModelProyect.setProperty("/estado_saldo", "Error");
+			// }
+			if(selecIndicador.IND_IMP === "C0"){
+				selecIndicador.BASE_IMP="0.00";
+				selecIndicador.IGV="0.00";
+				selecIndicador.INAFECTO="0.00";
+				selecIndicador.TOTAL="0.00";
+				ModelProyect.setProperty("/editableBaseI",false);
+				ModelProyect.setProperty("/editableBaseIGV",false);
+				ModelProyect.setProperty("/editableInafecto",true);
+
+			}else{
+				selecIndicador.BASE_IMP="0.00";
+				selecIndicador.IGV="0.00";
+				selecIndicador.INAFECTO="0.00";
+				selecIndicador.TOTAL="0.00";
+				ModelProyect.setProperty("/editableBaseI",true);
+				ModelProyect.setProperty("/editableBaseIGV",true);
+				ModelProyect.setProperty("/editableInafecto",true);
+			}
+
+			// ModelProyect.setProperty("/ImporteRend", contador_calculado.toFixed(2));
+			// ModelProyect.setProperty("/Saldo", calcular_Saldo.toFixed(2));
+			ModelProyect.refresh(true);
+		},
+
+		ListaGastosCr:function(){ //17.04.2025
+			var vista = this.getView();
+			var Proyect = vista.getModel("Proyect");
+			var that= this;
+			Proyect.setProperty("/datosGastosCr",models.oDataGastos());	
+			sap.ui.core.BusyIndicator.hide();
+		},
+		
+		listaIndicador:function(){ //17.04.2025
+			var vista = this.getView();
+			var Proyect = vista.getModel("Proyect");
+			var that= this;
+			Proyect.setProperty("/datosIndicador",models.oDataIndicador());	
+			sap.ui.core.BusyIndicator.hide();
+		},
 		
 		EliminacionFolder : async function (Sends){
 			try {
@@ -178,6 +560,287 @@ sap.ui.define([
 			}
 			
 		},
+
+		livechangeIden:function(){ // 17/04/2025
+
+			var oView = this.getView();
+			var Proyect = oView.getModel("Proyect");
+			var ruc = Proyect.getProperty("/ruc");
+			var tipoNif = Proyect.getProperty("/tipoNif");
+	
+			if(tipoNif == "DNI"){
+
+				if (ruc == undefined || ruc ==""){
+
+					MessageBox.warning("Registrar el N° de DNI");
+					Proyect.setProperty("/ruc", "");
+					Proyect.setProperty("/razonSocial", "")
+
+				}else if(ruc.length == "8"){
+					
+					Proyect.setProperty("/razonSocial", "Claudia Romero")
+					
+				}else{
+					Proyect.setProperty("/ruc", "")
+					MessageBox.warning("Son max. 8 digitos");
+				
+				}
+			}else if(tipoNif == "RUC"){
+
+				if (ruc == undefined || ruc ==""){
+
+					MessageBox.warning("Registrar el N° de RUC");
+					Proyect.setProperty("/ruc", "")
+					Proyect.setProperty("/razonSocial", "")
+
+				}else if(ruc.length == "11"){
+					
+					Proyect.setProperty("/razonSocial", "CENTRO COMERCIAL PLAZA NORTE S.A.C.")
+					
+				}else{
+					MessageBox.warning("Son max. 11 digitos");
+					Proyect.setProperty("/ruc", "");
+				}
+				
+			}else{
+				MessageBox.warning("Seleccionar el tipo de documento");
+				Proyect.setProperty("/ruc", "")
+				Proyect.setProperty("/razonSocial", "")
+			}	
+	
+			},
+			
+			changeTipoDoc:function(){ //17/04/2025
+				var oView						= this.getView();
+				var Proyect				= oView.getModel("Proyect")
+				var tipoNif 					= Proyect.getProperty("/tipoNif");
+	
+				if(tipoNif == "DNI"){
+					Proyect.setProperty("/ruc", "");
+					Proyect.setProperty("/razonSocial", "")
+
+				}else{
+					Proyect.setProperty("/ruc", "");
+					Proyect.setProperty("/razonSocial", "")
+
+				}
+				
+			} ,
+
+		Validarcampos:function(){//28/08/2024
+			var vista 			= this.getView();
+			var Proyect 		= vista.getModel("Proyect");
+			var arrayguardar_comp	=[];
+			var sRegistroComprobante = 	Proyect.getProperty("/sRegistroComprobantes");
+			var fecha_Comprobante  	=	 Proyect.getProperty("/fecha_Comprobante1");
+			var Key_comprobante 	= Proyect.getProperty("/Key_comprobante");
+			var tipoNif 			= Proyect.getProperty("/tipoNif");
+			var Ruc 				= Proyect.getProperty("/ruc");
+			var Razon_Social		= Proyect.getProperty("/razonSocial");
+			var Monedas				= Proyect.getProperty("/monedas");
+			var Glosa               =Proyect.getProperty("/Glosa");
+			var contador			=0;
+			var camposVacios        = false;
+
+			
+			if(sRegistroComprobante == "" || sRegistroComprobante == undefined){
+				camposVacios=true;
+			}
+			if(fecha_Comprobante == "" || fecha_Comprobante == undefined){
+				camposVacios=true;
+			}
+			
+			if(Key_comprobante == "" || Key_comprobante == undefined){
+				camposVacios=true;
+			}
+			if(tipoNif == "" || tipoNif == undefined){
+				camposVacios=true;
+			}
+			if(Ruc == "" || Ruc == undefined){
+				camposVacios=true;
+			}
+			if(Razon_Social ==""){
+				camposVacios=true;
+			}
+
+			if(Monedas == "" || Monedas == undefined){
+				camposVacios=true;
+			}
+
+			if(Glosa == "" || Glosa == undefined){
+				camposVacios=true;
+			}
+
+			return camposVacios;
+
+		},
+
+		selecTipo_Comprobante:function(){// 17.04.2025
+			var oView = this.getView();
+			var ModelProyect = oView.getModel("Proyect");
+			var datos_filtro =[];
+			// var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_CLASE_DOCSet"; //
+			// jQuery.ajax({
+			// 	type: "GET",
+			// 	cache: false,
+			// 	headers: {
+			// 		"Accept": "application/json"
+			// 	},
+			// 	contentType: "application/json",
+			// 	url: url,
+			// 	async: true,
+			// 	success: function (data, textStatus, jqXHR) {
+			// 		var datos = data.d.results;
+			// 		var selectDoc = {
+			// 			CLASE: "",
+			// 			DENOMINACION: "---Seleccionar---"
+			// 		}
+			// 		datos.unshift(selectDoc);
+					var datos=[{
+						CLASE:"",
+						DENOMINACION:"---Seleccionar---"
+					},{
+						CLASE:"FAC",
+						DENOMINACION:"Facturas"
+					},{
+						CLASE:"BO",
+						DENOMINACION:"Boletas"
+					}
+				]
+					
+					
+					ModelProyect.setProperty("/TipoDocumento", datos);
+			// 	},
+			// 	error: function () {
+			// 		MessageBox.error("Ocurrio un error al obtener los datos", {
+			// 		actions: ["Aceptar"],
+			// 					emphasizedAction: MessageBox.Action.OK,
+			// 					onClose: function (sAction) {
+			// 						if (sAction === "Aceptar") {
+			// 						location.reload();
+			// 						}
+			// 						sap.ui.core.BusyIndicator.hide();
+			// 						console.log(er);
+			// 					}
+			// 		});
+			// 	}
+			// });	
+			
+			
+		},
+
+		GuardarComprobanteCr:function(){ //17.04.2025
+			var vista 			     = this.getView();
+			var Proyect 		     = vista.getModel("Proyect");
+			var sRegistroComprobante = Proyect.getProperty("/sRegistroComprobantes");
+			var fecha_Comprobante  	 = Proyect.getProperty("/fecha_Comprobante1");
+			var Key_comprobante 	 = Proyect.getProperty("/Key_comprobante");
+			var tipoNif 			 = Proyect.getProperty("/tipoNif");
+			var datostipoDoc         = Proyect.getProperty("/datostipoDoc");
+			var Ruc 				 = Proyect.getProperty("/ruc");
+			var Razon_Social		 = Proyect.getProperty("/razonSocial");
+			var Monedas				 = Proyect.getProperty("/monedas");
+			var Glosa                =Proyect.getProperty("/Glosa");
+			var contador			 =0;
+			var DataGlosa            =Proyect.getProperty("/DataGlosa")[0];
+			var camposVacios         = false;
+			var validarCampos        = this.Validarcampos();
+			var ProductCollection    = Proyect.getProperty("/ProductCollection");
+			var repite  = false;
+			
+			if(validarCampos === true){
+				camposVacios=true;				
+			}
+			if(DataGlosa.TOTAL == "0.00"){
+				camposVacios=true;
+			}
+
+			if(DataGlosa.IND_IMP == ""){
+				camposVacios=true;
+			}
+
+			if(DataGlosa.TOTAL == "0.00"){
+				camposVacios=true;
+			}
+
+            if(camposVacios == true){
+				MessageBox.warning("Completar los campos obligatorios");
+				return;
+            }
+
+			if(ProductCollection !== undefined){ //06/10/2024
+				ProductCollection.forEach(function (items2) {
+				
+					if(items2.COMPROBANTE == sRegistroComprobante){
+						repite = true;
+					}
+	
+				});
+			}			
+			if(repite == true){
+				MessageBox.warning("El comprobante ya fue registrado");//06/10/2024
+				return;
+            }			
+			var estructura = {
+				key				: arrayguardar_comp.length +1,
+				keySeg			:arrayguardar_comp.length +1,
+				NROD0			:"",
+				DOC_PAGO		:"",
+				COD_SAP			:"",
+				ID_DOC_SRV		:"",
+				COMPROBANTE		:sRegistroComprobante,
+				COD_TIPO_COMP	: Key_comprobante,
+				TIPO_COMP		: "",
+				TIPODOCI    	:  tipoNif,
+				FECHA_COMP		: fecha_Comprobante,
+				TIPO_NIF		: "",
+				RUC				: Ruc,
+				RAZON_SOCIAL	: Razon_Social,
+				WAERS			: Monedas,
+				ESTADO			:"",
+				GLOSA   		: Glosa,
+				ORDEN_INT		: "",
+				VIAJES			: "",
+				REF_FACTURA		: "",
+				EST_COMP		: "",
+				COD_EST_COMP	: "",
+				DOC_COMP			:"",
+				DOC_CONT			:"",
+				DOC_PAGO_SOLICITUD  :"",
+				FECHA_CONT			:"",
+				FECHA_COMPENSA		:"",
+				desglose: [{	
+				"COMPROBANTE":sRegistroComprobante,
+				"POSIC": "1",
+				"COD_CONT": DataGlosa.COD_CONT,
+				"BASE_IMP": DataGlosa.BASE_IMP,
+				"IGV": DataGlosa.IGV,
+				"INAFECTO": DataGlosa.INAFECTO,
+				"TOTAL": DataGlosa.TOTAL,
+				"IND_IMP": DataGlosa.IND_IMP,
+				"imp": "",
+				
+				}]
+				
+			}
+
+			arrayguardar_comp.push(estructura);
+
+			Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
+			Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
+			Proyect.setProperty("/ProductCollection",arrayguardar_comp);
+			Proyect.setProperty("/sRegistroComprobantes","");
+			Proyect.setProperty("/fecha_Comprobante1","");
+			Proyect.setProperty("/Key_comprobante","");
+			Proyect.setProperty("/tipoNif","");
+			Proyect.setProperty("/ruc","");
+			Proyect.setProperty("/razonSocial","");
+			Proyect.setProperty("/monedas","");
+			Proyect.setProperty("/Glosa","");						
+			this.AgregarComprobante.close();
+		
+		},
+
 		userlog:function(){
 			var that=this;
 			var vista = this.getView();
@@ -307,7 +970,7 @@ sap.ui.define([
 			sap.ui.core.BusyIndicator.hide();
 		},
 
-		pressAgregarComproCR:function(){  //17/04/2025
+		pressAgregarComproCR:function(){ //17.04.2025
 			var vista = this.getView();
 			var Proyect = vista.getModel("Proyect");
 			var that= this;
@@ -380,50 +1043,7 @@ sap.ui.define([
 			that.AgregarComprobante.open();
 		},
 
-		
-		selecTipo_Comprobante:function(){
-			var oView = this.getView();
-			var ModelProyect = oView.getModel("Proyect");
-			var datos_filtro =[];
-			// var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_CLASE_DOCSet"; //
-			// jQuery.ajax({
-			// 	type: "GET",
-			// 	cache: false,
-			// 	headers: {
-			// 		"Accept": "application/json"
-			// 	},
-			// 	contentType: "application/json",
-			// 	url: url,
-			// 	async: true,
-			// 	success: function (data, textStatus, jqXHR) {
-			// 		var datos = data.d.results;
-			// 		var selectDoc = {
-			// 			CLASE: "",
-			// 			DENOMINACION: "---Seleccionar---"
-			// 		}
-			// 		datos.unshift(selectDoc);
-					
-					
-			// 		ModelProyect.setProperty("/TipoDocumento", datos);
-			// 	},
-			// 	error: function () {
-			// 		MessageBox.error("Ocurrio un error al obtener los datos", {
-			// 		actions: ["Aceptar"],
-			// 					emphasizedAction: MessageBox.Action.OK,
-			// 					onClose: function (sAction) {
-			// 						if (sAction === "Aceptar") {
-			// 						location.reload();
-			// 						}
-			// 						sap.ui.core.BusyIndicator.hide();
-			// 						console.log(er);
-			// 					}
-			// 		});
-			// 	}
-			// });	
-			
-			
-		},
-		
+	
 		infoaprobador:function(){
 		var oView = this.getView();
 		var ModelInputs = oView.getModel("Proyect");
