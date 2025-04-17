@@ -1,0 +1,42 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout"
+	xmlns:ui="sap.ui.table" xmlns:u="sap.ui.unified" xmlns:html="http://www.w3.org/1999/xhtml">
+	
+	<Dialog horizontalScrolling="true" showHeader="true" state="None" stretch="false" title="AGREGAR IMPUTACIÓN" type="Standard"
+		verticalScrolling="true" contentHeight="auto" contentWidth="auto">
+		<content>
+			
+			<VBox width="auto">
+				<items>
+					
+					<HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="Center" renderType="Div" displayInline="false" >
+						<items>
+							<RadioButtonGroup id="rbg3" columns="5" valueState="None" >
+								<RadioButton id="idProcentaje" text="Porcentaje" select="pressRadioP" />
+								<RadioButton id="idImporte" text="Importe" select="pressRadioI"/>
+							</RadioButtonGroup>
+						</items>
+					</HBox>
+					
+					<Label class="sapUiSmallMarginBegin" text="Centro de costo" design="Standard" width="auto" required="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+					<Select class="sapUiSmallMarginBegin sapUiTinyMarginBottom" width="90%"  selectedKey="{Proyect>/selectKeyagre}" change="presCentroC" items="{Proyect>/datosCeco}">
+						<items>
+							<core:Item key="{Proyect>CECO}" text="{Proyect>CECO}-{Proyect>NOMBRE}"/>
+						</items>
+					</Select>
+			
+					<Label class="sapUiSmallMarginBegin" text="Porcentaje" design="Standard" width="auto" required="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+					<Input class="sapUiSmallMarginBegin sapUiTinyMarginBottom" value="{Proyect>/porcentajeII}" width="90%" textAlign="Begin" textDirection="Inherit"  editable="{Proyect>/deseableporcentaje}" change="infoPorcentaje" visible="true"/>
+			
+					<Label class="sapUiSmallMarginBegin" text="Importe" design="Standard" width="auto" required="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+					<Input class="sapUiSmallMarginBegin sapUiSmallMarginBottom" value="{Proyect>/ImportesII}" width="90%" textAlign="Begin" textDirection="Inherit" visible="true" editable="{Proyect>/deseableimporte}" change="onImporteImp"/>
+				</items>	
+			</VBox>	
+		</content>
+		<buttons>
+			<Button text="Aceptar" type="Accept" icon="sap-icon://save" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="aceptarImputacion"/>
+			<Button text="Cancelar" type="Reject" icon="sap-icon://cancel" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="cerrarImputacion"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

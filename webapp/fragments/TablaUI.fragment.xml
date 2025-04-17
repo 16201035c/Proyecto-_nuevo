@@ -1,0 +1,99 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout"
+	xmlns:ui="sap.ui.table">
+	<ui:Table rows="{path:'Proyect>/jsonData' , sorter:{path: 'POSIC', descending: true}}" selectionMode="None" visibleRowCount="5" ariaLabelledBy="title">
+		<ui:extension>
+			<OverflowToolbar>
+				<content>
+					<ToolbarSpacer width=""/>
+					<Button press="masFilas" text="Agregar Desgloce" type="Transparent" icon="sap-icon://add" iconFirst="true" width="auto"
+						enabled="{Proyect>/enabledAgregar}" visible="false" iconDensityAware="false"/>
+				<!--{Proyect>/visibleAgregar}-->
+				</content>
+			</OverflowToolbar>
+		</ui:extension>
+		<ui:columns>
+			<ui:Column width="2rem" hAlign="Center">
+				<Label text="" wrapping="true" textAlign="Center"/>
+				<ui:template>
+					<ObjectStatus text="" icon="{Proyect>iconCeco}" state="{Proyect>stateCeco}"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="POSIC" filterProperty="POSIC" width="3rem" hAlign="Center">
+				<Label text="Pos." wrapping="true" textAlign="Center"/>
+				<ui:template>
+					<Text text="{Proyect>POSIC}" textAlign="Center"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="CONCEPTO" filterProperty="CONCEPTO" width="17rem" hAlign="Center">
+				<Label text="Tipo Gasto" wrapping="true"/>
+				<ui:template>
+					<ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>COD_CONT}" 	enabled="{Proyect>enabledGastos}" editable="{Proyect>/editableGastos}" change="onSeleccionGastos"
+						items="{path:'Proyect>/datosGastos', sorter:{path: 'CONCEPTO', descending: false}}">
+						<core:Item key="{Proyect>CODIGO}" text=" {Proyect>CODIGO} - {Proyect>CONCEPTO}"/>
+					</ComboBox>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="" filterProperty="" width="17rem" hAlign="Center">
+				<Label text="Cuenta Bancaria" wrapping="true"/>
+				<ui:template>
+					<ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>CUENTA_BANC}"  editable="{Proyect>/editableBanco}"
+						enabled="{Proyect>enabledBanco}"  items="{Proyect>/datosBancos}">
+						<core:Item key="{Proyect>BANKN}" text="{Proyect>DESCRIPCION}"/>
+					</ComboBox>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="INDICADOR" filterProperty="INDICADOR" width="15rem" hAlign="Center">
+				<Label text="Indicador Impuestos"/>
+				<ui:template>
+					<ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>IND_IMP}"
+						items="{path:'Proyect>/datosIndicador' , templateShareable:true}" change="changeIndicador" editable="{Proyect>/editableIndicador}" enabled="{Proyect>validacionIndicador}">
+						<core:Item key="{Proyect>INDICADOR}" text="{Proyect>INDICADOR}-{Proyect>NOMBRE}"/>
+					</ComboBox>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="BASE_IMP" filterProperty="BASE_IMP" width="11.5rem">
+				<Label text="Importe" textAlign="Center" width="100%"/>
+				<ui:template>
+					<Input value="{Proyect>BASE_IMP}" width="100%" textAlign="Right" type="Number" editable="{Proyect>/editableBaseI}" change="pressBaseImponibleyInafecto" enabled="{Proyect>validacionBase}"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="IGV" filterProperty="IGV" width="11.5rem">
+				<Label text="Igv" textAlign="Center" width="100%"/>
+				<ui:template>
+					<!--<Text text="{Proyect>IGV}" width="100%" textAlign="Right"/>-->
+					<Input value="{Proyect>IGV}" width="100%" textAlign="Right" type="Number"  change="changeIgv" enabled="{Proyect>validacionIGV}"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="INAFECTO" filterProperty="INAFECTO" width="11.5rem">
+				<Label text="No Grabada" textAlign="Center" width="100%"/>
+				<ui:template>
+					<Input value="{Proyect>INAFECTO}" width="100%" textAlign="Right" type="Number" editable="{Proyect>/editableInafecto}" change="pressBaseImponibleyInafecto" enabled="{Proyect>validacionInafecto}"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column sortProperty="TOTAL" filterProperty="TOTAL" width="11.5rem">
+				<Label text="Total" textAlign="Center" width="100%"/>
+				<ui:template>
+					<Text text="{Proyect>TOTAL}" width="100%" textAlign="Right"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column width="5.5rem" hAlign="Center">
+				<Label text="Movilidad" wrapping="true" textAlign="Center"/>
+				<ui:template>
+					<Button press="onMovilidad" type="Ghost" enabled="{Proyect>validaciones1}" icon="sap-icon://lead-outdated"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column width="5.5rem" hAlign="Center">
+				<Label text="CECO" textAlign="Center"/>
+				<ui:template>
+					<Button press="pressImputacion" type="Accept" icon="sap-icon://lead-outdated" enabled="{Proyect>enableImputa}"/>
+				</ui:template>
+			</ui:Column>
+			<ui:Column width="4rem" hAlign="Center" visible="false" >
+				<Label text="Borrar"/>
+				<ui:template>
+					<Button press="deleteRow" type="Reject" icon="sap-icon://delete" enabled="{Proyect>enabledBorrar}" />
+				</ui:template>
+			</ui:Column>
+		</ui:columns>
+	</ui:Table>
+</core:FragmentDefinition>

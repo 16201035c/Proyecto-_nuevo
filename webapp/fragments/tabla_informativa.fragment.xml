@@ -1,0 +1,38 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout"
+	xmlns:ui="sap.ui.table">
+<Dialog horizontalScrolling="true" showHeader="true"  stretch="false" title="Advertencia" type="Standard" icon="sap-icon://alert"  state="Warning"
+verticalScrolling="true" contentWidth="auto" contentHeight="auto">
+		<content>
+	<Table items="{path:'Proyect>/ErrorsCompExcel'}" width="20rem">
+		<headerToolbar>
+					<OverflowToolbar visible="false">
+						<content>
+							<ToolbarSpacer width=""/>
+								<!--<Button  type="Transparent" icon="sap-icon://add" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="masMovilidad"/>-->
+							<!--<Button  type="Transparent" icon="sap-icon://add" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="agregarfilas"/>-->
+						</content>
+					</OverflowToolbar>
+				</headerToolbar>
+		<columns>
+			<Column width="auto" hAlign="Center">
+				<Text text="Tabla de observaciones"/>
+			</Column>
+			<Column  width="auto">
+				<Text text="Mensaje"/>
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<Text text="{Proyect>COMPROBANTE}" textAlign="Begin"/>
+				<Text text="{Proyect>MENSAJE}" textAlign="Begin"/>
+			</ColumnListItem>
+		</items>
+	</Table>
+	</content>
+			<buttons>
+			<Button text="Salir" type="Reject" icon="" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="onSalir_Pantalla"/>
+			
+		</buttons>
+</Dialog>
+</core:FragmentDefinition>

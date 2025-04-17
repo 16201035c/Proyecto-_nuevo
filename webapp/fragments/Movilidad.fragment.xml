@@ -1,0 +1,89 @@
+<core:FragmentDefinition xmlns="sap.m"  xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:u="sap.ui.unified"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog horizontalScrolling="true" showHeader="true" state="None" stretch="false" title="AGREGAR MOVILIDAD POR DÍA" type="Standard"
+		verticalScrolling="true" contentHeight="auto" contentWidth="auto">
+		<content>
+		
+			<Table mode="None" items="{Proyect>/datosMovilidad}" width="50rem" >
+				<headerToolbar>
+					<OverflowToolbar visible="false">
+						<content>
+							<ToolbarSpacer width=""/>
+								<!--<Button  type="Transparent" icon="sap-icon://add" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="masMovilidad"/>-->
+							<!--<Button  type="Transparent" icon="sap-icon://add" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="agregarfilas"/>-->
+						</content>
+					</OverflowToolbar>
+				</headerToolbar>
+				<columns>
+					<Column width="5rem" hAlign="Center" minScreenWidth="Large" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Nro"/>
+					</Column> 
+					<Column width="10rem" hAlign="Center" minScreenWidth="Large" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Día"/>
+					</Column>
+					<Column width="8rem" hAlign="Center" minScreenWidth="Large" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Importe"/>
+						<!--<CheckBox text="Importe Total" textDirection="LTR" textAlign="Begin"  selected="true"/>-->
+					</Column>
+					<Column width="8rem" hAlign="Center"  visible="false" minScreenWidth="Large" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Permitido ({Proyect>/ImportesPermitos})"/>
+					</Column>
+					<Column width="8rem" hAlign="Center" visible="false"  minScreenWidth="Large" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Excedente"/>
+					</Column>
+					<Column width="8rem" hAlign="Center" minScreenWidth="Large" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false" visible="{Proyect>/visibleBorrarM}">
+						<Text text="Borrar"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem >
+						<cells>
+							<Text text="{Proyect>POSICMOV}" class="sapUiSmallMarginTop" wrapping="false"/>
+							<DatePicker id="fechaMovi" change="fnChangeFecha_mov" value="{Proyect>FECHA}" placeholder="DD/MM/YYYY" width="auto" required="true" editable="{Proyect>/editableFechaM}" visible="true" valueFormat="dd/MM/yyyy" displayFormat="dd/MM/yyyy"/>
+							<!--<Text text="{Proyect>FECHA}" wrapping="false"/>-->
+							<Input id="importeTotal" textAlign="Begin" value="{Proyect>impTotalMov}"  change="changeImporte_mov" width="100%" editable="{Proyect>/editableimporetM}" />
+							<Text id="importePer" text="{Proyect>IMP_PERM}" textAlign="Begin"  width="8rem" class="sapUiSmallMarginTop"/>
+							<Text id="Excend" text="{Proyect>IMP_EXED}" class="sapUiSmallMarginTop" textAlign="Begin"    width="8rem"/>
+						    <Button text="" type="Reject" icon="sap-icon://delete" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="onBorrarMov"/>
+						</cells>
+					</ColumnListItem>
+					<!--	<ColumnListItem >-->
+					<!--	<cells>-->
+					<!--		<Text text="" wrapping="false"/>-->
+					<!--		<Text text="{Proyect>Total}" wrapping="false"/>-->
+							
+					<!--		<Text text="{Proyect>ImporteP}" wrapping="false"/>-->
+					<!--		<Text text="{Proyect>ImporteE}" wrapping="false"/>-->
+							<!--<Input  textAlign="Begin" value="" width="8rem" editable="{Proyect>/deseableporcentaje}" />-->
+							<!--<Input textAlign="Begin" value="{Proyect>Excend}" type="Number"  width="8rem"/>-->
+						<!--<Button text="" type="Reject" icon="sap-icon://delete" iconFirst="true" width="auto" enabled="true" visible="true"-->
+				  <!--          iconDensityAware="false" press="onBorrarMov"/>-->
+							
+						   
+					<!--	</cells>-->
+					<!--</ColumnListItem>-->
+				</items>
+			</Table>
+			
+			<VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto"
+			height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
+				<items>
+					<Text text="" width="" wrapping="false"/>
+					<Text text="Total :" wrapping="false" width="3.5rem" textAlign="Right"/>
+					<Text text="{Proyect>/Importe_total}" wrapping="false" width="auto" textAlign="Begin"/>
+					<Text text="{Proyect>/ImporteP}" wrapping="false" width="auto" textAlign="Begin" visible="false"/>
+					<Text text="{Proyect>/ImporteE}" wrapping="false" width="auto" textAlign="Begin" visible="false"/>
+				</items>
+			</VBox>
+		</content>
+		<buttons>
+			<Button text="Agregar" type="Emphasized" icon="sap-icon://add" iconFirst="true" width="auto" enabled="true"  visible="{Proyect>/visibleAgregarM}"
+				iconDensityAware="false" press="masMovilidad"/>
+			<Button text="Guardar" type="Accept"  iconFirst="true" width="auto" enabled="true" visible="{Proyect>/visibleGuardarM}"
+				iconDensityAware="false" press="onGuardar_mov"/>
+			<Button text="Salir" type="Reject" icon="sap-icon://cancel" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="onCerrarMovi"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

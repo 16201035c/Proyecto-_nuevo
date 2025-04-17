@@ -1,0 +1,94 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout"
+	xmlns:ui="sap.ui.table" xmlns:u="sap.ui.unified" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog showHeader="true" state="None" stretch="false" title="INGRESAR CENTROS DE COSTO" type="Standard" verticalScrolling="true"
+		contentHeight="auto" contentWidth="auto">
+		<content>
+			<HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="100%" height="auto"
+				class="sapUiSmallMarginBottom sapUiSmallMarginTop" justifyContent="SpaceAround" renderType="Div" displayInline="false">
+				<items>
+					<HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="Start"
+						renderType="Div" displayInline="false">
+						<items>
+							<Title wrapping="true" text="Posicion:"/>
+							<Text text="{Proyect>/nroDesglose}" class="sapUiTinyMarginBegin" width="auto" maxLines="1" wrapping="false" textAlign="Begin"
+								textDirection="Inherit" visible="true"/>
+						</items>
+					</HBox>
+					<HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="Start"
+						renderType="Div" displayInline="false">
+						<items>
+							<Title wrapping="true" text="Moneda:"/>
+							<Text text="{Proyect>/MonedaImput}" class="sapUiTinyMarginBegin" width="auto" maxLines="1" wrapping="false" textAlign="Begin"
+								textDirection="Inherit" visible="true"/>
+						</items>
+					</HBox>
+					<HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="Start"
+						renderType="Div" displayInline="false">
+						<items>
+							<Title wrapping="true" text="Importe:"/>
+							<Text text="{Proyect>/ImportesI}" class="sapUiTinyMarginBegin" width="auto" maxLines="1" wrapping="false" textAlign="Begin"
+								textDirection="Inherit" visible="true"/>
+						</items>
+					</HBox>
+				</items>
+			</HBox>
+			<Table mode="None" width="50rem" items="{Proyect>/datosImputacion}">
+				<headerToolbar>
+					<OverflowToolbar visible="false">
+						<content>
+							<ToolbarSpacer width=""/>
+						</content>
+					</OverflowToolbar>
+				</headerToolbar>
+				<columns>
+					<Column width="2.5rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Nro" class="sapUiSmallMarginTop"/>
+					</Column>
+					<Column width="40%" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Centro de Costo" class="sapUiSmallMarginTop"/>
+					</Column>
+				
+					<Column width="auto" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline"   demandPopin="true" mergeDuplicates="false">
+						<!--<Text text="Porcentaje" class="sapUiSmallMarginTop"/>-->
+						<CheckBox text="Porcentaje" textDirection="LTR" select="pressRadioP" editable="{Proyect>/editablePorce}"   selected="{Proyect>/selPorcImpu}" enabled="{Proyect>/selPorcImpu}"/>
+					</Column>
+					
+					<Column width="auto" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false" >
+						<!--<Text text="Importe" textAlign="Center" class="sapUiSmallMarginTop"  visible="{Proyect>/visibleImportePP}"/>-->
+						<CheckBox text="Importe" textDirection="LTR" select="pressRadioI"  selected="{Proyect>/selImpImpu}"  enabled="{Proyect>/selImpImpu}"/>
+					</Column>
+						<Column width="5rem" hAlign="Center" visible="{Proyect>/visibleBorrar}" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
+						<Text text="Borrar" class="sapUiSmallMarginTop"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem >
+						<cells>
+								<Text text="{Proyect>POSICION}" wrapping="false" class="sapUiSmallMarginTop"/>
+							<!--<Text text="{Proyect>KOSTL}" wrapping="true" class="sapUiSmallMarginTop"/>-->
+							<ComboBox placeholder="---Seleccionar---" change="presCentroC" selectedKey="{Proyect>selectKeyagre}"   editable="{Proyect>/deseableCeco}"
+								items="{path:'Proyect>/datosCeco', sorter:{path: 'CECO', descending: false}}">
+								<core:Item key="{Proyect>CECO}" text="{Proyect>CECO} - {Proyect>NOMBRE}"/>
+							</ComboBox>
+							<!--<Text text="{Proyect>PORCENTAJE}" wrapping="true" class="sapUiSmallMarginTop"/>-->
+							<Input value="{Proyect>porcentajeII}" textAlign="Begin" textDirection="Inherit" editable="{Proyect>/deseableporcentaje}"
+								change="infoPorcentaje"/>
+							<!--<Text text="{Proyect>IMP}" wrapping="true" class="sapUiSmallMarginTop"/>-->
+							<Input value="{Proyect>IMP}" textAlign="Begin" textDirection="Inherit"  editable="{Proyect>/deseableimporte}"
+								change="onImporteImp"/>
+							<Button type="Reject" icon="sap-icon://delete" press="pressEliminarImpu"/>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</content>
+		<buttons>
+			<Button text="Agregar" type="Emphasized" icon="sap-icon://add" iconFirst="true" width="auto" enabled="true" visible="{Proyect>/visibleBtnAgregar}"
+				iconDensityAware="false" press="agregarfilas"/>
+			<Button text="Guardar" type="Accept" icon="sap-icon://save" iconFirst="true" width="auto" enabled="true" visible="{Proyect>/visibleBtnGuardar}"
+				iconDensityAware="false" press="guardarImp"/>
+			<Button text="Salir" type="Reject" icon="sap-icon://cancel" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="cerrarImp"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

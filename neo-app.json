@@ -1,0 +1,84 @@
+{
+  "welcomeFile": "/webapp/index.html",
+  "routes": [
+    {
+      "path": "/resources",
+      "target": {
+        "type": "service",
+        "name": "sapui5",
+        "entryPath": "/resources"
+      },
+      "description": "SAPUI5 Resources"
+    },
+    {
+      "path": "/test-resources",
+      "target": {
+        "type": "service",
+        "name": "sapui5",
+        "entryPath": "/test-resources"
+      },
+      "description": "SAPUI5 Resources"
+    },
+    {
+      "path": "/webapp/resources",
+      "target": {
+        "type": "service",
+        "name": "sapui5",
+        "entryPath": "/resources"
+      },
+      "description": "SAPUI5 Resources"
+    },
+    {
+      "path": "/webapp/test-resources",
+      "target": {
+        "type": "service",
+        "name": "sapui5",
+        "entryPath": "/test-resources"
+      },
+      "description": "SAPUI5 Test Resources"
+    },
+     {
+      "path": "/services/userapi",
+      "target": {
+        "type": "service",
+        "name": "userapi"
+      }
+    },{
+      "path": "/ERP/",
+      "target": {
+        "type": "destination",
+        "name": "ODPTALMA"
+      },
+      "description": "ERP Service"
+    },
+    {
+	    "path": "/SUNAT/",
+	    "target": {
+	    "type": "destination",
+	    "name": "SUNAT_RUC"
+	}
+	 },{
+	    "path": "/SUNAT_COMPROBANTE/",
+	    "target": {
+	    "type": "destination",
+	    "name": "SUNAT_COMPROBANTE"
+	}
+	 },
+	 {
+	    "path": "/SUNAT_SERIE/",
+	    "target": {
+	    "type": "destination",
+	    "name": "SUNAT_SERIE"
+	}
+	 },
+	 {
+      "path": "/cmis/",
+      "target": {
+        "type": "destination",
+        "name": "DocumentServiceTalma"
+      },
+      "description": "CMIS Connection Document Service"
+    }   
+  ],
+  "sendWelcomeFileRedirect": true
+}

@@ -1,0 +1,74 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout"
+	xmlns:ui="sap.ui.table">
+	<Table items="{path:'Proyect>/jsonData' , sorter:{path: 'POSIC', descending: true}}">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<ToolbarSpacer width=""/>
+					<Button press="masFilas" type="Transparent" icon="sap-icon://add" iconFirst="true" width="auto" enabled="{Proyect>/enabledAgregar}"
+					 iconDensityAware="false" visible="{Proyect>/visibleAgregar}"/>
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column width="3rem">
+				<Text text="Número"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+				<Text text="Tipo Gasto"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+				<Text text="Cuenta Bancaria"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+				<Text text="Indicador Impuestos"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+				<Text text="Movilidad"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+				<Text text="Base imponible"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Center" minScreenWidth="Large" width="auto">
+				<Text text="Igv"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+				<Text text="Inafecto"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+				<Text text="Total"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Center" minScreenWidth="Large" width="auto">
+				<Text text="Imputacion"/>
+			</Column>
+			<Column demandPopin="true" hAlign="Left" minScreenWidth="Large" width="3.5rem" visible="{Proyect>/visibleBorrar}">
+				<Text text="Borrar"/>
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<Text text="{Proyect>POSIC}" textAlign="Begin"/>
+				<ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>COD_CONT}" change="onSeleccionGastos" enabled="{Proyect>enabledGastos}"
+					items="{path:'Proyect>/datosGastos', sorter:{path: 'CONCEPTO', descending: false}}" editable="{Proyect>/editableGastos}">
+					<core:Item key="{Proyect>CODIGO}" text="{Proyect>CODIGO} - {Proyect>CONCEPTO}"/>
+				</ComboBox>
+				<ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>CUENTA_BANC}" items="{Proyect>/datosBancos}" editable="{Proyect>/editableBanco}"
+					enabled="{Proyect>enabledBanco}">
+					<core:Item key="{Proyect>BANKN}" text="{Proyect>DESCRIPCION}"/>
+				</ComboBox>
+				<ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>IND_IMP}"
+					items="{path:'Proyect>/datosIndicador' , templateShareable:true}" change="changeIndicador" enabled="{Proyect>validacionIndicador}"  editable="{Proyect>/editableIndicador}">
+					<core:Item key="{Proyect>INDICADOR}" text="{Proyect>INDICADOR}-{Proyect>NOMBRE}"/>
+				</ComboBox>
+			
+				<Input value="{Proyect>BASE_IMP}" textAlign="Begin" type="Number"  change="pressBaseImponibleyInafecto" enabled="{Proyect>validacionBase}" editable="{Proyect>/editableBaseI}"/>
+				<Input value="{Proyect>IGV}" width="100%" textAlign="Right" type="Number"  change="changeIgv" enabled="{Proyect>validacionIGV}"/>
+				<Input value="{Proyect>INAFECTO}" textAlign="Begin"  type="Number" editable="{Proyect>/editableInafecto}" change="pressBaseImponibleyInafecto" enabled="{Proyect>validacionInafecto}"/>
+				<Text text="{Proyect>TOTAL}" textAlign="Begin"/>
+				<Button press="onMovilidad" type="Ghost" enabled="{Proyect>validaciones1}" icon="sap-icon://lead-outdated"/>
+				<Button press="pressImputacion" type="Accept" icon="sap-icon://lead-outdated" enabled="{Proyect>enableImputa}"/>
+				<Button press="deleteRow" type="Reject" icon="sap-icon://delete" enabled="{Proyect>enabledBorrar}" />
+			</ColumnListItem>
+		</items>
+	</Table>
+</core:FragmentDefinition>

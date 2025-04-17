@@ -1,0 +1,397 @@
+<mvc:View controllerName="rendicionER.controller.DetalleSolicitudConER" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns="sap.m"
+	xmlns:semantic="sap.m.semantic">
+	<u:SplitContainer id="mySplitContainer" showSecondaryContent="false">
+		<u:secondaryContent>
+			<ObjectHeader id="headerObj" icon="sap-icon://employee-pane" iconDensityAware="false" responsive="true" fullScreenOptimized="true"
+				binding="{DetailModel>/Itinerario}" backgroundDesign="Translucent" title="{Proyect>/descripcionEmpleados}" intro="DNI :{Proyect>/DniUsua}">
+				<attributes>
+					<ObjectAttribute title="" text=""/>
+					<ObjectAttribute title="Solicitud" text="{Proyect>/solicitud}"/>
+					<ObjectAttribute title="Moneda" text="{Proyect>/moneda}"/>
+					<ObjectAttribute title="Importe Solic" id="idtasaImpCab" text="{Proyect>/importe}"/>
+					<!--<ObjectAttribute title="Ceco"-->
+					<!--text="{Proyect>/selectCeco}" -->
+					<!--/>	-->
+					<ObjectAttribute title="Importe rendido" text="{Proyect>/ImporteRend}"/>
+					<!--<ObjectAttribute id="subTotal" title="Saldo" -->
+					<!--				text="{Proyect>/Saldo}" -->
+					<!--				/>-->
+				</attributes>
+				<statuses>
+					<ObjectStatus title="Saldo" text="{Proyect>/Saldo}" state="{Proyect>/estado_saldo}"/>
+				</statuses>
+			</ObjectHeader>
+			<!--<ObjectStatus-->
+			<!--			class="sapUiSmallMarginBottom"-->
+			<!--			text="{Proyect>/Saldo}"-->
+			<!--			icon="sap-icon://sys-enter-2"-->
+			<!--			state="Error" />-->
+		</u:secondaryContent>
+		<u:content>
+			<SplitApp id="SplitAppMatestros" initialDetail="NotFound" initialMaster="master" orientationChange="onOrientationChange"
+				busyIndicatorDelay="0">
+				<!--												Master Pages											-->
+				<masterPages >
+					<!--										 Master de Lista de maestros									-->
+					<Page id="master" title="Productos" icon="sap-icon://action" class="sapUiStdPage" showSubHeader="{Proyect>/visBtnHeader}" showHeader="true">
+						<customHeader>
+							<Toolbar>
+								<Button icon="sap-icon://nav-back" press="onPressNavButton"/>
+								<ToolbarSpacer/>
+								<Title text="Comprobantes" level="H2"/>
+								<ToolbarSpacer/>
+								<Button text="Detalle" tooltip="Detalle de la solicitud" press="handleToggleSecondaryContent" icon="{Proyect>/btnDetIcon}"
+									type="{Proyect>/btnDetType}"/>
+							</Toolbar>
+						</customHeader>
+						<!-- Barra de busqueda -->
+						<subHeader>
+							<Toolbar>
+								<HBox width="100%" justifyContent="Center">
+									<Button icon="sap-icon://add" text="Agregar" tooltip="Agregar Comprobante" press="onAgregarComprobante"/>
+									<Button icon="sap-icon://bar-code" text="Escanear" tooltip="Escanear QR" press="onOpenFragQR"/>
+									<u:FileUploader id="fileUploader" name="myFileUpload" sameFilenameAllowed="true" icon="sap-icon://upload" change="handleUploadComplete2"
+										uploadUrl="upload/" buttonOnly="true" fileType="xlsx" buttonText="Importar" tooltip="Agregar Excel"
+										visible="{midata>/botonesTablaPropiedades/btnEdit}"/>
+									<!--<Button id="idGrabarSolicitudDetalleER" text="Grabar" press="onPressGrabar" enabled="true" type="Accept" icon="sap-icon://save" iconFirst="true" class="sapUiTinyMarginBegin"/>-->
+									<!--<Button id="idEnviarLiquidacionSolicitudDetalleER" text="Env. Aprob" press="onPressEnviarLiquidacion"  enabled="{Proyect>/btnEnvAprob}" type="Ghost" icon="sap-icon://paper-plane" iconFirst="true"/>	-->
+									<!--<Button text ="Detalle" tooltip="Detalle de la solicitud" press="handleToggleSecondaryContent" icon="{Proyect>/btnDetIcon}" type="{Proyect>/btnDetType}"/>-->
+									<!--<ToolbarSpacer />-->
+									<!--<ToggleButton text="Detalle Solic." icon="{Proyect>/btnDetIcon}"  type="{Proyect>/btnDetType}" tooltip="Detalle de la solicitud" press="handleToggleSecondaryContent" enabled="true"/>-->
+								</HBox>
+							</Toolbar>
+						</subHeader>
+						<content>
+							<List id="list" updateStarted="MasterSegmented" updateFinished="selectFirstItem2"
+								items="{path : 'Proyect>/DataComprobanteConfirmacion', sorter:{path: 'keySeg', descending: false}}" mode="{Proyect>/modeList}"
+								selectionChange="seleccionComp" delete="fnDeleteComprobantes" class="marcoimagenheader" enableBusyIndicator="true"
+								includeItemInSelection="false">
+								<items>
+									<ObjectListItem press="onPress" title="{Proyect>key}" type="Navigation" highlight="Warning">
+										<firstStatus>
+											<ObjectStatus text="{Proyect>COMPROBANTE}" state="None"/>
+										</firstStatus>
+										<secondStatus>
+											<ObjectStatus text="{Proyect>EST_COMP}" tooltip="{Proyect>EST_COMP}" visible="{Proyect>visibleState}" icon="{Proyect>iconComp}"
+												state="{Proyect>stateComp}"/>
+										</secondStatus>
+										<ObjectAttribute text="{Proyect>COD_EST_COMP}" visible="false"/>
+										<ObjectAttribute text="{Proyect>TIPO_COMP}"/>
+										<ObjectAttribute text="{Proyect>FECHA_COMP}"/>
+									</ObjectListItem>
+								</items>
+							</List>
+						</content>
+						<footer>
+							<Toolbar>
+								<Button id="idGrabarSolicitudDetalleER" visible="{Proyect>/visBtnHeader}" text="Grabar" press="onPressGrabar" enabled="true" type="Accept"
+									icon="sap-icon://save" iconFirst="true" class="sapUiTinyMarginBegin"/>
+								<Button id="idEnviarLiquidacionSolicitudDetalleER" visible="{Proyect>/visBtnHeader}" text="Enviar" press="onPressEnviarLiquidacion"
+									enabled="{Proyect>/btnEnvAprob}" type="Ghost" icon="sap-icon://paper-plane" iconFirst="true"/>
+								<ToggleButton id="buttonEliminarComprobante" visible="{Proyect>/visBtnHeader}" icon="sap-icon://delete" text="Borrar"
+									tooltip="Eliminar Comprobante" press="onConfirmarEliminarComprobante" enabled="{Proyect>/btnEliminarTabla}" type="Reject"/>
+								<Button id="idAprObs" text="Aprobar" width="33%" press="onPressAprObs" enabled="true" type="Accept" visible="{Proyect>/visBtnLevObs}"
+									iconFirst="true"/>
+								<Button id="idRechObs" text="En revisión" width="33%" press="onPressRechObs" type="Reject" visible="{Proyect>/visBtnLevObs}"
+									iconFirst="true"/>
+								<Button id="idEnvObs" text="Enviar" width="33%" press="onPressEnvObs" type="Ghost" visible="{Proyect>/visBtnLevObs}" iconFirst="true"/>
+								<!--<Button icon="sap-icon://add" tooltip="Agregar Comprobante" press="onAgregarComprobante"/>-->
+								<!--<Button icon="sap-icon://bar-code" tooltip="Escanear QR" press="onOpenFragQR"/>-->
+								<!--<ToggleButton id="buttonEliminarComprobante" icon="sap-icon://delete" tooltip="Eliminar Comprobante" press="onConfirmarEliminarComprobante" enabled="{Proyect>/btnEliminarTabla}"/>-->
+								<!--<ToolbarSpacer/>-->
+								<!--<Button icon="sap-icon://excel-attachment" tooltip="Exportar a Excel" visible="false"/>-->
+								<!--<Button icon="sap-icon://sort" tooltip="Ordenar" press="onPressSortMaestro" visible="false"/>-->
+								<!--<Button icon="sap-icon://filter" tooltip="Filtrar" visible="false"/>-->
+								<!--<u:FileUploader -->
+								<!--	id="fileUploader" -->
+								<!--	class="" -->
+								<!--	name="myFileUpload"-->
+								<!--	sameFilenameAllowed="true"-->
+								<!--	icon="sap-icon://upload" -->
+								<!--	change="handleUploadComplete2" -->
+								<!--	uploadUrl="upload/"-->
+								<!--	buttonOnly="true"-->
+								<!--	fileType="xlsx" -->
+								<!--	buttonText="Importar" -->
+								<!--	tooltip="Agregar Excel" -->
+								<!--	visible="{midata>/botonesTablaPropiedades/btnEdit}"/>-->
+							</Toolbar>
+						</footer>
+					</Page>
+				</masterPages>
+				<!--											Detail Pages												-->
+				<detailPages>
+					<!--										 Detalle de categoría											-->
+					<Page id="detail" title="Rendición de Entregas a Rendir (ER)" class="sapUiStdPage" navButtonPress="onPressNavButtonDetail">
+						<ObjectHeader iconDensityAware="false" responsive="true" fullScreenOptimized="false" binding="{DetailModel>/Itinerario}"
+							backgroundDesign="Translucent" title="{Proyect>/nroPos}" intro="{Proyect>/DataComprobanteConfirmacion/nroDocumento}">
+							<attributes>
+								<ObjectAttribute title="Nro. Comprobante" text="{Proyect>/COMPROBANTE}"/>
+								<!--<ObjectAttribute title="DNI"-->
+								<!--	text="70599323"/>-->
+								<ObjectAttribute title="Fec. de emisión" text="{Proyect>/FECHA_COMP}"/>
+								<!--- begin +@ctr -->
+								<ObjectAttribute title="Tipo Comprobante" text="{Proyect>/TIPO_COMP}"/>
+								<!-- end +@ctr -->
+								<ObjectAttribute title="Impuesto" id="impuestoRend" text="{Proyect>/impueDet}" press="reemLetrasCant"/>
+								<!--<ObjectAttribute title="{i18n>title_fragment_MonedaComp}" text="{ path : 'modelRendicion>/rendicion/cabecera/DesMoneda'}"/>-->
+							</attributes>
+							<attributes>
+								<!--Nombre de proyecto-->
+								<ObjectAttribute id="importeRend" title="Importe" text="{Proyect>/subTotal}"/>
+								<!--Importe rendido	(ahroa importe solicitado)-->
+								<ObjectAttribute title="No Grabada" id="noGrabada" text="{Proyect>/noGrabada}"/>
+								<!--Saldo por rendir (ahora importe rendido)-->
+								<ObjectAttribute title="Total" id="totalRend" text="{Proyect>/subTotalComp}"/>
+								<!--Importe por reembolsar (ahora saldo por rendir o importe por reembolsar) {i18n>porReembolsar}-->
+								<!--<ObjectAttribute title="Correo" id="oaSaldo"-->
+								<!--	text="{Proyect>/SelectedDetalle/correo}"-->
+								<!--	/>-->
+							</attributes>
+						</ObjectHeader>
+						<content>
+							<IconTabBar id="iconTabDetalle" selectedKey="{Proyect>/selectTab}" expandable="false" expanded="true" class="sapUiResponsiveContentPadding"
+								select="onPressTab" applyContentPadding="false">
+								<items>
+									<IconTabFilter key="idComprobantes" icon="sap-icon://add-document" iconColor="Positive" text="Comprobante" class="colortabs"
+										design="Horizontal">
+										<content>
+											<form:Form width="100%" editable="true" visible="true">
+												<form:title/>
+												<form:formContainers>
+													<form:FormContainer visible="true">
+														<form:formElements>
+															<form:FormElement visible="true">
+																<form:label>
+																	<Label text="Número Comprobante" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+																</form:label>
+																<form:fields>
+																	<MaskInput id="sRegistroComprobante"  mask="CCCCC-CCCCCCCCC" editable="{Proyect>/HABILI_COMPRO}" placeholderSymbol="_"  
+																		placeholder="YYYYY-ZZZZZZZZZ" change="fnRegistroComprobante"  valueState="{Proyect>/compValState}" valueStateText="{Proyect>/compValStateText}">
+																		<rules>
+																			<MaskInputRule maskFormatSymbol="C" regex="[A-Z,a-z,0-9]"/>
+																		</rules>
+																	</MaskInput>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="true">
+																<form:label>
+																	<Label text="Fecha Comprobante" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+																</form:label>
+																<form:fields>
+																	<DatePicker id="sfechaComprobante" change="fnChangeFechaComprobante" placeholder="DD/MM/YYYY"  width="auto" value="{Proyect>/fecha_Comprobante}"
+																		valueState="{Proyect>/fecCompValState}" editable="{Proyect>/HABILI_CAMPO}" valueStateText="{Proyect>/fecCompValStateText}"  visible="true"
+																		valueFormat="dd/MM/yyyy" displayFormat="dd/MM/yyyy"/>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="true">
+																<form:label>
+																	<Label text="Tipo Comprobante" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+																</form:label>
+																<form:fields>
+																	<Select 
+																	id="cSelectedTipoDocumento" 
+																	forceSelection="true" 
+																	selectedKey="{Proyect>/Key_comprobante}" 
+																	showSecondaryValues="true"
+																	change="fnSelectedTipoDocumento"
+																	valueState="{Proyect>/tipCompValState}"
+																	valueStateText="{Proyect>/tipCompValStateText}"
+																	items="{path: 'Proyect>/TipoDocumento', sorter:{path: 'DENOMINACION', descending: false}}" 
+																	editable="{Proyect>/editableTipo_Com}">
+																		<core:ListItem key="{Proyect>CLASE}" text="{Proyect>DENOMINACION}" additionalText="{Proyect>CLASE}"/>
+																	</Select>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="{Proyect>/Campos_Visibles}">
+																<form:label>
+																	<Label text="Tipo Doc. Identidad" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+																</form:label>
+																<form:fields>
+																	<Select id="select" forceSelection="false" selectedKey="{Proyect>/tipoNif}" items="{Proyect>/datostipoDoc}" change="changeTipoDoc"
+																		editable="{Proyect>/Editable_Tipo}">
+																		<core:ListItem key="{Proyect>TIPO}" text="{Proyect>TIPO}" enabled="{=${Proyect>TIPO}==='---Seleccionar---'?false:true}"/>
+																	</Select>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="{Proyect>/Campos_Visibles}">
+																<form:label>
+																	<Label text="Nro. Doc. Identidad" class="sapUiSmallMarginTop"/>
+																</form:label>
+																<form:fields>
+																	<Input id="idRuc" type="Number" value="{Proyect>/ruc}" required="true" maxLength="{Proyect>/cantidad}" editable="{Proyect>/visbleCampoRUC}"
+																		valueState="{Proyect>/rucValState}" valueStateText="{Proyect>/rucValStateText}" placeholder="Escribir" class="sapUiSmallMarginTop"
+																		liveChange="changeNroDoc"/>
+																	<!--<Button press="livechangeIden" type="Unstyled"  width="5rem" />-->
+																</form:fields>
+																<form:fields>
+																	<Button text="{Proyect>/Nombre_Boton}" press="livechangeIden" type="Emphasized" width="7rem" class="sapUiSmallMarginTop"
+																		enabled="true" visible="{Proyect>/visble_btnValidar}"/>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="{Proyect>/Visible_Btn02}">
+																<form:label>
+																	<Label text="" class="sapUiSmallMarginTop"/>
+																</form:label>
+																<form:fields>
+																	<Button text="{Proyect>/Nombre_Boton}" press="livechangeIden" type="Emphasized" width="7rem" class="sapUiSmallMarginTop"
+																		enabled="true" visible="{Proyect>/visble_btnValidar}"/>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="{Proyect>/Campos_Visibles}">
+																<form:label>
+																	<Label text="Razón Social/Nombre" class="sapUiSmallMarginTop"/>
+																</form:label>
+																<form:fields>
+																	<Input type="Text" value="{Proyect>/razonSocial}" class="sapUiSmallMarginTop" change="changeRazon_Social" maxLength="249" required="true" editable="{Proyect>/editableRazon}"/>
+																</form:fields>
+															</form:FormElement>
+														</form:formElements>
+														<form:title/>
+													</form:FormContainer>
+													<form:FormContainer visible="true">
+														<form:formElements>
+															<form:FormElement visible="true">
+																<form:label>
+																	<Label text="Moneda" required="true"/>
+																</form:label>
+																<form:fields>
+																	<Select width="100%" forceSelection="false" selectedKey="{Proyect>/monedas}" items="{Proyect>/datosmoneda}" change="changeMonedaC"
+																		editable="false" valueStateText="{Proyect>/monedaValueSt}" valueState="{Proyect>/estadoMone}">
+																		<core:ListItem key="{Proyect>MONEDA}" text="{Proyect>MONEDA}" enabled="{=${Proyect>MONEDA}==='---Seleccionar---'?false:true}"/>
+																	</Select>
+																</form:fields>
+															</form:FormElement>
+														
+															<form:FormElement visible="true">
+																<form:label>
+																	<Label text="Motivo" class="sapUiSmallMarginTop" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit"
+																		visible="true"/>
+																</form:label>
+																<form:fields>
+																	<TextArea id="idMotivo" value="{Proyect>/Glosa}" name="{Proyect>/dataDetSolcER/concepto}" class="sapUiSmallMarginTop" placeholder=""
+																		textAlign="Initial" textDirection="Inherit" rows="1" maxLength="50" change="changeMotivo" wrapping="None" editable="{Proyect>/visbleCampo}"
+																		valueState="{Proyect>/estadoglos}" valueStateText="{Proyect>/GlosaValueSt}"></TextArea>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="{Proyect>/VisibleReferencia}">
+																<form:label>
+																	<Label text="Referencia a Factura" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+																</form:label>
+																<form:fields>
+																	<MaskInput id="idFactura" mask="CCCCC-CCCCCCCCC" editable="{Proyect>/HABILI_FACTURA}" placeholderSymbol="_" placeholder="YYYY-ZZZZZZZZZZ"
+																		change="changeFactura" valueState="{Proyect>/compValState}" valueStateText="{Proyect>/compValStateText}">
+																		<rules>
+																			<MaskInputRule maskFormatSymbol="C" regex="[A-Z,0-9]"/>
+																		</rules>
+																	</MaskInput>
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="{Proyect>/visible_Campo}">
+																<form:label>
+																	<Label text="Orden Interna" class="sapUiSmallMarginTop" design="Standard" width="100%" required="false" textAlign="Begin"
+																		textDirection="Inherit" visible="true"/>
+																</form:label>
+																<form:fields>
+																	<Input value="{Proyect>/Orden_Interna}" class="sapUiSmallMarginTop" change="changeOrde_Interna" editable="{Proyect>/HABILI_CAMPO}" maxLength="10" />
+																</form:fields>
+															</form:FormElement>
+															<form:FormElement visible="{Proyect>/visible_Campo}">
+																<form:label>
+																	<Label text="Número de viaje" class="sapUiSmallMarginTop" design="Standard" width="100%" required="false" textAlign="Begin"
+																		textDirection="Inherit" visible="true"/>
+																</form:label>
+																<form:fields>
+																	<Input value="{Proyect>/Numero_viaje}" class="sapUiSmallMarginTop" maxLength="15" change="changeNumero_Viaje" editable="{Proyect>/HABILI_CAMPO}"/>
+																</form:fields>
+															</form:FormElement>
+														</form:formElements>
+														<form:title/>
+													</form:FormContainer>
+												</form:formContainers>
+												<form:layout>
+													<form:ResponsiveGridLayout adjustLabelSpan="false" columnsL="2" labelSpanL="3" columnsM="1" labelSpanM="2" labelSpanS="12"/>
+												</form:layout>
+											</form:Form>
+										</content>
+									</IconTabFilter>
+									<IconTabFilter id="idTabDesglose" key="keyTabDesgloce" press="validaTabDesgloce" icon="sap-icon://documents" text="Desglose de Gastos"
+										class="colortabs" design="Horizontal">
+										<content></content>
+									</IconTabFilter>
+									<IconTabFilter key="keyTabAdjuntos" iconColor="Default" icon="sap-icon://table-view" design="Horizontal" text="Adjuntos">
+										<HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="Start"
+											renderType="Div" displayInline="false" class="sapUiResponsiveMargin">
+											<items>
+												<u:FileUploader id="fileUploader2" fileType="xlsx,XLSX,DOCX,docx,pdf,PDF,JPG,jpg,PNG,png,pptx,PPTX" maximumFileSize="10" fileSizeExceed="onFileSizeExceed" buttonText="Subir archivo" style="Emphasized" icon="sap-icon://upload" visible="{Proyect>/visible_btnSubida}"
+													busyIndicatorDelay="0" class="sapUiTinyMarginBegin" busyIndicatorSize="Small" change="handleUploadAdjuntos" buttonOnly="true"
+													sameFilenameAllowed="true"/>
+											</items>
+										</HBox>
+										<Table items="{Proyect>/Posicion}" width="auto" mode="{Proyect>/estadoLink}" showSeparators="All" delete="DeleteDocumentoLinks" growing="true"
+											growingThreshold="20" growingScrollToLoad="true" class="sapUiResponsiveMargin">
+											<infoToolbar>
+												<Toolbar width="100%" height="auto" design="Auto" visible="false" enabled="true">
+													<content>
+														<Label text="Label" design="Standard" width="100%" required="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+													</content>
+												</Toolbar>
+											</infoToolbar>
+											<columns>
+												<Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Phone" demandPopin="false" popinDisplay="Inline" mergeDuplicates="false">
+													<header>
+														<Text text="Documento URL" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+													</header>
+													<footer/>
+												</Column>
+											</columns>
+											<items>
+												<ColumnListItem type="Inactive">
+													<cells>
+														<Link text="{Proyect>Name}" press="ChangePress" validateUrl="true" textAlign="Begin" width="auto" target="_blank" wrapping="true"
+															enabled="true" visible="true" emphasized="false" subtle="false"/>
+													</cells>
+												</ColumnListItem>
+											</items>
+										</Table>
+									</IconTabFilter>
+									<IconTabFilter id="idTabObservaciones" key="keyTabObservaciones" press="OnPressComentarios" icon="sap-icon://inspection" text="Observaciones"
+										class="colortabs" design="Horizontal" iconColor="Negative" >
+										<content>
+										<List
+										showSeparators="Inner"
+										items="{path:'Proyect>/datos_logRechazo', sorter:{path: 'POSIC', descending: true}}"
+										noDataText="" >
+										<FeedListItem
+										sender="{Proyect>RESPBL_RCH}"
+										icon="sap-icon://customer"
+										iconDensityAware="false"
+										info="Rechazo nivel {Proyect>NIVEL_RCH}"
+										timestamp="{Proyect>FECHA_ENV}"
+										text="{Proyect>CONCPT_RCH}"
+										convertLinksToAnchorTags="All"/>
+										</List>
+										</content>
+									</IconTabFilter>
+								
+								</items>
+							</IconTabBar>
+						</content>
+						<footer>
+							<Toolbar>
+								<ToolbarSpacer/>
+								<!--<Button text="Aceptar" icon="sap-icon://accept" type="Accept" id="btnGuardar" tooltip="Aceptar" press="onPressEditarDetalle"/>-->
+								<!--<Button text="Rechazar" icon="sap-icon://sys-cancel" type="Reject" id="btnCancelar" tooltip="Rechazar" press="onPressCancelarDetalle"/>-->
+							</Toolbar>
+						</footer>
+					</Page>
+					<Page id="NotFound">
+						<MessagePage showHeader="false" text="Ingrese un nuevo comprobante." description="" icon="sap-icon://detail-view"/>
+					</Page>
+				</detailPages>
+			</SplitApp>
+		</u:content>
+	</u:SplitContainer>
+</mvc:View>

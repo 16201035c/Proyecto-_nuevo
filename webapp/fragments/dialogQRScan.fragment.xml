@@ -1,0 +1,55 @@
+<core:FragmentDefinition 
+xmlns:core		="sap.ui.core" 
+controllerName	="rendicionER.controller.DetalleSolicitudConER"
+xmlns			="sap.m"
+xmlns:form		="sap.ui.layout.form" 
+xmlns:l			="sap.ui.layout"
+xmlns:html		="http://www.w3.org/1999/xhtml">
+	
+	<Dialog 
+	id					="dialogQRScan" 
+	horizontalScrolling	="true" 
+	showHeader			="false" 
+	state				="None" 
+	stretch				="false" 
+	title				="" 
+	type				="Standard"
+	verticalScrolling	="true" 
+	class				="sapUiResponsiveContentPadding">
+		<content>
+			<VBox id="PrimeraPantalla" class="sapUiTinyMarginTop" alignItems="Center" direction="Column" fitContainer="false" width="100%" height="100%" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
+                <items>
+                	<Title level="H3" text="Escaner QR" />
+                	
+                	<HBox wrap="Wrap" alignItems="Stretch" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="Start" renderType="Div" displayInline="false" class="sapUiResponsiveMargin">
+						<items>
+							<Label text="Seleecione una cámara: " class="sapUiSmallMarginTop sapUiSmallMarginEnd"/>
+							<!--<Select -->
+							<!--	width="100%"-->
+							<!--	forceSelection="false"-->
+							<!--	selectedKey="0" -->
+							<!--	items="{Proyect>/datosCamaraAll}"-->
+							<!--	change="onChangeCamera">-->
+							<!--	<core:ListItem key="{Proyect>codigo}" text="{Proyect>nombre}"/>-->
+							<!--</Select>-->
+							<Select id="selecCamID" forceSelection="false" selectedKey="0" items="{Proyect>/datosCamaraAll}" change="onChangeCamera">
+								<core:ListItem key="{Proyect>codigo}" text="{Proyect>nombre}" enabled="true"/>
+							</Select>
+						</items>
+					</HBox>
+                	
+					<html:video id="preview" width="auto" height="auto"></html:video>
+				</items>
+            </VBox>
+		</content>
+		
+		<buttons >
+			<Button text="Cancelar" icon="sap-icon://decline" type="Reject" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="onCloseFragQR"/>
+		</buttons>
+		
+		<customHeader/>
+		<endButton/>
+		<subHeader/>
+	</Dialog>
+</core:FragmentDefinition>

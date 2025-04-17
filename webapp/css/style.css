@@ -1,0 +1,43 @@
+/* Enter your custom styles here */
+.subrayado span:last-child {
+    border-top: 1.3px solid #dddddd;
+    padding-top: 5px;
+}
+
+.totalesStyle {
+    text-align: end;
+    /*font-size: 1.875rem;*/
+    /*font-weight: bold !important;*/
+}
+
+.homeBox{
+	border-style: ridge;
+	border-radius: 5px;
+	/*background-color: white;*/
+}
+
+/*.sapMPageFooter{*/
+/*	width: 320px;*/
+/*}*/
+
+
+/*.sapMOHR.sapMOHRBgSolid, .sapMOHR.sapMOHRBgTranslucent{*/
+/*    background: #acc8e0b8 !important;*/
+/*}*/
+
+/*.colorTopHeader{*/
+/*	 background: #acc8e0b8 !important;*/
+/*}*/
+
+/*#mySplitContainer {*/
+/*  background-color: yellow !important;*/
+/*  background: #acc8e0b8 !important;*/
+/*}*/
+
+/*.colorMidHeader{*/
+/*	background: #eff4f9 !important; */
+/*}*/
+
+/*.VboxHomePrincipal{*/
+/*	background-color: white;*/
+/*}*/

@@ -1,0 +1,47 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form">
+	<Dialog id="RegistroComprobante" horizontalScrolling="false" contentWidth="500px" showHeader="false">
+		<content>
+			<f:SimpleForm id="SimpleFormTabla" editable="true" layout="ResponsiveLayout" title="Registro de Comprobante" labelSpanXL="3"
+				labelSpanL="6" labelSpanM="6" labelSpanS="6" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="2" emptySpanS="0"
+				columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+				<f:content>
+					<!--<VBox>-->
+						<!--<HBox wrap="Wrap">-->
+							<Label text="Tipo de Comprobante"/>
+							<Select 
+								id="cSelectedTipoDocumento"
+								forceSelection="true"
+								selectedKey="{Proyect>/Key_comprobante}"
+								showSecondaryValues= "true"
+								change		="fnSelectedTipoDocumento" 
+								items="{
+									path: 'Proyect>/TipoDocumento', templateShareable:false
+								}">
+								<core:ListItem key="{Proyect>CLASE}" text="{Proyect>DENOMINACION}" additionalText = "{Proyect>CLASE}" />
+							</Select>
+						<!--</HBox>-->
+						<!--<HBox wrap="Wrap">-->
+							<Label text="Fecha de emisión"/>
+							<DatePicker id="sfechaComprobante" change="fnChangeFechaComprobante" placeholder="DD/MM/YYYY" width="auto" required="true" valueStateText="Fecha Invalida" enabled="true" visible="true" valueFormat="dd/MM/yyyy" displayFormat="dd/MM/yyyy"/>
+							 <Label text="Registro de Comprobante"/>
+							<MaskInput id="sRegistroComprobante" mask="CCCC-CCCCCCCC" enabled="true" placeholderSymbol="_"
+								placeholder="YYYY-ZZZZZZZZ" required="true" change="fnRegistroComprobante">
+								<rules>
+									<MaskInputRule maskFormatSymbol="C" regex="[A-Z,0-9]"/>
+								</rules>
+							</MaskInput>
+							
+							<!--<Text text="{Proyect>/CountComprobante/nComprobante}" wrapping="false" />-->
+						<!--</HBox>-->
+					<!--</VBox>-->
+				</f:content>
+			</f:SimpleForm>
+		</content>
+		<endButton>
+			<Button type="Reject" text="Cerrar" press="onPressClose" icon="sap-icon://decline"/>
+		</endButton>
+		<beginButton>
+			<Button type="Accept" text="Crear" press="onPressGuardarComprobante" icon="sap-icon://add"/>
+		</beginButton>
+	</Dialog>
+</core:FragmentDefinition>
