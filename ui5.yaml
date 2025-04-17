@@ -1,0 +1,53 @@
+specVersion: "3.1"
+metadata:
+  name: rendicioner
+type: application
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertError: false
+        backend:
+          # - path: /sap
+          #   url: ""
+          #   destination: ODPTALMA
+          # - path: /ERP/
+          #   destination: ODPTALMA
+          #   url: ""
+          #   pathPrefix: /
+          # - path: /SUNAT/
+          #   destination: SUNAT_RUC
+          #   url: ""
+          #   pathPrefix: /
+          # - path: /SUNAT_COMPROBANTE/
+          #   destination: SUNAT_COMPROBANTE
+          #   url: ""
+          #   pathPrefix: /
+          # - path: /SUNAT_SERIE/
+          #   destination: SUNAT_SERIE
+          #   url: ""
+          #   pathPrefix: /
+          # - path: /cmis/
+          #   destination: DocumentServiceTalma
+          #   url: ""
+          #   pathPrefix: /
+          # - path: /here/goes/your/serviceUrl/local/
+          #   url: ""
+          #   destination: ODPTALMA
+        ui5:
+          path:
+            - /resources
+            - /test-resources
+          url: https://ui5.sap.com
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
+        delay: 300
+    - name: fiori-tools-preview
+      afterMiddleware: fiori-tools-appreload
+      configuration:
+        component: rendicionER
+        ui5Theme: sap_fiori_3

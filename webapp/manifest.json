@@ -1,171 +1,172 @@
 {
-	"_version": "1.12.0",
-	"sap.app": {
-		"id": "rendicionER",
-		"type": "application",
-		"i18n": "i18n/i18n.properties",
-		"applicationVersion": {
-			"version": "1.0.0"
-		},
-		"dataSources": {
-			"local": {
-				"uri": "/here/goes/your/serviceUrl/local/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/metadata.xml"
-				}
-			}
-		},
-		"title": "{{appTitle}}",
-		"description": "{{appDescription}}",
-		"ach": "ach",
-		"resources": "resources.json",
-		"sourceTemplate": {
-			"id": "ui5template.basicSAPUI5ApplicationProject",
-			"version": "1.40.12"
-		}
-	},
-	"sap.ui": {
-		"technology": "UI5",
-		"icons": {
-			"icon": "",
-			"favIcon": "",
-			"phone": "",
-			"phone@2": "",
-			"tablet": "",
-			"tablet@2": ""
-		},
-		"deviceTypes": {
-			"desktop": true,
-			"tablet": true,
-			"phone": true
-		}
-	},
-	"sap.ui5": {
-		"flexEnabled": false,
-		"rootView": {
-			"viewName": "rendicionER.view.Home",
-			"type": "XML",
-			"id": ""
-		},
-		"dependencies": {
-			"minUI5Version": "1.65.6",
-			"libs": {
-				"sap.ui.layout": {},
-				"sap.ui.core": {},
-				"sap.m": {}
-			}
-		},
-		"contentDensities": {
-			"compact": true,
-			"cozy": true
-		},
-		"models": {
-			"i18n": {
-				"type": "sap.ui.model.resource.ResourceModel",
-				"settings": {
-					"bundleName": "rendicionER.i18n.i18n"
-				}
-			},
-			"Proyect": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {},
-				"preload": true
-			},
-			"AperturaER": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {},
-				"preload": true
-			},
-			"TipoCambio": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {},
-				"dataSource": "TipoCambio",
-				"preload": true
-			}
-		},
-		"resources": {
-			"css": [
-				{
-					"uri": "css/style.css"
-				}
-			]
-		},
-		"routing": {
-			"config": {
-				"routerClass": "sap.m.routing.Router",
-				"viewType": "XML",
-				"viewPath": "rendicionER.view",
-				"controlId": "App",
-				"clearTarget": false,
-				"controlAggregation": "pages",
-				"bypassed": {
-					"target": [
-						"RendicionConER"
-					]
-				}
-			},
-			"routes": [
-				{
-					"pattern": "RendicionConER/:context:",
-					"name": "RendicionConER",
-					"target": [
-						"RendicionConER"
-					]
-				},
-				{
-					"pattern": "ReporteEstado/:context:",
-					"name": "ReporteEstado",
-					"target": [
-						"ReporteEstado"
-					]
-				},
-				{
-					"pattern": "DetalleSolicitudConER/:context:",
-					"name": "DetalleSolicitudConER",
-					"target": [
-						"DetalleSolicitudConER"
-					]
-				},
-				{
-					"pattern": "DetalleConER/:context:",
-					"name": "DetalleConER",
-					"target": [
-						"DetalleConER"
-					]
-				}
-			],
-			"targets": {
-				"RendicionConER": {
-					"controlAggregation": "pages",
-					"viewName": "RendicionConER",
-					"viewLevel": 1,
-					"transition": "slide"
-				},
-				"ReporteEstado": {
-					"controlAggregation": "pages",
-					"viewName": "ReporteEstado",
-					"viewLevel": 3,
-					"transition": "slide"
-				},
-				"DetalleSolicitudConER": {
-					"controlAggregation": "pages",
-					"viewName": "DetalleSolicitudConER",
-					"viewLevel": 4,
-					"transition": "slide"
-				},
-				"DetalleConER": {
-					"controlAggregation": "pages",
-					"viewName": "DetalleConER",
-					"viewLevel": 5,
-					"transition": "slide"
-				}
-			}
-		}
-	},
-	"sap.platform.hcp": {
-		"uri": "webapp",
-		"_version": "1.1.0"
-	}
+    "_version": "1.12.0",
+    "sap.app": {
+        "id": "rendicionER",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "dataSources": {
+            "local": {
+                "uri": "/here/goes/your/serviceUrl/local/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            }
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "ach": "ach",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "ui5template.basicSAPUI5ApplicationProject",
+            "version": "1.40.12",
+            "toolsId": "e222f8aa-31b2-47ad-9fd1-e8c99e593e02"
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "rootView": {
+            "viewName": "rendicionER.view.Home",
+            "type": "XML",
+            "id": ""
+        },
+        "dependencies": {
+            "minUI5Version": "1.65.6",
+            "libs": {
+                "sap.ui.layout": {},
+                "sap.ui.core": {},
+                "sap.m": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "rendicionER.i18n.i18n"
+                }
+            },
+            "Proyect": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {},
+                "preload": true
+            },
+            "AperturaER": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {},
+                "preload": true
+            },
+            "TipoCambio": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {},
+                "dataSource": "TipoCambio",
+                "preload": true
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "rendicionER.view",
+                "controlId": "App",
+                "clearTarget": false,
+                "controlAggregation": "pages",
+                "bypassed": {
+                    "target": [
+                        "RendicionConER"
+                    ]
+                }
+            },
+            "routes": [
+                {
+                    "pattern": "RendicionConER/:context:",
+                    "name": "RendicionConER",
+                    "target": [
+                        "RendicionConER"
+                    ]
+                },
+                {
+                    "pattern": "ReporteEstado/:context:",
+                    "name": "ReporteEstado",
+                    "target": [
+                        "ReporteEstado"
+                    ]
+                },
+                {
+                    "pattern": "DetalleSolicitudConER/:context:",
+                    "name": "DetalleSolicitudConER",
+                    "target": [
+                        "DetalleSolicitudConER"
+                    ]
+                },
+                {
+                    "pattern": "DetalleConER/:context:",
+                    "name": "DetalleConER",
+                    "target": [
+                        "DetalleConER"
+                    ]
+                }
+            ],
+            "targets": {
+                "RendicionConER": {
+                    "controlAggregation": "pages",
+                    "viewName": "RendicionConER",
+                    "viewLevel": 1,
+                    "transition": "slide"
+                },
+                "ReporteEstado": {
+                    "controlAggregation": "pages",
+                    "viewName": "ReporteEstado",
+                    "viewLevel": 3,
+                    "transition": "slide"
+                },
+                "DetalleSolicitudConER": {
+                    "controlAggregation": "pages",
+                    "viewName": "DetalleSolicitudConER",
+                    "viewLevel": 4,
+                    "transition": "slide"
+                },
+                "DetalleConER": {
+                    "controlAggregation": "pages",
+                    "viewName": "DetalleConER",
+                    "viewLevel": 5,
+                    "transition": "slide"
+                }
+            }
+        }
+    },
+    "sap.platform.hcp": {
+        "uri": "webapp",
+        "_version": "1.1.0"
+    }
 }

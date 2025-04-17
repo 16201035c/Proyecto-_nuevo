@@ -1,4 +1,4 @@
-<mvc:View controllerName="rendicionER.controller.RendicionConER" xmlns:mvc="sap.ui.core.mvc" displayBlock="rue"
+<mvc:View controllerName="rendicionER.controller.RendicionConER" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
 	xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns="sap.m">
 	<!--<Shell id="shell">-->
 	<!--	<App id="app">-->
@@ -39,80 +39,94 @@
 		</fb:FilterBar>
 		<content>
 			<VBox>
-					<!--<OverflowToolbar>-->
-						<!--<Title text="Registros {Proyect>/count}" titleStyle="H4" textAlign="Center" />-->
-						<!--<ToolbarSpacer width=""/>-->
-					<!--</OverflowToolbar>-->
-				<items>	
-				<!--<IconTabBar id="idIconTabBar" select=".onFilterSelect" class="sapUiResponsiveContentPadding" expandable="false">-->
-				<!--	<items>-->
-				<!--		<IconTabFilter showAll="true" count="{Proyect>/count}" text="Solicitudes" key="All"/>-->
-				<!--		<IconTabSeparator visible="false"/>-->
-				<!--		<IconTabFilter icon="sap-icon://loan" iconColor="Positive" visible="false" count="{/ProductCollectionStats/Counts/Weight/Ok}"-->
-				<!--			text="Aprobadas" key="Aprobadas"/>-->
-				<!--		<IconTabFilter icon="sap-icon://documents" iconColor="Neutral" visible="false" count="{/ProductCollectionStats/Counts/Weight/Heavy}"-->
-				<!--			text="Rendidas" key="Rendidas"/>-->
-				<!--		</items>-->
-				<!--	<content>-->
-				<!--, ascending: false-->
-						<Table id="table" mode="None" items="{path: 'Proyect>/ReporteHistoricoTable', sorter:{path: 'NROD0'}}" width="auto">
-							<columns>
-								<Column width="5rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
-									<Text text="Nro Solicitud"/>
-								</Column>
-								<Column width="8rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
-									<Text text="Documento de Pago"/>
-								</Column>
-								<Column width="6rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
-									<Text text="Fecha Solicitud"/>
-								</Column>
-								<Column width="10rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false" visible="false">
-									<Text text="Cód proveedor"/>
-								</Column>
-								<Column width="10rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false" visible="false">
-									<Text text="Nombre Beneficiario"/>
-								</Column>
-								<Column width="8rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
-									<Text text="Importe Solicitud"/>
-								</Column>
-								<Column width="8rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
-									<Text text="Importe Rendido"/>
-								</Column>
-								<Column width="5rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
-									<Text text="Moneda" textAlign="Center"/>
-								</Column>
-								<!--<Column width="10rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">-->
-								<!--	<Text text="Centro de Costo" textAlign="Center"/>-->
-								<!--</Column>-->
-								<Column width="10rem" hAlign="Center" minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true" mergeDuplicates="false">
-									<Text text="Estado Sol."/>
-								</Column>
-							</columns>
-							<items>
-								<ColumnListItem vAlign="Middle" type="Navigation" press="handleSelectionChange">
-									<cells>
-										<Text text="{Proyect>NROD0}" wrapping="false"/>
-										<Text text="{Proyect>AUGBL}" wrapping="false"/>
-										<Text text="{Proyect>Fecha}" wrapping="false"/>
-										<Text text="{Proyect>BENE1}" wrapping="false"/>
-										<Text text="{Proyect>NOMBRES} {Proyect>APELLIDOS}" wrapping="false"/>
-										<ObjectStatus text="{Proyect>WRBTR}" state="Indication05"/>
-										<ObjectStatus text="{Proyect>IMP_RENDIDO}" state="Indication05"/>
-										<Text text="{Proyect>WAERS}" wrapping="false"/>
-										<!--<Select width="auto"  selectedKey="{Proyect>/selectKeyCECO}"  items="{Proyect>/datosCeco}" -->
-										<!--enabled="true"> -->
-										<!--	<items>-->
-										<!--		<core:Item key="{Proyect>CECO}" text="{Proyect>CECO}-{Proyect>NOMBRE}"/>-->
-										<!--	</items>-->
-										<!--</Select>-->
-									<ObjectStatus text="{Proyect>descripcion}" icon="{Proyect>iconEstado}" state="{Proyect>estado}" inverted="{Proyect>habilitado}"/>
-									</cells>
-								</ColumnListItem>
-							</items>
-						</Table>
-				<!--	</content>-->
-				<!--</IconTabBar>-->
-					</items>	
+			 <Table id="idProductsTable"
+						sticky="HeaderToolbar,ColumnHeaders"
+						inset="false"
+						items="{Proyect>/ProductCollection}"
+					   class="sapFDynamicPageAlignContent" mode="MultiSelect"
+					   width="auto" selectionChange="seleccionComp">
+
+					   
+					<headerToolbar>
+						
+								<OverflowToolbar>
+									<content>
+										<ToolbarSpacer width=""/>
+										<Button text="Agregar" press="pressAgregarComproCR" type="Emphasized" icon="sap-icon://add" iconFirst="true" width="auto" enabled="{Proyect>/enableAgregar}"
+											visible="{Proyect>/VisibleEditar}" iconDensityAware="false"/>
+										<Button text="Editar" press="Editar_Compro" type="Accept" icon="sap-icon://edit" iconFirst="true" width="auto" enabled="{Proyect>/enableEditar}"
+											visible="{Proyect>/VisibleAgregar}" iconDensityAware="false"/>
+										<Button text="Eliminar" press="quitarGrupos" type="Reject" icon="sap-icon://less" iconFirst="true" width="auto"
+											enabled="{Proyect>/enableElim}" visible="{Proyect>/VisibleEliminar}" iconDensityAware="false"/>
+									</content>
+								</OverflowToolbar>
+							
+					</headerToolbar>
+					<columns>
+						<Column
+								width="12em">
+							<Text text="N° de comprobante" />
+						</Column>
+						<Column
+								minScreenWidth="Tablet"
+								demandPopin="true">
+							<Text text="Fecha de comprobante" />
+						</Column>
+						<Column
+								minScreenWidth="Tablet"
+								demandPopin="true">
+							<Text text="Tipo de comprobante" />
+						</Column>
+						<Column
+								minScreenWidth="Tablet"
+								demandPopin="true">
+							<Text text="Tipo de doc. identidad" />
+						</Column>
+						<Column
+								minScreenWidth="Tablet"
+								demandPopin="true"
+								hAlign="End">
+							<Text text="N° documento de identidad" />
+						</Column>
+						<Column minScreenWidth="Tablet"
+								demandPopin="true"
+								hAlign="End">
+							<Text text="Razon social" />
+						</Column>
+						<Column minScreenWidth="Tablet"
+								demandPopin="true"
+								hAlign="End">
+							<Text text="Moneda" />
+						</Column>
+						<Column minScreenWidth="Tablet"
+								demandPopin="true"
+								hAlign="End">
+							<Text text="Motivo" />
+						</Column>
+						<Column minScreenWidth="Tablet"
+								demandPopin="true"
+								hAlign="End">
+							<Text text="Detalle" />
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+							  <Text text="{Proyect>COMPROBANTE}" textAlign="Center"/>
+							   <Text text="{Proyect>FECHA_COMP}" textAlign="Center"/>
+							    <Text text="{Proyect>COD_TIPO_COMP}" textAlign="Center"/>
+								 <Text text="{Proyect>TIPODOCI}" textAlign="Center"/>
+								  <Text text="{Proyect>RUC}" textAlign="Center"/>
+								   <Text text="{Proyect>RAZON_SOCIAL}" textAlign="Center"/>
+								   <Text text="{Proyect>WAERS}" textAlign="Center"/>
+								   <Text text="{Proyect>GLOSA}" textAlign="Center"/>
+								   <Button type="Default" text="Detalle"  press="pressDetalle"/>
+								
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>		
+
 			</VBox>
 		</content>
 		<headerContent>
