@@ -23,32 +23,32 @@ server:
       configuration:
         ignoreCertError: false
         backend:
-          # - path: /sap
-          #   url: ""
-          #   destination: ODPTALMA
-          # - path: /ERP/
-          #   destination: ODPTALMA
-          #   url: ""
-          #   pathPrefix: /
-          # - path: /SUNAT/
-          #   destination: SUNAT_RUC
-          #   url: ""
-          #   pathPrefix: /
-          # - path: /SUNAT_COMPROBANTE/
-          #   destination: SUNAT_COMPROBANTE
-          #   url: ""
-          #   pathPrefix: /
-          # - path: /SUNAT_SERIE/
-          #   destination: SUNAT_SERIE
-          #   url: ""
-          #   pathPrefix: /
-          # - path: /cmis/
-          #   destination: DocumentServiceTalma
-          #   url: ""
-          #   pathPrefix: /
-          # - path: /here/goes/your/serviceUrl/local/
-          #   url: ""
-          #   destination: ODPTALMA
+          - path: /sap
+            url: ""
+            destination: ODPTALMA
+          - path: /ERP/
+            destination: ODPTALMA
+            url: ""
+            pathPrefix: /
+          - path: /SUNAT/
+            destination: SUNAT_RUC
+            url: ""
+            pathPrefix: /
+          - path: /SUNAT_COMPROBANTE/
+            destination: SUNAT_COMPROBANTE
+            url: ""
+            pathPrefix: /
+          - path: /SUNAT_SERIE/
+            destination: SUNAT_SERIE
+            url: ""
+            pathPrefix: /
+          - path: /cmis/
+            destination: DocumentServiceTalma
+            url: ""
+            pathPrefix: /
+          - path: /here/goes/your/serviceUrl/local/
+            url: ""
+            destination: ODPTALMA
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

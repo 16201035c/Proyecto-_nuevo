@@ -4,8 +4,11 @@ sap.ui.define([
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/m/MessageBox",
-	"rendicionER/model/models"
-], function (Controller, BaseController, Filter, FilterOperator, MessageBox,models) {
+	"rendicionER/model/models",
+	"rendicionER/libs/xlsx",
+	"sap/ui/model/json/JSONModel",
+	'sap/ui/core/BusyIndicator'
+], function (Controller, BaseController, Filter, FilterOperator, MessageBox,models,xlsxjs,JSONModel,BusyIndicator) {
 	"use strict";
 	var arraydatos=[];
 	var arraysolic=[];
@@ -675,6 +678,524 @@ sap.ui.define([
 
 		},
 
+		handleUploadComplete2: function (oEvent) {
+			var file			= oEvent.getParameter("files") && oEvent.getParameter("files")[0];
+			let that			= this;
+			var vista			= this.getView();
+			var FileUpExcel 	= vista.byId("fileUploader");
+			let excelData		= {};
+			var headers 		= [];
+			var ModelProyect	= vista.getModel("Proyect");
+			var data2			= ModelProyect.getProperty("/ProductCollection");
+			var comprobanteDatos = [];
+			var contDatos        = 0;
+			
+	
+			
+			if (file && window.FileReader) {
+				let reader = new FileReader();
+				const rABS = !!reader.readAsBinaryString
+				reader.readAsBinaryString(file);
+				reader.onload = async function (e) {
+					var data = e.target.result;
+
+					var result; // se guarda la informacion del excel
+					var workbook = XLSX.read(data, {
+						type: 'binary'
+					});
+
+					var sheet_name_list = workbook.SheetNames;
+					sheet_name_list.forEach(function (y) {
+						if (y === "Hoja1") {
+							var roa = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+							if (roa.length > 0) {
+								result = roa;
+							}
+						}
+					});
+					//se esstructura la informacion para las vistas correspondientes.
+					await that.Estructuracion(result);
+
+				};
+			}
+		},
+
+		Estructuracion: async function (dataExcel) {
+			var that				= this;
+			var oView				= this.getView();
+			var Proyect		        = oView.getModel("Proyect");
+			var datas				= Proyect.getProperty("/ProductCollection");
+			var comprobAnt			= "";
+			var RucAnt				="";//21/07/2022
+			var keyComp 			= 1;
+			var keyDesg 			= 1;
+			var nombreRuc			= "ABC Consultores";
+			var estadoSolic 		= Proyect.getProperty("/estadoSolic");
+			var importe 			= Proyect.getProperty("/importe");
+			var solicitud			= Proyect.getProperty("/solicitud");
+			var COD_SAP 			= Proyect.getProperty("/COD_SAP");
+			var importe_rendido 	= Proyect.getProperty("/ImporteRend");
+			var moneda				= Proyect.getProperty("/moneda");
+			var validar_ruc 		= false;
+			var array_estructura	= [];
+			let Array               =[];
+			var hoy 			    = new Date();
+			var mes 				= hoy.getMonth() + 1;
+			var hoyp				= hoy.getDate().toString();
+			var array_CamposVacios	=[];
+			
+			
+			if (hoyp < 10) {
+				var hoyn = "0" + hoy.getDate().toString();
+			} else {
+				var hoyn = hoy.getDate().toString();
+			}
+	
+			if (mes < 10) {
+				mes = "0" + mes.toString();
+			}
+			
+			var fechaActual			= hoy.getFullYear().toString() + mes.toString() +hoyn.toString();
+			
+			if (datas == 0 || datas == undefined){
+				
+				keyComp;
+
+				try {
+
+					for (var i = dataExcel.length - 1; i >= 0; i--) {
+						
+						dataExcel[i].filaExcel = i+2;
+						
+						if (Object.keys(dataExcel[i]).length < 4) {
+							dataExcel.splice(i, 1);
+							
+						}else if(Object.keys(dataExcel[i]).length < 13 && Object.keys(dataExcel[i]).length > 3){
+							array_CamposVacios.push(dataExcel[i].filaExcel);
+							dataExcel.splice(i, 1);
+							
+						}else{
+						dataExcel[i]["__EMPTY_3"].toString().padStart(5, "0")  + "-" + dataExcel[i]["__EMPTY_4"].toString().padStart(9, "0");	
+						Array.push(dataExcel[i]);	
+						}
+					}
+					
+					//Validacion de campos vacios en el excel 
+				if(array_CamposVacios.length > 0){
+				   sap.m.MessageBox.warning("Las filas " + array_CamposVacios.join(" , ") + " del excel cargado contienen campos vacios, porfavor verificar su documento.");
+				   return;
+				}	
+				
+				let array_estru = dataExcel.map(obj => obj["__EMPTY_3"].toString().padStart(5, "0") +"-"+ obj["__EMPTY_4"].toString().padStart(9, "0") + " "+ obj["__EMPTY_5"].toString());//21/07/2022
+				let isDuplicate = array_estru.some((item, index) => index !== array_estru.indexOf(item))
+
+				
+				if (isDuplicate) {
+					sap.m.MessageBox.warning("Existen Comprobantes duplicados en el adjunto");
+					return;
+				}
+
+				// let isDuplicateListaExcel = Array.filter((item, index) => datas.findIndex(obj1 => obj1.COMPROBANTE === item["__EMPTY_3"].toString().padStart(5, "0")  + "-" + item["__EMPTY_4"].toString().padStart(9, "0") && obj1.RUC === item["__EMPTY_5"].toString()) !== -1)
+
+				// if (isDuplicateListaExcel.length !== 0) {
+				// 	sap.m.MessageBox.warning("Existen Comprobantes duplicados en la lista con el adjunto");
+				// 	return;
+				// }
+				
+				dataExcel = Array ;
+				
+				dataExcel.forEach(function (comp, index) {
+
+					if (comp.__EMPTY_1 === "Tipo de comprobante") {
+						return;
+					}
+					
+					var fechaCambio = comp["__EMPTY_2"].replaceAll("/", "").replaceAll(".", "");
+					var fechaFormato = fechaCambio.substr(0, 2) + "/" + fechaCambio.substr(2, 2) + "/" + fechaCambio.substr(4, 4);
+					var baseImp = comp["__EMPTY_9"];
+					var glosa = comp["__EMPTY_8"];
+					var IGV = comp["__EMPTY_10"];
+					var INAFECTO = comp["__EMPTY_11"];
+					var TOTAL = comp["__EMPTY_12"];
+					var Ceco = comp["__EMPTY_13"].toString();
+					var indImp = comp["__EMPTY_6"].split(" - ")[0];
+					// var Moneda = comp["__EMPTY_6"];
+					var Serie = comp["__EMPTY_3"].toString().padStart(5, "0");//cambio de 15/06/2022;
+					var numComp = comp["__EMPTY_4"].toString().padStart(9, "0");
+					// var razSoc			= comp["Razon social"];
+					var Ruc = comp["__EMPTY_5"];
+					var tipComp = comp["__EMPTY_1"];
+					var CodComp = comp["__EMPTY_1"].split(" - ")[0];
+					var tipGasto = comp["__EMPTY_7"].split(" - ")[0];
+
+					if (baseImp === "") {
+						baseImp = "0.00";
+					} else {
+						baseImp = parseFloat(baseImp).toFixed(2);
+						if (isNaN(baseImp) || baseImp === "0") {
+							baseImp = "0.00";
+						}
+					}
+
+					if (IGV === "") {
+						IGV = "0.00";
+					} else {
+						IGV = parseFloat(IGV).toFixed(2);
+						if (isNaN(IGV) || IGV === "0") {
+							IGV = "0.00";
+						}
+					}
+
+					if (INAFECTO === "") {
+						INAFECTO = "0.00";
+					} else {
+						INAFECTO = parseFloat(INAFECTO).toFixed(2);
+						if (isNaN(INAFECTO) || INAFECTO === "0") {
+							INAFECTO = "0.00";
+						}
+					}
+
+					if (TOTAL === "") {
+						TOTAL = "0.00";
+					} else {
+						TOTAL = parseFloat(TOTAL).toFixed(2);
+						if (isNaN(TOTAL) || TOTAL === "0") {
+							TOTAL = "0.00";
+						}
+					}
+
+					if (comprobAnt !== Serie + numComp && (RucAnt !== Ruc.toString() || RucAnt === Ruc.toString())) {//21/07/2022
+						// keyDesg = 1;
+						
+						var estructura = {
+							//SCastillo
+							NROD0     : solicitud,
+							DOC_PAGO  : "",
+							COD_SAP		: COD_SAP,
+							//SCastillo
+							keySeg		: keyComp,
+							key			: keyComp,
+							COMPROBANTE	: Serie + "-" + numComp,
+							TIPO_COMP	: tipComp,
+							COD_TIPO_COMP: CodComp,
+							TIPO_PRUEBA	: CodComp,//16/08/2022
+							//SCastillo
+							TIPODOCI	: Ruc.toString().length > 8 ? "RUC" : "DNI",
+							//SCastillo
+							FECHA_COMP	: fechaFormato,
+							FECHA_PRUEBA :fechaFormato,//16/08/2022
+							RUC			: Ruc.toString(),
+							RAZON_SOCIAL: "",
+							WAERS		: moneda,
+							KOSTL		: "",
+							ESTADO		: "",
+							//SCastillo
+							GLOSA		: glosa,
+							PRUEBA_GLOSA : glosa,//16/08/2022
+							DATOS_SAP	:false ,
+							iconComp	: "sap-icon://pending",
+							EST_COMP	: "COMP. PEND. APR.",
+							COD_EST_COMP: "CPA",
+							stateComp	: "Warning",
+							VALIDA_GRABADO:false,
+							COMPROBANTE_ANTIGUO	:Serie + "-" + numComp,
+							COMPROBANTE_PRUEBA  :Serie + "-" + numComp,//16/08/2022
+							RUC_COPIA		: Ruc.toString(),
+							VALIDAR_DATOS	:false,//01/09/2022
+							//SCastillo
+							//COMP. PEND. APR
+							desglose: [{
+								stateCeco: "Success",
+								iconCeco: "sap-icon://sys-enter-2",
+								POSIC: keyDesg,
+								COMPROBANTE: Serie + "-" + numComp,
+								COD_CONT: tipGasto,
+								// TIPO			: tipGasto,
+								centro: Ceco === undefined ? "" : Ceco,
+								BASE_IMP: baseImp,
+								IGV: IGV,
+								INAFECTO: INAFECTO,
+								TOTAL: TOTAL,
+								IND_IMP: indImp,
+								imp: "",
+								validaciones1: false,
+								validacionBase: false,
+								validacionInafecto: true,
+								validacionIndicador: true,							
+							}],
+							archivoAd: [],
+							DeleteArchivo : []
+						};
+
+						array_estructura.push(JSON.parse(JSON.stringify(estructura)));
+						
+						// array_estructura.map(function(items_o){//27/07/2022
+							
+						// if(items_o.COD_TIPO_COMP === "KX"){
+						// items_o.TIPODOCI = "DEXT";	
+						
+						// }else if((items_o.COD_TIPO_COMP  === "SK" || items_o.COD_TIPO_COMP  === "PM")){
+							
+						// items_o.TIPODOCI = "DNI";	
+						// }else{
+							
+						// items_o.TIPODOCI = "RUC";	
+						// }
+						
+						// items_o.desglose.map(function(xs){
+						// 	if(xs.IND_IMP === "C0"){
+								
+						// 	xs.BASE_IMP ="0.00";
+						// 	xs.IGV ="0.00";		
+						// 	xs.imputacion.map(function(rz){
+						// 	rz.IMP = xs.INAFECTO;
+						// 	rz.IMP_TOTAL = xs.INAFECTO;
+						
+						// });	
+							
+						// 	}	
+						// });
+						
+						// });
+
+						keyComp++
+
+					}
+
+					comprobAnt = Serie + numComp;
+					RucAnt =Ruc.toString();//21/07/2022
+				});
+				// var informacion = datas.concat(array_estructura);
+
+				Proyect.setProperty("/ProductCollection" , array_estructura);
+
+			} catch (e) {
+				sap.ui.core.BusyIndicator.hide();
+				sap.m.MessageBox.error("Error en el formato vuelva a intentarlo");
+			}
+
+
+			}else if (datas.length > 0) {
+				keyComp = datas.length + 1;
+
+				try {
+
+					for (var i = dataExcel.length - 1; i >= 0; i--) {
+						
+						dataExcel[i].filaExcel = i+2;
+						
+						if (Object.keys(dataExcel[i]).length < 4) {
+							dataExcel.splice(i, 1);
+							
+						}else if(Object.keys(dataExcel[i]).length < 13 && Object.keys(dataExcel[i]).length > 3){
+							array_CamposVacios.push(dataExcel[i].filaExcel);
+							dataExcel.splice(i, 1);
+							
+						}else{
+						dataExcel[i]["__EMPTY_3"].toString().padStart(5, "0")  + "-" + dataExcel[i]["__EMPTY_4"].toString().padStart(9, "0");	
+						Array.push(dataExcel[i]);	
+						}
+					}
+					
+					//Validacion de campos vacios en el excel 
+				if(array_CamposVacios.length > 0){
+				   sap.m.MessageBox.warning("Las filas " + array_CamposVacios.join(" , ") + " del excel cargado contienen campos vacios, porfavor verificar su documento.");
+				   return;
+				}	
+				
+				let array_estru = dataExcel.map(obj => obj["__EMPTY_3"].toString().padStart(5, "0") +"-"+ obj["__EMPTY_4"].toString().padStart(9, "0") + " "+ obj["__EMPTY_5"].toString());//21/07/2022
+				let isDuplicate = array_estru.some((item, index) => index !== array_estru.indexOf(item))
+
+				
+				if (isDuplicate) {
+					sap.m.MessageBox.warning("Existen Comprobantes duplicados en el adjunto");
+					return;
+				}
+
+				let isDuplicateListaExcel = Array.filter((item, index) => datas.findIndex(obj1 => obj1.COMPROBANTE === item["__EMPTY_3"].toString().padStart(5, "0")  + "-" + item["__EMPTY_4"].toString().padStart(9, "0") && obj1.RUC === item["__EMPTY_5"].toString()) !== -1)
+
+				if (isDuplicateListaExcel.length !== 0) {
+					sap.m.MessageBox.warning("Existen Comprobantes duplicados en la lista con el adjunto");
+					return;
+				}
+				
+				dataExcel = Array ;
+				
+				dataExcel.forEach(function (comp, index) {
+
+					if (comp.__EMPTY_1 === "Tipo de comprobante") {
+						return;
+					}
+					
+					var fechaCambio = comp["__EMPTY_2"].replaceAll("/", "").replaceAll(".", "");
+					var fechaFormato = fechaCambio.substr(0, 2) + "/" + fechaCambio.substr(2, 2) + "/" + fechaCambio.substr(4, 4);
+					var baseImp = comp["__EMPTY_9"];
+					var glosa = comp["__EMPTY_8"];
+					var IGV = comp["__EMPTY_10"];
+					var INAFECTO = comp["__EMPTY_11"];
+					var TOTAL = comp["__EMPTY_12"];
+					var Ceco = comp["__EMPTY_13"].toString();
+					var indImp = comp["__EMPTY_6"].split(" - ")[0];
+					// var Moneda = comp["__EMPTY_6"];
+					var Serie = comp["__EMPTY_3"].toString().padStart(5, "0");//cambio de 15/06/2022;
+					var numComp = comp["__EMPTY_4"].toString().padStart(9, "0");
+					// var razSoc			= comp["Razon social"];
+					var Ruc = comp["__EMPTY_5"];
+					var tipComp = comp["__EMPTY_1"];
+					var CodComp = comp["__EMPTY_1"].split(" - ")[0];
+					var tipGasto = comp["__EMPTY_7"].split(" - ")[0];
+
+					if (baseImp === "") {
+						baseImp = "0.00";
+					} else {
+						baseImp = parseFloat(baseImp).toFixed(2);
+						if (isNaN(baseImp) || baseImp === "0") {
+							baseImp = "0.00";
+						}
+					}
+
+					if (IGV === "") {
+						IGV = "0.00";
+					} else {
+						IGV = parseFloat(IGV).toFixed(2);
+						if (isNaN(IGV) || IGV === "0") {
+							IGV = "0.00";
+						}
+					}
+
+					if (INAFECTO === "") {
+						INAFECTO = "0.00";
+					} else {
+						INAFECTO = parseFloat(INAFECTO).toFixed(2);
+						if (isNaN(INAFECTO) || INAFECTO === "0") {
+							INAFECTO = "0.00";
+						}
+					}
+
+					if (TOTAL === "") {
+						TOTAL = "0.00";
+					} else {
+						TOTAL = parseFloat(TOTAL).toFixed(2);
+						if (isNaN(TOTAL) || TOTAL === "0") {
+							TOTAL = "0.00";
+						}
+					}
+
+					if (comprobAnt !== Serie + numComp && (RucAnt !== Ruc.toString() || RucAnt === Ruc.toString())) {//21/07/2022
+						// keyDesg = 1;
+						
+						var estructura = {
+							//SCastillo
+							NROD0     : solicitud,
+							DOC_PAGO  : "",
+							COD_SAP		: COD_SAP,
+							//SCastillo
+							keySeg		: keyComp,
+							key			: keyComp,
+							COMPROBANTE	: Serie + "-" + numComp,
+							TIPO_COMP	: tipComp,
+							COD_TIPO_COMP: CodComp,
+							TIPO_PRUEBA	: CodComp,//16/08/2022
+							//SCastillo
+							TIPODOCI	: Ruc.toString().length > 8 ? "RUC" : "DNI",
+							//SCastillo
+							FECHA_COMP	: fechaFormato,
+							FECHA_PRUEBA :fechaFormato,//16/08/2022
+							RUC			: Ruc.toString(),
+							RAZON_SOCIAL: "",
+							WAERS		: moneda,
+							KOSTL		: "",
+							ESTADO		: "",
+							//SCastillo
+							GLOSA		: glosa,
+							PRUEBA_GLOSA : glosa,//16/08/2022
+							DATOS_SAP	:false ,
+							iconComp	: "sap-icon://pending",
+							EST_COMP	: "COMP. PEND. APR.",
+							COD_EST_COMP: "CPA",
+							stateComp	: "Warning",
+							VALIDA_GRABADO:false,
+							COMPROBANTE_ANTIGUO	:Serie + "-" + numComp,
+							COMPROBANTE_PRUEBA  :Serie + "-" + numComp,//16/08/2022
+							RUC_COPIA		: Ruc.toString(),
+							VALIDAR_DATOS	:false,//01/09/2022
+							//SCastillo
+							//COMP. PEND. APR
+							desglose: [{
+								stateCeco: "Success",
+								iconCeco: "sap-icon://sys-enter-2",
+								POSIC: keyDesg,
+								COMPROBANTE: Serie + "-" + numComp,
+								COD_CONT: tipGasto,
+								// TIPO			: tipGasto,
+								centro: Ceco === undefined ? "" : Ceco,
+								BASE_IMP: baseImp,
+								IGV: IGV,
+								INAFECTO: INAFECTO,
+								TOTAL: TOTAL,
+								IND_IMP: indImp,
+								imp: "",
+								validaciones1: false,
+								validacionBase: false,
+								validacionInafecto: true,
+								validacionIndicador: true,							
+							}],
+							archivoAd: [],
+							DeleteArchivo : []
+						};
+
+						array_estructura.push(JSON.parse(JSON.stringify(estructura)));
+						
+						// array_estructura.map(function(items_o){//27/07/2022
+							
+						// if(items_o.COD_TIPO_COMP === "KX"){
+						// items_o.TIPODOCI = "DEXT";	
+						
+						// }else if((items_o.COD_TIPO_COMP  === "SK" || items_o.COD_TIPO_COMP  === "PM")){
+							
+						// items_o.TIPODOCI = "DNI";	
+						// }else{
+							
+						// items_o.TIPODOCI = "RUC";	
+						// }
+						
+						// items_o.desglose.map(function(xs){
+						// 	if(xs.IND_IMP === "C0"){
+								
+						// 	xs.BASE_IMP ="0.00";
+						// 	xs.IGV ="0.00";		
+						// 	xs.imputacion.map(function(rz){
+						// 	rz.IMP = xs.INAFECTO;
+						// 	rz.IMP_TOTAL = xs.INAFECTO;
+						
+						// });	
+							
+						// 	}	
+						// });
+						
+						// });
+
+						keyComp++
+
+					}
+
+					comprobAnt = Serie + numComp;
+					RucAnt =Ruc.toString();//21/07/2022
+				});
+				var informacion = datas.concat(array_estructura);
+
+				Proyect.setProperty("/ProductCollection" , informacion);
+
+			} catch (e) {
+				sap.ui.core.BusyIndicator.hide();
+				sap.m.MessageBox.error("Error en el formato vuelva a intentarlo");
+			}
+			}
+
+
+
+		},
+
 		selecTipo_Comprobante:function(){// 17.04.2025
 			var oView = this.getView();
 			var ModelProyect = oView.getModel("Proyect");
@@ -748,6 +1269,7 @@ sap.ui.define([
 			var ProductCollection    = Proyect.getProperty("/ProductCollection");
 			var repite  = false;
 			
+			
 			if(validarCampos === true){
 				camposVacios=true;				
 			}
@@ -776,7 +1298,7 @@ sap.ui.define([
 					}
 	
 				});
-			}			
+			}		
 			if(repite == true){
 				MessageBox.warning("El comprobante ya fue registrado");//06/10/2024
 				return;
@@ -824,7 +1346,14 @@ sap.ui.define([
 				
 			}
 
+
 			arrayguardar_comp.push(estructura);
+
+			
+
+			if(ProductCollection !== undefined){
+			arrayguardar_comp = ProductCollection.concat(arrayguardar_comp);
+			}
 
 			Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
 			Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);

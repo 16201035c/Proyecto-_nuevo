@@ -65,7 +65,7 @@
 											visible="{Proyect>/VisibleAgregar}" iconDensityAware="false"/>
 										<Button text="Eliminar" press="quitarGrupos" type="Reject" icon="sap-icon://less" iconFirst="true" width="auto"
 											enabled="{Proyect>/enableElim}" visible="{Proyect>/VisibleEliminar}" iconDensityAware="false"/>
-										<Button icon="sap-icon://excel-attachment" tooltip="Exportar a Excel" visible="true"/>
+										<Button icon="sap-icon://excel-attachment" tooltip="Exportar plantilla" visible="true"/>
 										<u:FileUploader id="fileUploader1" name="myFileUpload" sameFilenameAllowed="true" icon="sap-icon://upload" change="handleUploadComplete2"
 										uploadUrl="upload/" buttonOnly="true" fileType="xlsx" buttonText="Importar" tooltip="Agregar Excel"
 										visible="{midata>/botonesTablaPropiedades/btnEdit}"/>
@@ -76,7 +76,7 @@
 					</headerToolbar>
 					<columns>
 						<Column
-								width="12em">
+								width="8rem">
 							<Text text="N° de comprobante" />
 						</Column>
 						<Column
@@ -95,9 +95,7 @@
 							<Text text="Tipo de doc. identidad" />
 						</Column>
 						<Column
-								minScreenWidth="Tablet"
-								demandPopin="true"
-								hAlign="End">
+								width="9rem">
 							<Text text="N° documento de identidad" />
 						</Column>
 						<Column minScreenWidth="Tablet"
