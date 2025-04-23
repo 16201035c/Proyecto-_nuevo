@@ -55,12 +55,12 @@
                 <items>
                     <ColumnListItem>
                         <Text text="{Proyect>POSIC}" textAlign="Begin"/>
-						<Input value="{Proyect>COD_CONT}" textAlign="Begin" type="Text"    editable="{Proyect>/editableBaseI}"/>
-                        <Input value="{Proyect>IND_IMP}" textAlign="Begin" type="Text"    editable="{Proyect>/editableBaseI}"/>
-                        <Input value="{Proyect>IND_IMP}" textAlign="Begin" type="Text"  change="pressBaseImponibleyInafecto"  editable="{Proyect>/editableBaseI}"/>
-                     	<Input value="{Proyect>BASE_IMP}" textAlign="Begin" type="Number"  change="pressBaseImponibleyInafecto"  editable="{Proyect>/editableBaseI}"/>
-                        <Input value="{Proyect>IGV}" width="100%" textAlign="Right" type="Number"  change="changeIgv" editable="{Proyect>/editableBaseIGV}"/>
-                        <Input value="{Proyect>INAFECTO}" textAlign="Begin"  type="Number" editable="{Proyect>/editableInafecto}" change="pressBaseImponibleyInafecto"/>
+						<Input value="{Proyect>COD_CONT}" textAlign="Begin" type="Text"    editable="false"/>
+                        <Input value="{Proyect>IND_IMP}" textAlign="Begin" type="Text"    editable="false"/>
+                        <Input value="{Proyect>IND_IMP}" textAlign="Begin" type="Text"  change="pressBaseImponibleyInafecto"  editable="false"/>
+                     	<Input value="{Proyect>BASE_IMP}" textAlign="Begin" type="Number"  change="pressBaseImponibleyInafecto"  editable="false"/>
+                        <Input value="{Proyect>IGV}" width="100%" textAlign="Right" type="Number"  change="changeIgv" editable="false"/>
+                        <Input value="{Proyect>INAFECTO}" textAlign="Begin"  type="Number" editable="false" change="pressBaseImponibleyInafecto"/>
                         <Text text="{Proyect>TOTAL}" textAlign="Begin"/>
                     
                     </ColumnListItem>

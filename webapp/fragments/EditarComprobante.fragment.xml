@@ -1,0 +1,212 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout"
+	xmlns:ui="sap.ui.table" xmlns:u="sap.ui.unified" xmlns:html="http://www.w3.org/1999/xhtml">
+	
+	<Dialog horizontalScrolling="true" showHeader="true" state="None" stretch="false" title="Ingresar comprobante" type="Standard"
+		verticalScrolling="true" contentHeight="auto" contentWidth="auto">
+		<content>
+		<IconTabBar id="iconTabDetalle2" selectedKey="{Proyect>/selectTab}" expandable="false" expanded="true" class="sapUiResponsiveContentPadding"
+        select="onPressTab1" applyContentPadding="false">
+        <items>
+            <IconTabFilter key="idComprobantes1" icon="sap-icon://add-document" iconColor="Positive" text="Comprobante" class="colortabs"
+                design="Horizontal">
+                <content>
+                    <form:Form width="100%" editable="true" visible="true">
+                        <form:title/>
+                        <form:formContainers>
+                            <form:FormContainer visible="true">
+                                <form:formElements>
+                                    <form:FormElement visible="true">
+                                        <form:label>
+                                            <Label text="Número Comprobante" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <MaskInput id="sRegistroComprobantes1"  mask="CCCCC-CCCCCCCCC" editable="false" placeholderSymbol="_" value="{Proyect>/sRegistroComprobantes}" 
+                                                placeholder="YYYYY-ZZZZZZZZZ" change="fnRegistroComprobante"  valueState="{Proyect>/compValState}" valueStateText="{Proyect>/compValStateText}">
+                                                <rules>
+                                                    <MaskInputRule maskFormatSymbol="C" regex="[A-Z,a-z,0-9]"/>
+                                                </rules>
+                                            </MaskInput>
+                                            
+                                        </form:fields>
+                                    </form:FormElement>
+                                    <form:FormElement visible="true">
+                                        <form:label>
+                                            <Label text="Fecha Comprobante" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <DatePicker id="sfechaComprobantes1" change="fnChangeFechaComprobante" placeholder="DD/MM/YYYY"  width="auto" value="{Proyect>/fecha_Comprobante1}"
+                                                 visible="true" valueFormat="dd/MM/yyyy" displayFormat="dd/MM/yyyy"/>
+                                        </form:fields>
+                                    </form:FormElement>
+                                    <form:FormElement visible="true">
+                                        <form:label>
+                                            <Label text="Tipo Comprobante" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <Select 
+                                            id="cSelectedTipoDocumento2" 
+                                            forceSelection="true" 
+                                            selectedKey="{Proyect>/Key_comprobante}" 
+                                            showSecondaryValues="true"
+                                            change="fnSelectedTipoDocumento"
+                                            valueState="{Proyect>/tipCompValState}"
+                                            valueStateText="{Proyect>/tipCompValStateText}"
+                                            items="{path: 'Proyect>/TipoDocumento', sorter:{path: 'DENOMINACION', descending: false}}" 
+                                            editable="{Proyect>/editableTipo_Com}">
+                                                <core:ListItem key="{Proyect>DENOMINACION}" enabled="{=${Proyect>CLASE}==='---Seleccionar---'?false:true}" text="{Proyect>DENOMINACION}" additionalText="{Proyect>CLASE}"/>
+                                            </Select>
+                                        </form:fields>
+                                    </form:FormElement>
+                                    <form:FormElement visible="{Proyect>/Campos_Visibles}">
+                                        <form:label>
+                                            <Label text="Tipo Doc. Identidad" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <Select id="select2" forceSelection="false" selectedKey="{Proyect>/tipoNif}" items="{Proyect>/datostipoDoc}" change="changeTipoDoc"
+                                                editable="{Proyect>/Editable_Tipo}" >
+                                                <core:ListItem key="{Proyect>TIPO}" text="{Proyect>TIPO}" />
+                                            </Select>
+                                        </form:fields>
+                                    </form:FormElement>
+                                    <form:FormElement visible="{Proyect>/Campos_Visibles}">
+                                        <form:label>
+                                            <Label text="Nro. Doc. Identidad" class="sapUiSmallMarginTop"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <Input id="idRuc2" type="Number" value="{Proyect>/ruc}" required="true" maxLength="{Proyect>/cantidad}" editable="{Proyect>/visbleCampoRUC}"
+                                                valueState="{Proyect>/rucValState}" valueStateText="{Proyect>/rucValStateText}" placeholder="Escribir" class="sapUiSmallMarginTop"
+                                                liveChange="changeNroDoc"/>
+                                            <!--<Button press="livechangeIden" type="Unstyled"  width="5rem" />-->
+                                        </form:fields>
+                                        <form:fields>
+                                            <Button text="{i18n>Nombre_Boton}" press="livechangeIden" type="Emphasized" width="7rem" class="sapUiSmallMarginTop"
+                                                enabled="true" visible="{Proyect>/visble_btnValidar}"/>
+                                        </form:fields>
+                                    </form:FormElement>
+                                   <form:FormElement visible="{Proyect>/Campos_Visibles}">
+                                        <form:label>
+                                            <Label text="Razón Social/Nombre" class="sapUiSmallMarginTop"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <Input type="Text" value="{Proyect>/razonSocial}" class="sapUiSmallMarginTop" change="changeRazon_Social" maxLength="249" required="true" enabled="false"/>
+                                        </form:fields>
+                                    </form:FormElement>
+                                </form:formElements>
+                                <form:title/>
+                            </form:FormContainer>
+                            <form:FormContainer visible="true">
+                                <form:formElements>
+                                    <form:FormElement visible="true">
+                                        <form:label>
+                                            <Label text="Moneda" required="true"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <Select width="100%" forceSelection="false" selectedKey="{Proyect>/monedas}" items="{Proyect>/datosmoneda}" change="changeMonedaC"
+                                                editable="true" valueStateText="{Proyect>/monedaValueSt}" valueState="{Proyect>/estadoMone}" >
+                                                <core:ListItem key="{Proyect>MONEDA}" text="{Proyect>MONEDA}" enabled="{=${Proyect>MONEDA}==='---Seleccionar---'?false:true}"/>
+                                            </Select>
+                                        </form:fields>
+                                    </form:FormElement>
+                                
+                                    <form:FormElement visible="true">
+                                        <form:label>
+                                            <Label text="Motivo" class="sapUiSmallMarginTop" design="Standard" width="100%" required="true" textAlign="Begin" textDirection="Inherit"
+                                                visible="true"/>
+                                        </form:label>
+                                        <form:fields>
+                                            <TextArea id="idMotivo2" value="{Proyect>/Glosa}" name="{Proyect>/dataDetSolcER/concepto}" class="sapUiSmallMarginTop" placeholder=""
+                                                textAlign="Initial" textDirection="Inherit" rows="1" maxLength="50" change="changeMotivo" wrapping="None" editable="{Proyect>/visbleCampo}"
+                                                valueState="{Proyect>/estadoglos}" valueStateText="{Proyect>/GlosaValueSt}"></TextArea>
+                                        </form:fields>
+                                    </form:FormElement>
+                                   
+                                </form:formElements>
+                                <form:title/>
+                            </form:FormContainer>
+                        </form:formContainers>
+                        <form:layout>
+                            <form:ResponsiveGridLayout adjustLabelSpan="false" columnsL="2" labelSpanL="3" columnsM="1" labelSpanM="2" labelSpanS="12"/>
+                        </form:layout>
+                    </form:Form>
+                </content>
+            </IconTabFilter>
+            <IconTabFilter id="DesgloseNuevo1" key="keyTabDesgloce" press="validaTabDesgloceCR" icon="sap-icon://documents" text="Desglose de Gastos"
+                class="colortabs" design="Horizontal">
+                <content>
+            
+
+                <Table items="{path:'Proyect>/DataGlosa1' , sorter:{path: 'POSIC', descending: true}}">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                          
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="3rem">
+                        <Text text="Número"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Tipo Gasto"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Cuenta Bancaria"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Indicador Impuestos"/>
+                    </Column>
+                    
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Base imponible"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Center" minScreenWidth="Large" width="auto">
+                        <Text text="Igv"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Inafecto"/>
+                    </Column>
+                    <Column demandPopin="true" hAlign="Begin" minScreenWidth="Large" width="auto">
+                        <Text text="Total"/>
+                    </Column>
+                    
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <Text text="{Proyect>POSIC}" textAlign="Begin"/>
+                        <ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>COD_CONT}" change="onSeleccionGastos" 
+                            items="{path:'Proyect>/datosGastosCr', sorter:{path: 'descripcion', descending: false}}" editable="{Proyect>/editableGastos}">
+                            <core:Item key="{Proyect>descripcion}" text="{Proyect>descripcion}"/>
+                        </ComboBox>
+                        <ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>CUENTA_BANC}" items="{Proyect>/datosBancos}" editable="{Proyect>/editableBanco}"
+                           >
+                            <core:Item key="{Proyect>BANKN}" text="{Proyect>DESCRIPCION}"/>
+                        </ComboBox>
+                        <ComboBox maxWidth="100%" placeholder="---Seleccionar---" selectedKey="{Proyect>IND_IMP}"
+                            items="{path:'Proyect>/datosIndicador' , templateShareable:true}" change="changeIndicador"  editable="{Proyect>/editableIndicador}">
+                            <core:Item key="{Proyect>INDICADOR}" text="{Proyect>INDICADOR}-{Proyect>NOMBRE}"/>
+                        </ComboBox>
+                    
+                        <Input value="{Proyect>BASE_IMP}" textAlign="Begin" type="Number"  change="pressBaseImponibleyInafecto1"  editable="{Proyect>/editableBaseI}"/>
+                        <Input value="{Proyect>IGV}" width="100%" textAlign="Right" type="Number"  change="changeIgv" editable="{Proyect>/editableBaseIGV}"/>
+                        <Input value="{Proyect>INAFECTO}" textAlign="Begin"  type="Number" editable="{Proyect>/editableInafecto}" change="pressBaseImponibleyInafecto1"/>
+                        <Text text="{Proyect>TOTAL}" textAlign="Begin"/>
+                    
+                    </ColumnListItem>
+                </items>
+            </Table>
+                
+    </content>
+</IconTabFilter>
+        
+        </items>
+    </IconTabBar>
+        </content>
+		<buttons>
+		<Button text="Aceptar" type="Accept" icon="sap-icon://save" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="GuardarComprobanteCrEdit"/>
+			<Button text="Cerrar" type="Reject" icon="sap-icon://cancel" iconFirst="true" width="auto" enabled="true" visible="true"
+				iconDensityAware="false" press="cerrarEditar"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

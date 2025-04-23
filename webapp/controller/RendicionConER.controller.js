@@ -123,6 +123,8 @@ sap.ui.define([
 				ModelProyect.setProperty("/KeySociedad","300");
 				ModelProyect.setProperty("/seleccion_CECO","id1");
 				ModelProyect.setProperty("/enableCeco",false);
+				ModelProyect.setProperty("/enableEditar", false);
+				ModelProyect.setProperty("/enableElim", false);
 				ModelProyect.setProperty("/btnEliminarTabla",false);
 				ModelProyect.setSizeLimit(9999999999999999999999);//nuevo 22/06/2022
 				vista.getModel("contadorGlobal").setProperty("/contador", 1);
@@ -381,6 +383,20 @@ sap.ui.define([
 
 		},
 
+		seleccionComp: function (oEvent) { // 22/04/2025
+			var vista  = this.getView();	
+			var Proyect = vista.getModel("Proyect");
+			var selectSolicitudER	= vista.byId("idProductsTable");
+			var selecciones   =       selectSolicitudER.getSelectedItems();
+			if (selecciones.length > 0) {
+				Proyect.setProperty("/enableElim", true);
+				Proyect.setProperty("/enableEditar", true);
+			} else {
+				Proyect.setProperty("/enableElim", false);
+				Proyect.setProperty("/enableEditar", false);
+			}
+		},
+
 		changeIndicador: function (args) {//17/04/2025
 			var oView						= this.getView();
 			var ModelProyect				= oView.getModel("Proyect");
@@ -562,6 +578,97 @@ sap.ui.define([
 				console.log(err);
 			}
 			
+		},
+
+		Editar_Compro:function(){ // 22.04.2025
+			sap.ui.core.BusyIndicator.show(0);
+			var vista   = this.getView();	
+			var Proyect = vista.getModel("Proyect");
+			var selectSolicitudER = vista.byId("idProductsTable");
+			var selecciones   =       selectSolicitudER.getSelectedItems();
+			var ProductCollection = Proyect.getProperty("/ProductCollection");
+			var prueba    ="";
+			
+			var posiciones			= selecciones.map(function (objeto) {
+				var path = objeto.getBindingContext("Proyect").getPath();
+				var objetos = Proyect.getProperty(path);
+				return objetos;
+			});
+
+		   posiciones.forEach(function (objeto) {			
+			 prueba = objeto;
+	   		});
+			
+			if (!this.EditarDeta) {
+				this.EditarDeta = sap.ui.xmlfragment("rendicionER.fragments.EditarComprobante", this);
+				vista.addDependent(this.EditarDeta);
+			}
+
+			Proyect.setProperty("/sRegistroComprobantes",posiciones[0].COMPROBANTE);
+			 Proyect.setProperty("/fecha_Comprobante1",posiciones[0].FECHA_COMP);
+			 Proyect.setProperty("/Key_comprobante", posiciones[0].COD_TIPO_COMP);
+			 Proyect.setProperty("/tipoNif", posiciones[0].TIPODOCI);
+			 Proyect.setProperty("/ruc", posiciones[0].RUC);
+			 Proyect.setProperty("/razonSocial", posiciones[0].RAZON_SOCIAL);
+			 Proyect.setProperty("/monedas", posiciones[0].WAERS);
+			 Proyect.setProperty("/Glosa", posiciones[0].GLOSA);
+			 Proyect.setProperty("/DataGlosa1",posiciones[0].desglose);
+			 Proyect.setProperty("/Selección_edi", prueba);
+			
+			this.EditarDeta.open();
+			sap.ui.core.BusyIndicator.hide(0);		
+		},
+
+		cerrarEditar:function(){//26/02/2025
+			this.EditarDeta.close();
+		},
+
+		GuardarComprobanteCrEdit:function(){//22.04.2025
+
+			sap.ui.core.BusyIndicator.show(0);
+			var vista   = this.getView();	
+			var Proyect = vista.getModel("Proyect");
+			var selectSolicitudER = vista.byId("idProductsTable");
+			var selecciones   =       selectSolicitudER.getSelectedItems();
+			var ProductCollection = Proyect.getProperty("/ProductCollection");
+			var fecha_Comprobante  	 = Proyect.getProperty("/fecha_Comprobante1");
+			var Key_comprobante 	 = Proyect.getProperty("/Key_comprobante");
+			var tipoNif 			 = Proyect.getProperty("/tipoNif");
+			var datostipoDoc         = Proyect.getProperty("/datostipoDoc");
+			var Ruc 				 = Proyect.getProperty("/ruc");
+			var Razon_Social		 = Proyect.getProperty("/razonSocial");
+			var Monedas				 = Proyect.getProperty("/monedas");
+			var Glosa                =Proyect.getProperty("/Glosa");
+			var sRegistroComprobante = Proyect.getProperty("/sRegistroComprobantes");
+			var prueba   			 ="";
+			var Selección_edi = Proyect.getProperty("/Selección_edi");
+
+			ProductCollection.forEach(function (objeto) {
+				if (Selección_edi === objeto) {
+					objeto.COMPROBANTE		= sRegistroComprobante;
+					objeto.FECHA_COMP = fecha_Comprobante;
+					objeto.COD_TIPO_COMP = Key_comprobante;
+					objeto.COD_TIPO_COMP= tipoNif;
+					objeto.RUC= Ruc;
+					objeto.RAZON_SOCIAL= Razon_Social;
+					objeto.WAERS= Monedas;
+					objeto.GLOSA= Glosa;
+					objeto.desglose= Selección_edi.desglose;
+													
+				}
+					
+		   });
+		   sap.ui.core.BusyIndicator.hide(0);
+		   Proyect.setProperty("/sRegistroComprobantes","");
+			Proyect.setProperty("/fecha_Comprobante1","");
+			Proyect.setProperty("/Key_comprobante","");
+			Proyect.setProperty("/tipoNif","");
+			Proyect.setProperty("/ruc","");
+			Proyect.setProperty("/razonSocial","");
+			Proyect.setProperty("/monedas","");
+			Proyect.setProperty("/Glosa","");	
+			this.EditarDeta.close();
+
 		},
 
 		livechangeIden:function(){ // 17/04/2025
@@ -1270,6 +1377,7 @@ sap.ui.define([
 			var repite  = false;
 			
 			
+			
 			if(validarCampos === true){
 				camposVacios=true;				
 			}
@@ -1298,75 +1406,139 @@ sap.ui.define([
 					}
 	
 				});
-			}		
-			if(repite == true){
-				MessageBox.warning("El comprobante ya fue registrado");//06/10/2024
-				return;
-            }			
-			var estructura = {
-				key				: arrayguardar_comp.length +1,
-				keySeg			:arrayguardar_comp.length +1,
-				NROD0			:"",
-				DOC_PAGO		:"",
-				COD_SAP			:"",
-				ID_DOC_SRV		:"",
-				COMPROBANTE		:sRegistroComprobante,
-				COD_TIPO_COMP	: Key_comprobante,
-				TIPO_COMP		: "",
-				TIPODOCI    	:  tipoNif,
-				FECHA_COMP		: fecha_Comprobante,
-				TIPO_NIF		: "",
-				RUC				: Ruc,
-				RAZON_SOCIAL	: Razon_Social,
-				WAERS			: Monedas,
-				ESTADO			:"",
-				GLOSA   		: Glosa,
-				ORDEN_INT		: "",
-				VIAJES			: "",
-				REF_FACTURA		: "",
-				EST_COMP		: "",
-				COD_EST_COMP	: "",
-				DOC_COMP			:"",
-				DOC_CONT			:"",
-				DOC_PAGO_SOLICITUD  :"",
-				FECHA_CONT			:"",
-				FECHA_COMPENSA		:"",
-				desglose: [{	
-				"COMPROBANTE":sRegistroComprobante,
-				"POSIC": "1",
-				"COD_CONT": DataGlosa.COD_CONT,
-				"BASE_IMP": DataGlosa.BASE_IMP,
-				"IGV": DataGlosa.IGV,
-				"INAFECTO": DataGlosa.INAFECTO,
-				"TOTAL": DataGlosa.TOTAL,
-				"IND_IMP": DataGlosa.IND_IMP,
-				"imp": "",
+
+
+				if(repite == true){
+					MessageBox.warning("El comprobante ya fue registrado");//06/10/2024
+					return;
+				}			
+		
+
+				var estructura = {
+					key				: arrayguardar_comp.length +1,
+					keySeg			:arrayguardar_comp.length +1,
+					NROD0			:"",
+					DOC_PAGO		:"",
+					COD_SAP			:"",
+					ID_DOC_SRV		:"",
+					COMPROBANTE		:sRegistroComprobante,
+					COD_TIPO_COMP	: Key_comprobante,
+					TIPO_COMP		: "",
+					TIPODOCI    	:  tipoNif,
+					FECHA_COMP		: fecha_Comprobante,
+					TIPO_NIF		: "",
+					RUC				: Ruc,
+					RAZON_SOCIAL	: Razon_Social,
+					WAERS			: Monedas,
+					ESTADO			:"",
+					GLOSA   		: Glosa,
+					ORDEN_INT		: "",
+					VIAJES			: "",
+					REF_FACTURA		: "",
+					EST_COMP		: "",
+					COD_EST_COMP	: "",
+					DOC_COMP			:"",
+					DOC_CONT			:"",
+					DOC_PAGO_SOLICITUD  :"",
+					FECHA_CONT			:"",
+					FECHA_COMPENSA		:"",
+					desglose: [{	
+					"COMPROBANTE":sRegistroComprobante,
+					"POSIC": "1",
+					"COD_CONT": DataGlosa.COD_CONT,
+					"BASE_IMP": DataGlosa.BASE_IMP,
+					"IGV": DataGlosa.IGV,
+					"INAFECTO": DataGlosa.INAFECTO,
+					"TOTAL": DataGlosa.TOTAL,
+					"IND_IMP": DataGlosa.IND_IMP,
+					"imp": "",
+					
+					}]
+					
+				}
+				ProductCollection.push(estructura);
+	
 				
-				}]
+				// const informacion =ProductCollection.concat(arrayguardar_comp); // 22/04/2025
 				
-			}
+				
+				Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
+				Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
+				Proyect.setProperty("/ProductCollection",ProductCollection);
+				Proyect.setProperty("/sRegistroComprobantes","");
+				Proyect.setProperty("/fecha_Comprobante1","");
+				Proyect.setProperty("/Key_comprobante","");
+				Proyect.setProperty("/tipoNif","");
+				Proyect.setProperty("/ruc","");
+				Proyect.setProperty("/razonSocial","");
+				Proyect.setProperty("/monedas","");
+				Proyect.setProperty("/Glosa","");						
+				this.AgregarComprobante.close();
 
 
-			arrayguardar_comp.push(estructura);
+			}else {
 
+				var estructura = {
+					key				: arrayguardar_comp.length +1,
+					keySeg			:arrayguardar_comp.length +1,
+					NROD0			:"",
+					DOC_PAGO		:"",
+					COD_SAP			:"",
+					ID_DOC_SRV		:"",
+					COMPROBANTE		:sRegistroComprobante,
+					COD_TIPO_COMP	: Key_comprobante,
+					TIPO_COMP		: "",
+					TIPODOCI    	:  tipoNif,
+					FECHA_COMP		: fecha_Comprobante,
+					TIPO_NIF		: "",
+					RUC				: Ruc,
+					RAZON_SOCIAL	: Razon_Social,
+					WAERS			: Monedas,
+					ESTADO			:"",
+					GLOSA   		: Glosa,
+					ORDEN_INT		: "",
+					VIAJES			: "",
+					REF_FACTURA		: "",
+					EST_COMP		: "",
+					COD_EST_COMP	: "",
+					DOC_COMP			:"",
+					DOC_CONT			:"",
+					DOC_PAGO_SOLICITUD  :"",
+					FECHA_CONT			:"",
+					FECHA_COMPENSA		:"",
+					desglose: [{	
+					"COMPROBANTE":sRegistroComprobante,
+					"POSIC": "1",
+					"COD_CONT": DataGlosa.COD_CONT,
+					"BASE_IMP": DataGlosa.BASE_IMP,
+					"IGV": DataGlosa.IGV,
+					"INAFECTO": DataGlosa.INAFECTO,
+					"TOTAL": DataGlosa.TOTAL,
+					"IND_IMP": DataGlosa.IND_IMP,
+					"imp": "",
+					
+					}]
+					
+				}
+				arrayguardar_comp.push(estructura);
+               
+	
+				Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
+				Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
+				Proyect.setProperty("/ProductCollection",arrayguardar_comp);
+				Proyect.setProperty("/sRegistroComprobantes","");
+				Proyect.setProperty("/fecha_Comprobante1","");
+				Proyect.setProperty("/Key_comprobante","");
+				Proyect.setProperty("/tipoNif","");
+				Proyect.setProperty("/ruc","");
+				Proyect.setProperty("/razonSocial","");
+				Proyect.setProperty("/monedas","");
+				Proyect.setProperty("/Glosa","");						
+				this.AgregarComprobante.close();
+				arrayguardar_comp = [];
+
+			}	
 			
-
-			if(ProductCollection !== undefined){
-			arrayguardar_comp = ProductCollection.concat(arrayguardar_comp);
-			}
-
-			Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
-			Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
-			Proyect.setProperty("/ProductCollection",arrayguardar_comp);
-			Proyect.setProperty("/sRegistroComprobantes","");
-			Proyect.setProperty("/fecha_Comprobante1","");
-			Proyect.setProperty("/Key_comprobante","");
-			Proyect.setProperty("/tipoNif","");
-			Proyect.setProperty("/ruc","");
-			Proyect.setProperty("/razonSocial","");
-			Proyect.setProperty("/monedas","");
-			Proyect.setProperty("/Glosa","");						
-			this.AgregarComprobante.close();
 		
 		},
 
