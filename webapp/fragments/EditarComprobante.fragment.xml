@@ -187,9 +187,9 @@
                             <core:Item key="{Proyect>INDICADOR}" text="{Proyect>INDICADOR}-{Proyect>NOMBRE}"/>
                         </ComboBox>
                     
-                        <Input value="{Proyect>BASE_IMP}" textAlign="Begin" type="Number"  change="pressBaseImponibleyInafecto1"  editable="{Proyect>/editableBaseI}"/>
+                        <Input value="{Proyect>BASE_IMP}" textAlign="Begin" type="Number"  change="pressBaseImponibleyInafecto"  editable="{Proyect>/editableBaseI}"/>
                         <Input value="{Proyect>IGV}" width="100%" textAlign="Right" type="Number"  change="changeIgv" editable="{Proyect>/editableBaseIGV}"/>
-                        <Input value="{Proyect>INAFECTO}" textAlign="Begin"  type="Number" editable="{Proyect>/editableInafecto}" change="pressBaseImponibleyInafecto1"/>
+                        <Input value="{Proyect>INAFECTO}" textAlign="Begin"  type="Number" editable="{Proyect>/editableInafecto}" change="pressBaseImponibleyInafecto"/>
                         <Text text="{Proyect>TOTAL}" textAlign="Begin"/>
                     
                     </ColumnListItem>

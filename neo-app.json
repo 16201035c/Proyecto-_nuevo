@@ -52,7 +52,7 @@
       "description": "ERP Service"
     },
     {
-	    "path": "/SUNAT/",
+	    "path": "/SUNAT_RUC/",
 	    "target": {
 	    "type": "destination",
 	    "name": "SUNAT_RUC"

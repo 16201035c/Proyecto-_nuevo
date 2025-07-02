@@ -2602,968 +2602,968 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			oView.byId("sfechaComprobante").setValue(fecha);
 		},
 
-		// livechangeIden:  function(oEvent){
-		// 	sap.ui.core.BusyIndicator.show(0);
-		// 	var oView								= this.getView();
-		// 	var ModelProyect						= oView.getModel("Proyect");
-		// 	var ruc 								= ModelProyect.getProperty("/ruc");
-		// 	var tipoNif 							= ModelProyect.getProperty("/tipoNif");
-		// 	var mensajes							= "";
-		// 	var mensaje1							= "";
-		// 	var that								= this;
-		// 	var Nombre								= "";
-		// 	validar_tabs							= false;
-		// 	var Nombre_Boton						= oEvent.getSource().mProperties.text;
-		// 	var seleccion							= ModelProyect.getProperty("/selecPress");
-		// 	var DataComprobanteConfirmacion 		= ModelProyect.getProperty("/DataComprobanteConfirmacion");
-		// 	var DescRegistroComprobante 			= oView.byId("sRegistroComprobante").getValue();
-		// 	var FechaComprobante					= oView.byId("sfechaComprobante").getValue();
-		// 	var Key_comprobante 					= ModelProyect.getProperty("/Key_comprobante");
-		// 	var COD_SAP 							= ModelProyect.getProperty("/COD_SAP");
-		// 	var datosComprobante01					= ModelProyect.getProperty("/datosComprobante");
-		// 	var SelectedTipoDocumento				= oView.byId("cSelectedTipoDocumento").getSelectedItem().getText();
-		// 	var formato_defecha 					= FechaComprobante.substring(6, 10) + FechaComprobante.substring(5, 3) + FechaComprobante.substring(2, 0);
-		// 	var razonSocial 						= ModelProyect.getProperty("/razonSocial");
-		// 	var tipoNif 							= ModelProyect.getProperty("/tipoNif");
-		// 	var RUC_BENE							= ModelProyect.getProperty("/RUC_BENE");
-		// 	var Monto_comprobante					=ModelProyect.getProperty("/Monto_comprobante");
-		// 	var codigo_clase						= "";
-		// 	var validacion_comprobant				= false;//21/07/2022
-		// 	ModelProyect.setProperty("/Nombre_boton", Nombre_Boton);
-		// 	var VALIDAR_EDICIONES					= false;
-		// 	var validacionFecha                      =ModelProyect.getProperty("/validacionFecha");
-		// 	var Validacion_Clase					=ModelProyect.getProperty("/Validacion_Clase");
-		// 	var validacionRango						=  ModelProyect.getProperty("/validacionRango");
+		livechangeIden:  function(oEvent){
+			sap.ui.core.BusyIndicator.show(0);
+			var oView								= this.getView();
+			var ModelProyect						= oView.getModel("Proyect");
+			var ruc 								= ModelProyect.getProperty("/ruc");
+			var tipoNif 							= ModelProyect.getProperty("/tipoNif");
+			var mensajes							= "";
+			var mensaje1							= "";
+			var that								= this;
+			var Nombre								= "";
+			validar_tabs							= false;
+			var Nombre_Boton						= oEvent.getSource().mProperties.text;
+			var seleccion							= ModelProyect.getProperty("/selecPress");
+			var DataComprobanteConfirmacion 		= ModelProyect.getProperty("/DataComprobanteConfirmacion");
+			var DescRegistroComprobante 			= oView.byId("sRegistroComprobante").getValue();
+			var FechaComprobante					= oView.byId("sfechaComprobante").getValue();
+			var Key_comprobante 					= ModelProyect.getProperty("/Key_comprobante");
+			var COD_SAP 							= ModelProyect.getProperty("/COD_SAP");
+			var datosComprobante01					= ModelProyect.getProperty("/datosComprobante");
+			var SelectedTipoDocumento				= oView.byId("cSelectedTipoDocumento").getSelectedItem().getText();
+			var formato_defecha 					= FechaComprobante.substring(6, 10) + FechaComprobante.substring(5, 3) + FechaComprobante.substring(2, 0);
+			var razonSocial 						= ModelProyect.getProperty("/razonSocial");
+			var tipoNif 							= ModelProyect.getProperty("/tipoNif");
+			var RUC_BENE							= ModelProyect.getProperty("/RUC_BENE");
+			var Monto_comprobante					=ModelProyect.getProperty("/Monto_comprobante");
+			var codigo_clase						= "";
+			var validacion_comprobant				= false;//21/07/2022
+			ModelProyect.setProperty("/Nombre_boton", Nombre_Boton);
+			var VALIDAR_EDICIONES					= false;
+			var validacionFecha                      =ModelProyect.getProperty("/validacionFecha");
+			var Validacion_Clase					=ModelProyect.getProperty("/Validacion_Clase");
+			var validacionRango						=  ModelProyect.getProperty("/validacionRango");
 			
-		// 	//27/07/2022
-		// 		if(seleccion.key  === "Nuevo Comprobante" || seleccion.COMPROBANTE1 !== seleccion.COMPROBANTE_ANTIGUO || (seleccion.RUC_PRUEBA !== "" && seleccion.RUC_PRUEBA !== seleccion.RUC_COPIA)){
-		// 		//si se son distitintos van a validar y si no 
+			//27/07/2022
+				if(seleccion.key  === "Nuevo Comprobante" || seleccion.COMPROBANTE1 !== seleccion.COMPROBANTE_ANTIGUO || (seleccion.RUC_PRUEBA !== "" && seleccion.RUC_PRUEBA !== seleccion.RUC_COPIA)){
+				//si se son distitintos van a validar y si no 
 				
-		// 		if (Nombre_Boton === "Validar"){
-		// 			if (DescRegistroComprobante.length < 13 || ruc === undefined || (tipoNif === "RUC" && ruc.length < 11) || (tipoNif === "DNI" &&
-		// 				ruc
-		// 				.length < 8) || (FechaComprobante === undefined || FechaComprobante === "") || (Key_comprobante === undefined || Key_comprobante ===
-		// 				"0"  || Key_comprobante ==="---Seleccionar---" || Key_comprobante === "")) {
-		// 			var mensajes1 = "Complete corréctamente los campos en rojos";
-		// 			ModelProyect.setProperty("/visbleCampo", false);
-		// 			ModelProyect.setProperty("/razonSocial", "");
-		// 			ModelProyect.setProperty("/Glosa", "");
-		// 				//ModelProyect.setProperty("/monedas", "---Seleccionar---");
-		// 			MessageBox.error(mensajes1, {
-		// 				actions: [MessageBox.Action.OK],
-		// 				emphasizedAction: MessageBox.Action.OK,
-		// 				onClose: function (sAction) {
-		// 				sap.ui.core.BusyIndicator.hide();	
-		// 				}
-		// 			});
+				if (Nombre_Boton === "Validar"){
+					if (DescRegistroComprobante.length < 13 || ruc === undefined || (tipoNif === "RUC" && ruc.length < 11) || (tipoNif === "DNI" &&
+						ruc
+						.length < 8) || (FechaComprobante === undefined || FechaComprobante === "") || (Key_comprobante === undefined || Key_comprobante ===
+						"0"  || Key_comprobante ==="---Seleccionar---" || Key_comprobante === "")) {
+					var mensajes1 = "Complete corréctamente los campos en rojos";
+					ModelProyect.setProperty("/visbleCampo", false);
+					ModelProyect.setProperty("/razonSocial", "");
+					ModelProyect.setProperty("/Glosa", "");
+						//ModelProyect.setProperty("/monedas", "---Seleccionar---");
+					MessageBox.error(mensajes1, {
+						actions: [MessageBox.Action.OK],
+						emphasizedAction: MessageBox.Action.OK,
+						onClose: function (sAction) {
+						sap.ui.core.BusyIndicator.hide();	
+						}
+					});
 
-		// 			if (DescRegistroComprobante.length < 13) {
-		// 				ModelProyect.setProperty("/compValState", "Error");
-		// 				ModelProyect.setProperty("/compValStateText", "Complete corréctamente los números del comprobante");
-		// 			} else {
-		// 				ModelProyect.setProperty("/compValState", "None");
-		// 				ModelProyect.setProperty("/compValStateText", "");
-		// 			}
+					if (DescRegistroComprobante.length < 13) {
+						ModelProyect.setProperty("/compValState", "Error");
+						ModelProyect.setProperty("/compValStateText", "Complete corréctamente los números del comprobante");
+					} else {
+						ModelProyect.setProperty("/compValState", "None");
+						ModelProyect.setProperty("/compValStateText", "");
+					}
 
-		// 			if (tipoNif === "RUC" && (ruc === undefined || ruc.length < 11)) {
-		// 				ModelProyect.setProperty("/rucValState", "Error");
-		// 				ModelProyect.setProperty("/rucValStateText", "Complete corréctamente el RUC");
-		// 			} else {
+					if (tipoNif === "RUC" && (ruc === undefined || ruc.length < 11)) {
+						ModelProyect.setProperty("/rucValState", "Error");
+						ModelProyect.setProperty("/rucValStateText", "Complete corréctamente el RUC");
+					} else {
 
-		// 				if (tipoNif === "DNI" && (ruc === undefined || ruc.length < 8)) {
-		// 					ModelProyect.setProperty("/rucValState", "Error");
-		// 					ModelProyect.setProperty("/rucValStateText", "Complete corréctamente el DNI");
-		// 				} else {
-		// 					ModelProyect.setProperty("/rucValState", "None");
-		// 					ModelProyect.setProperty("/rucValStateText", "");
-		// 				}
+						if (tipoNif === "DNI" && (ruc === undefined || ruc.length < 8)) {
+							ModelProyect.setProperty("/rucValState", "Error");
+							ModelProyect.setProperty("/rucValStateText", "Complete corréctamente el DNI");
+						} else {
+							ModelProyect.setProperty("/rucValState", "None");
+							ModelProyect.setProperty("/rucValStateText", "");
+						}
 
-		// 			}
+					}
 
-		// 			if (FechaComprobante === undefined || FechaComprobante === "") {
-		// 				ModelProyect.setProperty("/fecCompValState", "Error");
-		// 				ModelProyect.setProperty("/fecCompValStateText", "Completar la fecha del comprobante");
-		// 			} else {
-		// 				ModelProyect.setProperty("/fecCompValState", "None");
-		// 				ModelProyect.setProperty("/fecCompValStateText", "");
-		// 			}
+					if (FechaComprobante === undefined || FechaComprobante === "") {
+						ModelProyect.setProperty("/fecCompValState", "Error");
+						ModelProyect.setProperty("/fecCompValStateText", "Completar la fecha del comprobante");
+					} else {
+						ModelProyect.setProperty("/fecCompValState", "None");
+						ModelProyect.setProperty("/fecCompValStateText", "");
+					}
 
-		// 			if (Key_comprobante === undefined || Key_comprobante === "0" || Key_comprobante ==="---Seleccionar---" || Key_comprobante === "") {
-		// 				ModelProyect.setProperty("/tipCompValState", "Error");
-		// 				ModelProyect.setProperty("/tipCompValStateText", "Seleccionar un tipo de comprobante");
-		// 			} else {
-		// 				ModelProyect.setProperty("/tipCompValState", "None");
-		// 				ModelProyect.setProperty("/tipCompValStateText", "");
-		// 			}
+					if (Key_comprobante === undefined || Key_comprobante === "0" || Key_comprobante ==="---Seleccionar---" || Key_comprobante === "") {
+						ModelProyect.setProperty("/tipCompValState", "Error");
+						ModelProyect.setProperty("/tipCompValStateText", "Seleccionar un tipo de comprobante");
+					} else {
+						ModelProyect.setProperty("/tipCompValState", "None");
+						ModelProyect.setProperty("/tipCompValStateText", "");
+					}
 
-		// 			return;
-		// 		}
+					return;
+				}
 				
-		// 		if(Key_comprobante !== undefined){
-		// 			if(Key_comprobante ==="KR"){
-		// 				if(DescRegistroComprobante.substring(0,1) !== "0"){
-		// 					MessageBox.error("Los comprobantes del tipo KR siempre deben tene un cero a la izquierda en la serie.");
-		// 					sap.ui.core.BusyIndicator.hide();	
-		// 					return ;	
+				if(Key_comprobante !== undefined){
+					if(Key_comprobante ==="KR"){
+						if(DescRegistroComprobante.substring(0,1) !== "0"){
+							MessageBox.error("Los comprobantes del tipo KR siempre deben tene un cero a la izquierda en la serie.");
+							sap.ui.core.BusyIndicator.hide();	
+							return ;	
 							
 							
-		// 				}
+						}
 						
 						
-		// 			}
+					}
 					
 					
-		// 		}
+				}
 				
-		// 		if(validacionFecha != undefined &&  !validacionFecha){
-		// 			MessageBox.error("Formato de fecha incorrecta, el formato debe ser DD/MM/YYYY.");
-		// 			sap.ui.core.BusyIndicator.hide();	
-		// 			return false;	
-		// 		}
+				if(validacionFecha != undefined &&  !validacionFecha){
+					MessageBox.error("Formato de fecha incorrecta, el formato debe ser DD/MM/YYYY.");
+					sap.ui.core.BusyIndicator.hide();	
+					return false;	
+				}
 					
-		// 		if(validacionRango != undefined && validacionRango){
-		// 		MessageBox.error("La fecha de comprobante no debe ser mayor a la fecha actual ni menor a un año de la fecha actual.");
-		// 		sap.ui.core.BusyIndicator.hide();	
-		// 		return ;	
-		// 		}
+				if(validacionRango != undefined && validacionRango){
+				MessageBox.error("La fecha de comprobante no debe ser mayor a la fecha actual ni menor a un año de la fecha actual.");
+				sap.ui.core.BusyIndicator.hide();	
+				return ;	
+				}
 					
-		// 		if(Validacion_Clase === true){//12/08/2022
-		// 		 MessageBox.warning("No se puede seleccionar el DEXT para el tipo de comprobante seleccionado.");
-		// 		 ModelProyect.setProperty("/Validacion_Clase" , false);
-		// 		 sap.ui.core.BusyIndicator.hide();
-		// 		 return;	
-		// 		}	
+				if(Validacion_Clase === true){//12/08/2022
+				 MessageBox.warning("No se puede seleccionar el DEXT para el tipo de comprobante seleccionado.");
+				 ModelProyect.setProperty("/Validacion_Clase" , false);
+				 sap.ui.core.BusyIndicator.hide();
+				 return;	
+				}	
 
-		// 		ModelProyect.setProperty("/compValState", "None");
-		// 		ModelProyect.setProperty("/compValStateText", "");
-		// 		ModelProyect.setProperty("/rucValState", "None");
-		// 		ModelProyect.setProperty("/rucValStateText", "");
-		// 		ModelProyect.setProperty("/rucValState", "None");
-		// 		ModelProyect.setProperty("/rucValStateText", "");
-		// 		ModelProyect.setProperty("/tipCompValState", "None");
-		// 		ModelProyect.setProperty("/tipCompValStateText", "");
-		// 		ModelProyect.setProperty("/fecCompValState", "None");
-		// 		ModelProyect.setProperty("/fecCompValStateText", "");
+				ModelProyect.setProperty("/compValState", "None");
+				ModelProyect.setProperty("/compValStateText", "");
+				ModelProyect.setProperty("/rucValState", "None");
+				ModelProyect.setProperty("/rucValStateText", "");
+				ModelProyect.setProperty("/rucValState", "None");
+				ModelProyect.setProperty("/rucValStateText", "");
+				ModelProyect.setProperty("/tipCompValState", "None");
+				ModelProyect.setProperty("/tipCompValStateText", "");
+				ModelProyect.setProperty("/fecCompValState", "None");
+				ModelProyect.setProperty("/fecCompValStateText", "");
 
 				
-		// 		DataComprobanteConfirmacion.forEach(function (ITEMS_02) {//21/07/2022
-		// 			if(ITEMS_02.COMPROBANTE === DescRegistroComprobante && ITEMS_02.RUC === ruc && ITEMS_02.keySeg !== seleccion.keySeg){
-		// 				validacion_comprobant = true;				
+				DataComprobanteConfirmacion.forEach(function (ITEMS_02) {//21/07/2022
+					if(ITEMS_02.COMPROBANTE === DescRegistroComprobante && ITEMS_02.RUC === ruc && ITEMS_02.keySeg !== seleccion.keySeg){
+						validacion_comprobant = true;				
 							
-		// 		}
-		// 		});
+				}
+				});
 				
-		// 		if(validacion_comprobant){
+				if(validacion_comprobant){
 					
-		// 				MessageBox.warning("Ya existe el número de comprobante.", {
-		// 					actions: ["Aceptar"],
-		// 					//title: "Llenar los campos faltantes",
-		// 					emphasizedAction: "",
-		// 					onClose: async function (sAction) {
-		// 						if (sAction === "Aceptar") {
+						MessageBox.warning("Ya existe el número de comprobante.", {
+							actions: ["Aceptar"],
+							//title: "Llenar los campos faltantes",
+							emphasizedAction: "",
+							onClose: async function (sAction) {
+								if (sAction === "Aceptar") {
 								
-		// 						}
+								}
 								
-		// 						sap.ui.core.BusyIndicator.hide();
-		// 					}
-		// 				});
-		// 				ModelProyect.setProperty("/razonSocial", "");
-		// 				ModelProyect.setProperty("/ruc", "");
-		// 				ModelProyect.setProperty("/visbleCampo", false);
-		// 				return;
-		// 			}
+								sap.ui.core.BusyIndicator.hide();
+							}
+						});
+						ModelProyect.setProperty("/razonSocial", "");
+						ModelProyect.setProperty("/ruc", "");
+						ModelProyect.setProperty("/visbleCampo", false);
+						return;
+					}
 
-		// 		//if()
+				//if()
 				
-		// 		// var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_VALIDA_PROVEEDORSet?$filter=STCD1 eq '" + ruc + "'";
+				var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_VALIDA_PROVEEDORSet?$filter=STCD1 eq '" + ruc + "'";
 
-		// 		// var datitos = {
-		// 		// 	"FLAG": "X",
-		// 		// 	"ZET_VALIDA_COMPROBANTESet": [{
-		// 		// 		"COMPROBANTE": DescRegistroComprobante,
-		// 		// 		"MENSAJE": "",
-		// 		// 		"RUC": ruc,
-		// 		// 		"TIPO_COMP": Key_comprobante,
-		// 		// 		"FECHA_COMP": formato_defecha
-		// 		// 	}]
-		// 		// }
-		// 		// $.ajax({
-		// 		// 	url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV",
-		// 		// 	type: "GET",
-		// 		// 	headers: {
-		// 		// 		"x-CSRF-Token": "Fetch"
-		// 		// 	}
-		// 		// }).always(function (data, status, response) {
-		// 		// 	var token = response.getResponseHeader("x-csrf-token");
-		// 		// 	$.ajax({
-		// 		// 		url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_VALIDA_COMPROBANTE_CABSet",
-		// 		// 		method: "POST",
-		// 		// 		headers: {
-		// 		// 			"x-CSRF-Token": token
-		// 		// 		},
-		// 		// 		async: true,
-		// 		// 		contentType: "application/json",
-		// 		// 		dataType: "json",
-		// 		// 		data: JSON.stringify(datitos),
-		// 		// 	}).always(function (data, status, response) {
-		// 		// 	var mensaje_compro = data.d.ZET_VALIDA_COMPROBANTESet.results[0].MENSAJE;
-		// 		// 	if (mensaje_compro === "Ya existe el número de comprobante") {
-		// 		// 	MessageBox.error("Ya existe el número de comprobante");
-		// 		// 	sap.ui.core.BusyIndicator.hide();
-		// 		// 	}else{
-		// 		// 	if(tipoNif === "RUC"){
+				var datitos = {
+					"FLAG": "X",
+					"ZET_VALIDA_COMPROBANTESet": [{
+						"COMPROBANTE": DescRegistroComprobante,
+						"MENSAJE": "",
+						"RUC": ruc,
+						"TIPO_COMP": Key_comprobante,
+						"FECHA_COMP": formato_defecha
+					}]
+				}
+				$.ajax({
+					url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV",
+					type: "GET",
+					headers: {
+						"x-CSRF-Token": "Fetch"
+					}
+				}).always(function (data, status, response) {
+					var token = response.getResponseHeader("x-csrf-token");
+					$.ajax({
+						url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_VALIDA_COMPROBANTE_CABSet",
+						method: "POST",
+						headers: {
+							"x-CSRF-Token": token
+						},
+						async: true,
+						contentType: "application/json",
+						dataType: "json",
+						data: JSON.stringify(datitos),
+					}).always(function (data, status, response) {
+					var mensaje_compro = data.d.ZET_VALIDA_COMPROBANTESet.results[0].MENSAJE;
+					if (mensaje_compro === "Ya existe el número de comprobante") {
+					MessageBox.error("Ya existe el número de comprobante");
+					sap.ui.core.BusyIndicator.hide();
+					}else{
+					if(tipoNif === "RUC"){
 						
-		// 		// 	if(Key_comprobante === "KB" && ruc.substring(0,2) === "20"){
-		// 		// 	MessageBox.warning("Los comprobantes de tipo Boletas deben ser distinto a Ruc 20");
-		// 		// 	ModelProyect.setProperty("/razonSocial", "");
-		// 		// 	sap.ui.core.BusyIndicator.hide();
-		// 		// 	return;	
+					if(Key_comprobante === "KB" && ruc.substring(0,2) === "20"){
+					MessageBox.warning("Los comprobantes de tipo Boletas deben ser distinto a Ruc 20");
+					ModelProyect.setProperty("/razonSocial", "");
+					sap.ui.core.BusyIndicator.hide();
+					return;	
 						
-		// 		// 	}	
-		// 		// 		jQuery.ajax({
-		// 		// 					type: "GET",
-		// 		// 					url: "/SUNAT/ruc?numero=" + ruc,
+					}	
+						jQuery.ajax({
+									type: "GET",
+									url: "/SUNAT/ruc?numero=" + ruc,
 
-		// 		// 					async: true,
-		// 		// 					success: async function (data1, textStatus, jqXHR) {
-		// 		// 						console.log(data1)
-		// 		// 						var condicion_01 = data1.condicion.toUpperCase(); //convierte de minuscula a mayuscula
-		// 		// 						var estado_01 = data1.estado.toUpperCase(); //convierte de minuscula a mayuscula
-		// 		// 						var mensajes = "";
-		// 		// 						switch (condicion_01) {
-		// 		// 						case "NO HALLADO":
-		// 		// 							mensajes = "NO HALLADO";
-		// 		// 							break;
-		// 		// 						case "NO HABIDO":
-		// 		// 							mensajes = "NO HABIDO";
-		// 		// 							break;
+									async: true,
+									success: async function (data1, textStatus, jqXHR) {
+										console.log(data1)
+										var condicion_01 = data1.condicion.toUpperCase(); //convierte de minuscula a mayuscula
+										var estado_01 = data1.estado.toUpperCase(); //convierte de minuscula a mayuscula
+										var mensajes = "";
+										switch (condicion_01) {
+										case "NO HALLADO":
+											mensajes = "NO HALLADO";
+											break;
+										case "NO HABIDO":
+											mensajes = "NO HABIDO";
+											break;
 
-		// 		// 						}
+										}
 
-		// 		// 						switch (estado_01) {
+										switch (estado_01) {
 
-		// 		// 						case "BAJA DEFINITIVA":
+										case "BAJA DEFINITIVA":
 
-		// 		// 							if (mensajes.length > 0) {
-		// 		// 								mensajes += " y BAJA DEFINITIVA";
-		// 		// 							} else {
-		// 		// 								mensajes = "BAJA DEFINITIVA";
-		// 		// 							}
-		// 		// 							break;
-		// 		// 						case "BAJA DE OFICIO":
+											if (mensajes.length > 0) {
+												mensajes += " y BAJA DEFINITIVA";
+											} else {
+												mensajes = "BAJA DEFINITIVA";
+											}
+											break;
+										case "BAJA DE OFICIO":
 
-		// 		// 							if (mensajes.length > 0) {
-		// 		// 								mensajes += " y BAJA DE OFICIO";
-		// 		// 							} else {
-		// 		// 								mensajes = "BAJA DE OFICIO";
-		// 		// 							}
-		// 		// 							break;
-		// 		// 						}
-		// 		// 						var numeroRuc = "";
-		// 		// 						var nuevo_NroCompro = "";
-		// 		// 						var antiguo_NroCompro = "";
-		// 		// 						var fecha_antigua	="";
-		// 		// 						var tipocomprobante_antiguo="";
-		// 		// 						var tipodoc	="";
-		// 		// 						var antiguo_Ruc	="";
+											if (mensajes.length > 0) {
+												mensajes += " y BAJA DE OFICIO";
+											} else {
+												mensajes = "BAJA DE OFICIO";
+											}
+											break;
+										}
+										var numeroRuc = "";
+										var nuevo_NroCompro = "";
+										var antiguo_NroCompro = "";
+										var fecha_antigua	="";
+										var tipocomprobante_antiguo="";
+										var tipodoc	="";
+										var antiguo_Ruc	="";
 
-		// 		// 						if (mensajes.length > 0) {
-		// 		// 							MessageBox.information("El RUC esta " + mensajes);
-		// 		// 							ModelProyect.setProperty("/razonSocial", "");
-		// 		// 							sap.ui.core.BusyIndicator.hide();
-		// 		// 							return;
+										if (mensajes.length > 0) {
+											MessageBox.information("El RUC esta " + mensajes);
+											ModelProyect.setProperty("/razonSocial", "");
+											sap.ui.core.BusyIndicator.hide();
+											return;
 
-		// 		// 						} else if (estado_01 === "ACTIVO" && condicion_01 === "HABIDO") {
-		// 		// 							DataComprobanteConfirmacion.forEach(function (ITEMS) {
+										} else if (estado_01 === "ACTIVO" && condicion_01 === "HABIDO") {
+											DataComprobanteConfirmacion.forEach(function (ITEMS) {
 											
-		// 		// 								if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
+												if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
 												
-		// 		// 									//antiguo_NroCompro = ITEMS.COMPROBANTE;
-		// 		// 									//antiguo_Ruc = ITEMS.RUC;                   
+													//antiguo_NroCompro = ITEMS.COMPROBANTE;
+													//antiguo_Ruc = ITEMS.RUC;                   
 
 												
-		// 		// 								if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
-		// 		// 								if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
-		// 		// 								nuevo_NroCompro =DescRegistroComprobante;
-		// 		// 								}else{
-		// 		// 								nuevo_NroCompro ="";	
-		// 		// 								}
-		// 		// 								}
+												if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
+												if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
+												nuevo_NroCompro =DescRegistroComprobante;
+												}else{
+												nuevo_NroCompro ="";	
+												}
+												}
 												
-		// 		// 								if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
-		// 		// 								if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
-		// 		// 									numeroRuc = ruc;
-		// 		// 								}else{
-		// 		// 									numeroRuc = "";
-		// 		// 								}
-		// 		// 								}
+												if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
+												if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
+													numeroRuc = ruc;
+												}else{
+													numeroRuc = "";
+												}
+												}
 												
-		// 		// 								if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
-		// 		// 									fecha_antigua = ITEMS.FECHA_COMP;
+												if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
+													fecha_antigua = ITEMS.FECHA_COMP;
 													
-		// 		// 								}
+												}
 												
 												
-		// 		// 								if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
-		// 		// 									tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
-		// 		// 								}
+												if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
+													tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
+												}
 												
-		// 		// 								if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
-		// 		// 									tipodoc = ITEMS.TIPODOCI;
-		// 		// 								}
+												if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
+													tipodoc = ITEMS.TIPODOCI;
+												}
 												
-		// 		// 								if (ITEMS.keySeg === seleccion.keySeg) {
-		// 		// 									ITEMS.NROD0 = datosComprobante01.NROD0;
-		// 		// 									ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
-		// 		// 									ITEMS.COD_SAP = COD_SAP;
-		// 		// 									ITEMS.visibleState = true;
-		// 		// 									ITEMS.TIPODOCI = tipoNif;
-		// 		// 									ITEMS.COPIA_TIPODOC =tipodoc;
-		// 		// 									ITEMS.TIPO_COMP = SelectedTipoDocumento;
-		// 		// 									ITEMS.FECHA_COMP = FechaComprobante;
-		// 		// 									ITEMS.COMPROBANTE = DescRegistroComprobante;
-		// 		// 									//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
-		// 		// 									ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
-		// 		// 									ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
-		// 		// 									ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
-		// 		// 									ITEMS.RUC_PRUEBA = numeroRuc;
-		// 		// 									//ITEMS.RUC_COPIA = antiguo_Ruc;
-		// 		// 									ITEMS.FECHA_ANTIGUA =fecha_antigua;
-		// 	    // 									ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
-		// 		// 									ITEMS.key = ITEMS.keySeg;
-		// 		// 									ITEMS.RUC = ruc;
-		// 		// 									ITEMS.RAZON_SOCIAL = data1.nombre;
-		// 		// 									ITEMS.COD_TIPO_COMP = Key_comprobante;
-		// 		// 									ITEMS.validacion_guardado= false;//30062022
-		// 		// 									ITEMS.VALIDAR_DATOS = false;//01/09/2022
+												if (ITEMS.keySeg === seleccion.keySeg) {
+													ITEMS.NROD0 = datosComprobante01.NROD0;
+													ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
+													ITEMS.COD_SAP = COD_SAP;
+													ITEMS.visibleState = true;
+													ITEMS.TIPODOCI = tipoNif;
+													ITEMS.COPIA_TIPODOC =tipodoc;
+													ITEMS.TIPO_COMP = SelectedTipoDocumento;
+													ITEMS.FECHA_COMP = FechaComprobante;
+													ITEMS.COMPROBANTE = DescRegistroComprobante;
+													//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
+													ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
+													ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
+													ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
+													ITEMS.RUC_PRUEBA = numeroRuc;
+													//ITEMS.RUC_COPIA = antiguo_Ruc;
+													ITEMS.FECHA_ANTIGUA =fecha_antigua;
+			    									ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
+													ITEMS.key = ITEMS.keySeg;
+													ITEMS.RUC = ruc;
+													ITEMS.RAZON_SOCIAL = data1.nombre;
+													ITEMS.COD_TIPO_COMP = Key_comprobante;
+													ITEMS.validacion_guardado= false;//30062022
+													ITEMS.VALIDAR_DATOS = false;//01/09/2022
 											
-		// 		// 								ITEMS.desglose.map(function (items02) {
-		// 		// 								if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
-		// 		// 									items02.COMPROBANTE = DescRegistroComprobante;
-		// 		// 									}
+												ITEMS.desglose.map(function (items02) {
+												if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
+													items02.COMPROBANTE = DescRegistroComprobante;
+													}
 
-		// 		// 									});
+													});
 													
-		// 		// 									ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
-		// 		// 									ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
-		// 		// 									ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
-		// 		// 									ModelProyect.setProperty("/nroPos", seleccion.keySeg);
-		// 		// 									validar_tabs = true;
-		// 		// 								}
-		// 		// 								} 
+													ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
+													ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
+													ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
+													ModelProyect.setProperty("/nroPos", seleccion.keySeg);
+													validar_tabs = true;
+												}
+												} 
 											
-		// 		// 							});
+											});
 										
-		// 		// 							ModelProyect.setProperty("/razonSocial", data1.nombre);
-		// 		// 							ModelProyect.setProperty("/visbleCampo", true);
-		// 		// 							ModelProyect.setProperty("/editableMonto_compro", false);
-		// 		// 							MessageToast.show("RUC existente");
-		// 		// 							sap.ui.core.BusyIndicator.hide();
-		// 		// 						} else {
-		// 		// 							MessageBox.information("El RUC esta " + estado_01 + " y " + condicion_01);
-		// 		// 							ModelProyect.setProperty("/razonSocial", "");
-		// 		// 							//ModelProyect.setProperty("/Orden_Interna", "");
-		// 		// 							//ModelProyect.setProperty("/Numero_viaje", "");
-		// 		// 							//ModelProyect.setProperty("/Glosa", "");
-		// 		// 							ModelProyect.setProperty("/visbleCampo", false);
-		// 		// 							DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
-		// 		// 							if (te.keySeg === seleccion.keySeg) {
-		// 		// 							te.RUC = "";
-		// 		// 							te.RAZON_SOCIAL ="" ;                   
+											ModelProyect.setProperty("/razonSocial", data1.nombre);
+											ModelProyect.setProperty("/visbleCampo", true);
+											ModelProyect.setProperty("/editableMonto_compro", false);
+											MessageToast.show("RUC existente");
+											sap.ui.core.BusyIndicator.hide();
+										} else {
+											MessageBox.information("El RUC esta " + estado_01 + " y " + condicion_01);
+											ModelProyect.setProperty("/razonSocial", "");
+											//ModelProyect.setProperty("/Orden_Interna", "");
+											//ModelProyect.setProperty("/Numero_viaje", "");
+											//ModelProyect.setProperty("/Glosa", "");
+											ModelProyect.setProperty("/visbleCampo", false);
+											DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
+											if (te.keySeg === seleccion.keySeg) {
+											te.RUC = "";
+											te.RAZON_SOCIAL ="" ;                   
 												
-		// 		// 							}	
-		// 		// 							});
-		// 		// 						}
-		// 		// 						sap.ui.core.BusyIndicator.hide();
-		// 		// 					},
+											}	
+											});
+										}
+										sap.ui.core.BusyIndicator.hide();
+									},
 
-		// 		// 					error: function (er) {
-		// 		// 						MessageBox.error("Ruc invalido.");
-		// 		// 						ModelProyect.setProperty("/razonSocial", "");
-		// 		// 						//ModelProyect.setProperty("/Orden_Interna", "");
-		// 		// 						//ModelProyect.setProperty("/Numero_viaje", "");
-		// 		// 						//ModelProyect.setProperty("/Glosa", "");
-		// 		// 						ModelProyect.setProperty("/visbleCampo", false);
-		// 		// 						DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
-		// 		// 						if (te.keySeg === seleccion.keySeg) {
-		// 		// 						te.RUC = "";
-		// 		// 						te.RAZON_SOCIAL ="" ;                   
+									error: function (er) {
+										MessageBox.error("Ruc invalido.");
+										ModelProyect.setProperty("/razonSocial", "");
+										//ModelProyect.setProperty("/Orden_Interna", "");
+										//ModelProyect.setProperty("/Numero_viaje", "");
+										//ModelProyect.setProperty("/Glosa", "");
+										ModelProyect.setProperty("/visbleCampo", false);
+										DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
+										if (te.keySeg === seleccion.keySeg) {
+										te.RUC = "";
+										te.RAZON_SOCIAL ="" ;                   
 											
-		// 		// 						}	
-		// 		// 						});
+										}	
+										});
 										
-		// 		// 						sap.ui.core.BusyIndicator.hide();
-		// 		// 						console.log(er);
-		// 		// 					}
-		// 		// 				});
+										sap.ui.core.BusyIndicator.hide();
+										console.log(er);
+									}
+								});
 						
-		// 		// 	}else if(tipoNif === "DEXT"){//24/07/2022
+					}else if(tipoNif === "DEXT"){//24/07/2022
 						
-		// 		// 		var numeroRuc = "";
-		// 		// 		var nuevo_NroCompro = "";
-		// 		// 		var antiguo_NroCompro = "";
-		// 		// 		var fecha_antigua	="";
-		// 		// 		var tipocomprobante_antiguo="";
-		// 		// 		var tipodoc	="";
-		// 		// 		var antiguo_Ruc	="";
+						var numeroRuc = "";
+						var nuevo_NroCompro = "";
+						var antiguo_NroCompro = "";
+						var fecha_antigua	="";
+						var tipocomprobante_antiguo="";
+						var tipodoc	="";
+						var antiguo_Ruc	="";
 						
-		// 		// 			jQuery.ajax({
-		// 		// 					type: "GET",
-		// 		// 					cache: false,
-		// 		// 					headers: {
-		// 		// 						"Accept": "application/json"
-		// 		// 					},
-		// 		// 					contentType: "application/json",
-		// 		// 					url: url,
-		// 		// 					async: true,
-		// 		// 					success: function (data, textStatus, jqXHR) {
-		// 		// 					var datos = data.d.results[0].MENSAJE;
+							jQuery.ajax({
+									type: "GET",
+									cache: false,
+									headers: {
+										"Accept": "application/json"
+									},
+									contentType: "application/json",
+									url: url,
+									async: true,
+									success: function (data, textStatus, jqXHR) {
+									var datos = data.d.results[0].MENSAJE;
 									
-		// 		// 					if(datos === "Success"){
-		// 		// 					var Nombre = data.d.results[0].NAME1;	
+									if(datos === "Success"){
+									var Nombre = data.d.results[0].NAME1;	
 										
-		// 		// 					DataComprobanteConfirmacion.forEach(function (ITEMS) {
+									DataComprobanteConfirmacion.forEach(function (ITEMS) {
 														
-		// 		// 						if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
+										if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
 											
-		// 		// 								//antiguo_NroCompro = ITEMS.COMPROBANTE;
+												//antiguo_NroCompro = ITEMS.COMPROBANTE;
 										
-		// 		// 							if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
-		// 		// 							if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
-		// 		// 								nuevo_NroCompro =DescRegistroComprobante;
-		// 		// 								}else{
-		// 		// 								nuevo_NroCompro ="";	
-		// 		// 								}
-		// 		// 								}
+											if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
+											if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
+												nuevo_NroCompro =DescRegistroComprobante;
+												}else{
+												nuevo_NroCompro ="";	
+												}
+												}
 											
-		// 		// 							if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
-		// 		// 							if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
-		// 		// 								numeroRuc = ruc;
-		// 		// 							}else{
-		// 		// 								numeroRuc = "";
-		// 		// 							}
-		// 		// 							}
+											if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
+											if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
+												numeroRuc = ruc;
+											}else{
+												numeroRuc = "";
+											}
+											}
 										
 											
-		// 		// 							if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA){
-		// 		// 								fecha_antigua = ITEMS.FECHA_COMP;
-		// 		// 							}
+											if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA){
+												fecha_antigua = ITEMS.FECHA_COMP;
+											}
 											
-		// 		// 							if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
-		// 		// 								tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
-		// 		// 							}
+											if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
+												tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
+											}
 											
-		// 		// 							if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
-		// 		// 								tipodoc = ITEMS.TIPODOCI;
-		// 		// 							}
+											if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
+												tipodoc = ITEMS.TIPODOCI;
+											}
 											
 											
-		// 		// 							if (ITEMS.keySeg === seleccion.keySeg) {
-		// 		// 								ITEMS.NROD0 = datosComprobante01.NROD0;
-		// 		// 								ITEMS.DOC_PAGO=datosComprobante01.BELNR;
-		// 		// 								ITEMS.COD_REPO = datosComprobante01.COD_REPO;
-		// 		// 								ITEMS.COD_SAP = COD_SAP;
-		// 		// 								ITEMS.visibleState = true;
-		// 		// 								ITEMS.TIPODOCI = tipoNif;
-		// 		// 								ITEMS.COPIA_TIPODOC =tipodoc;
-		// 		// 								ITEMS.TIPO_COMP = SelectedTipoDocumento;
-		// 		// 								ITEMS.FECHA_COMP = FechaComprobante;
-		// 		// 								ITEMS.COMPROBANTE = DescRegistroComprobante;
-		// 		// 								//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
-		// 		// 								ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
-		// 		// 								ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
-		// 		// 								ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
-		// 		// 								ITEMS.RUC_PRUEBA = numeroRuc;
-		// 		// 								ITEMS.FECHA_ANTIGUA =fecha_antigua;
-		// 		// 								ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
-		// 		// 								ITEMS.key = ITEMS.keySeg;
-		// 		// 								ITEMS.RUC = ruc;
-		// 		// 								ITEMS.RAZON_SOCIAL = Nombre;
-		// 		// 								ITEMS.COD_TIPO_COMP = Key_comprobante;
-		// 		// 								ITEMS.VALIDAR_DATOS = false;//01/09/2022
+											if (ITEMS.keySeg === seleccion.keySeg) {
+												ITEMS.NROD0 = datosComprobante01.NROD0;
+												ITEMS.DOC_PAGO=datosComprobante01.BELNR;
+												ITEMS.COD_REPO = datosComprobante01.COD_REPO;
+												ITEMS.COD_SAP = COD_SAP;
+												ITEMS.visibleState = true;
+												ITEMS.TIPODOCI = tipoNif;
+												ITEMS.COPIA_TIPODOC =tipodoc;
+												ITEMS.TIPO_COMP = SelectedTipoDocumento;
+												ITEMS.FECHA_COMP = FechaComprobante;
+												ITEMS.COMPROBANTE = DescRegistroComprobante;
+												//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
+												ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
+												ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
+												ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
+												ITEMS.RUC_PRUEBA = numeroRuc;
+												ITEMS.FECHA_ANTIGUA =fecha_antigua;
+												ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
+												ITEMS.key = ITEMS.keySeg;
+												ITEMS.RUC = ruc;
+												ITEMS.RAZON_SOCIAL = Nombre;
+												ITEMS.COD_TIPO_COMP = Key_comprobante;
+												ITEMS.VALIDAR_DATOS = false;//01/09/2022
 										
-		// 		// 							ITEMS.desglose.map(function (items02) {
-		// 		// 								if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
-		// 		// 								items02.COMPROBANTE = DescRegistroComprobante;
-		// 		// 								}
+											ITEMS.desglose.map(function (items02) {
+												if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
+												items02.COMPROBANTE = DescRegistroComprobante;
+												}
 			
-		// 		// 								});
+												});
 												
-		// 		// 								ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
-		// 		// 								ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
-		// 		// 								ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
-		// 		// 								ModelProyect.setProperty("/nroPos", seleccion.keySeg);
-		// 		// 								validar_tabs = true;
-		// 		// 							}
-		// 		// 							}
+												ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
+												ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
+												ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
+												ModelProyect.setProperty("/nroPos", seleccion.keySeg);
+												validar_tabs = true;
+											}
+											}
 														
-		// 		// 					});
+									});
 									
-		// 		// 					ModelProyect.setProperty("/visbleCampo", true);
-		// 		// 					//ModelProyect.setProperty("/Glosa", "");
-		// 		// 					ModelProyect.setProperty("/editableMonto_compro", false);
-		// 		// 					ModelProyect.setProperty("/razonSocial", Nombre);
-		// 		// 					ModelProyect.setProperty("/editableRazon",false);
-		// 		// 					sap.ui.core.BusyIndicator.hide();
+									ModelProyect.setProperty("/visbleCampo", true);
+									//ModelProyect.setProperty("/Glosa", "");
+									ModelProyect.setProperty("/editableMonto_compro", false);
+									ModelProyect.setProperty("/razonSocial", Nombre);
+									ModelProyect.setProperty("/editableRazon",false);
+									sap.ui.core.BusyIndicator.hide();
 									
-		// 		// 					}else if(datos === "Proveedor no existe, por favor completar datos"){
+									}else if(datos === "Proveedor no existe, por favor completar datos"){
 									
-		// 		// 					DataComprobanteConfirmacion.forEach(function (ITEMS) {
+									DataComprobanteConfirmacion.forEach(function (ITEMS) {
 														
-		// 		// 						if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
+										if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
 											
-		// 		// 								//antiguo_NroCompro = ITEMS.COMPROBANTE;
+												//antiguo_NroCompro = ITEMS.COMPROBANTE;
 										
-		// 		// 							if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
-		// 		// 							if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
-		// 		// 								nuevo_NroCompro =DescRegistroComprobante;
-		// 		// 								}else{
-		// 		// 								nuevo_NroCompro ="";	
-		// 		// 								}
-		// 		// 								}
+											if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
+											if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
+												nuevo_NroCompro =DescRegistroComprobante;
+												}else{
+												nuevo_NroCompro ="";	
+												}
+												}
 											
-		// 		// 							if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
-		// 		// 							if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
-		// 		// 								numeroRuc = ruc;
-		// 		// 							}else{
-		// 		// 								numeroRuc = "";
-		// 		// 							}
-		// 		// 							}
+											if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
+											if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
+												numeroRuc = ruc;
+											}else{
+												numeroRuc = "";
+											}
+											}
 										
 											
-		// 		// 							if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA){
-		// 		// 								fecha_antigua = ITEMS.FECHA_COMP;
-		// 		// 							}
+											if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA){
+												fecha_antigua = ITEMS.FECHA_COMP;
+											}
 											
-		// 		// 							if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
-		// 		// 								tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
-		// 		// 							}
+											if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
+												tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
+											}
 											
-		// 		// 							if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
-		// 		// 								tipodoc = ITEMS.TIPODOCI;
-		// 		// 							}
+											if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
+												tipodoc = ITEMS.TIPODOCI;
+											}
 											
 											
-		// 		// 							if (ITEMS.keySeg === seleccion.keySeg) {
-		// 		// 								ITEMS.NROD0 = datosComprobante01.NROD0;
-		// 		// 								ITEMS.DOC_PAGO=datosComprobante01.BELNR;
-		// 		// 								ITEMS.COD_REPO = datosComprobante01.COD_REPO;
-		// 		// 								ITEMS.COD_SAP = COD_SAP;
-		// 		// 								ITEMS.visibleState = true;
-		// 		// 								ITEMS.TIPODOCI = tipoNif;
-		// 		// 								ITEMS.COPIA_TIPODOC =tipodoc;
-		// 		// 								ITEMS.TIPO_COMP = SelectedTipoDocumento;
-		// 		// 								ITEMS.FECHA_COMP = FechaComprobante;
-		// 		// 								ITEMS.COMPROBANTE = DescRegistroComprobante;
-		// 		// 								//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
-		// 		// 								ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
-		// 		// 								ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
-		// 		// 								ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
-		// 		// 								ITEMS.RUC_PRUEBA = numeroRuc;
-		// 		// 								ITEMS.FECHA_ANTIGUA =fecha_antigua;
-		// 		// 								ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
-		// 		// 								ITEMS.key = ITEMS.keySeg;
-		// 		// 								ITEMS.RUC = ruc;
-		// 		// 								ITEMS.RAZON_SOCIAL = "";
-		// 		// 								ITEMS.COD_TIPO_COMP = Key_comprobante;
-		// 		// 								ITEMS.VALIDAR_DATOS = false;//01/09/2022
+											if (ITEMS.keySeg === seleccion.keySeg) {
+												ITEMS.NROD0 = datosComprobante01.NROD0;
+												ITEMS.DOC_PAGO=datosComprobante01.BELNR;
+												ITEMS.COD_REPO = datosComprobante01.COD_REPO;
+												ITEMS.COD_SAP = COD_SAP;
+												ITEMS.visibleState = true;
+												ITEMS.TIPODOCI = tipoNif;
+												ITEMS.COPIA_TIPODOC =tipodoc;
+												ITEMS.TIPO_COMP = SelectedTipoDocumento;
+												ITEMS.FECHA_COMP = FechaComprobante;
+												ITEMS.COMPROBANTE = DescRegistroComprobante;
+												//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
+												ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
+												ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
+												ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
+												ITEMS.RUC_PRUEBA = numeroRuc;
+												ITEMS.FECHA_ANTIGUA =fecha_antigua;
+												ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
+												ITEMS.key = ITEMS.keySeg;
+												ITEMS.RUC = ruc;
+												ITEMS.RAZON_SOCIAL = "";
+												ITEMS.COD_TIPO_COMP = Key_comprobante;
+												ITEMS.VALIDAR_DATOS = false;//01/09/2022
 										
-		// 		// 							ITEMS.desglose.map(function (items02) {
-		// 		// 								if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
-		// 		// 								items02.COMPROBANTE = DescRegistroComprobante;
-		// 		// 								}
+											ITEMS.desglose.map(function (items02) {
+												if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
+												items02.COMPROBANTE = DescRegistroComprobante;
+												}
 			
-		// 		// 								});
+												});
 												
-		// 		// 								ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
-		// 		// 								ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
-		// 		// 								ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
-		// 		// 								ModelProyect.setProperty("/nroPos", seleccion.keySeg);
-		// 		// 								MessageToast.show("Proveedor no existe, por favor completar datos.");
-		// 		// 								validar_tabs = true;
-		// 		// 							}
-		// 		// 							}
+												ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
+												ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
+												ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
+												ModelProyect.setProperty("/nroPos", seleccion.keySeg);
+												MessageToast.show("Proveedor no existe, por favor completar datos.");
+												validar_tabs = true;
+											}
+											}
 														
-		// 		// 					});
+									});
 									
-		// 		// 					ModelProyect.setProperty("/visbleCampo", true);
-		// 		// 					//ModelProyect.setProperty("/Glosa", "");
-		// 		// 					ModelProyect.setProperty("/editableMonto_compro", true);
-		// 		// 					ModelProyect.setProperty("/razonSocial", "");
-		// 		// 					ModelProyect.setProperty("/editableRazon",true);
-		// 		// 					sap.ui.core.BusyIndicator.hide();
+									ModelProyect.setProperty("/visbleCampo", true);
+									//ModelProyect.setProperty("/Glosa", "");
+									ModelProyect.setProperty("/editableMonto_compro", true);
+									ModelProyect.setProperty("/razonSocial", "");
+									ModelProyect.setProperty("/editableRazon",true);
+									sap.ui.core.BusyIndicator.hide();
 										
-		// 		// 					}
-		// 		// 					},
-		// 		// 					error: function () {
-		// 		// 						MessageBox.error("Ocurrio un error al obtener los datos.");
-		// 		// 						sap.ui.core.BusyIndicator.hide();
-		// 		// 					}
-		// 		// 				});
+									}
+									},
+									error: function () {
+										MessageBox.error("Ocurrio un error al obtener los datos.");
+										sap.ui.core.BusyIndicator.hide();
+									}
+								});
 						
 						
 						
-		// 		// 	}else{
-		// 		// 			jQuery.ajax({
-		// 		// 					type: "GET",
-		// 		// 					cache: false,
-		// 		// 					headers: {
-		// 		// 						"Accept": "application/json"
-		// 		// 					},
-		// 		// 					contentType: "application/json",
-		// 		// 					url: url,
-		// 		// 					async: true,
-		// 		// 					success: function (data, textStatus, jqXHR) {
-		// 		// 						var datos = data.d.results[0].MENSAJE;
+					}else{
+							jQuery.ajax({
+									type: "GET",
+									cache: false,
+									headers: {
+										"Accept": "application/json"
+									},
+									contentType: "application/json",
+									url: url,
+									async: true,
+									success: function (data, textStatus, jqXHR) {
+										var datos = data.d.results[0].MENSAJE;
 								
-		// 		// 						if (datos === "Success") {
-		// 		// 						if (ruc.length === 8) {
-		// 		// 								Nombre = data.d.results[0].NAME1;
+										if (datos === "Success") {
+										if (ruc.length === 8) {
+												Nombre = data.d.results[0].NAME1;
 												
-		// 		// 								var numeroRuc = "";
-		// 		// 								var nuevo_NroCompro = "";
-		// 		// 								var antiguo_NroCompro = "";
-		// 		// 								var fecha_antigua	="";
-		// 		// 								var tipocomprobante_antiguo="";
-		// 		// 								var tipodoc ="";
-		// 		// 								var antiguo_Ruc	="";
+												var numeroRuc = "";
+												var nuevo_NroCompro = "";
+												var antiguo_NroCompro = "";
+												var fecha_antigua	="";
+												var tipocomprobante_antiguo="";
+												var tipodoc ="";
+												var antiguo_Ruc	="";
 												
-		// 		// 								DataComprobanteConfirmacion.forEach(function (ITEMS) {
+												DataComprobanteConfirmacion.forEach(function (ITEMS) {
 												
-		// 		// 								if (ITEMS.keySeg === seleccion.keySeg){
-		// 		// 									//antiguo_NroCompro = ITEMS.COMPROBANTE;
-		// 		// 									//antiguo_Ruc = ITEMS.RUC;
+												if (ITEMS.keySeg === seleccion.keySeg){
+													//antiguo_NroCompro = ITEMS.COMPROBANTE;
+													//antiguo_Ruc = ITEMS.RUC;
 												
-		// 		// 								if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
-		// 		// 								if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
-		// 		// 								nuevo_NroCompro =DescRegistroComprobante;
-		// 		// 								}else{
-		// 		// 								nuevo_NroCompro ="";	
-		// 		// 								}
-		// 		// 								}
+												if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
+												if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
+												nuevo_NroCompro =DescRegistroComprobante;
+												}else{
+												nuevo_NroCompro ="";	
+												}
+												}
 												
-		// 		// 								if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
-		// 		// 								if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
-		// 		// 									numeroRuc = ruc;
-		// 		// 								}else{
-		// 		// 									numeroRuc = "";
-		// 		// 								}
-		// 		// 								}
+												if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
+												if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
+													numeroRuc = ruc;
+												}else{
+													numeroRuc = "";
+												}
+												}
 												
-		// 		// 								if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
-		// 		// 									tipodoc = ITEMS.TIPODOCI;
-		// 		// 								}
+												if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
+													tipodoc = ITEMS.TIPODOCI;
+												}
 
 												
-		// 		// 								if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
-		// 		// 									fecha_antigua = ITEMS.FECHA_COMP;
-		// 		// 								}
+												if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
+													fecha_antigua = ITEMS.FECHA_COMP;
+												}
 											
 												
-		// 		// 								if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP){
-		// 		// 									tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
-		// 		// 								}
+												if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP){
+													tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
+												}
 											
 											
-		// 		// 								if (ITEMS.keySeg === seleccion.keySeg) {
-		// 		// 									ITEMS.NROD0 = datosComprobante01.NROD0;
-		// 		// 									ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
-		// 		// 									ITEMS.COD_SAP = COD_SAP;
-		// 		// 									ITEMS.visibleState = true;
-		// 		// 									ITEMS.TIPODOCI = tipoNif;
-		// 		// 									ITEMS.COPIA_TIPODOC =tipodoc;
-		// 		// 									ITEMS.TIPO_COMP = SelectedTipoDocumento;
-		// 		// 									ITEMS.FECHA_COMP = FechaComprobante;
-		// 		// 									ITEMS.COMPROBANTE = DescRegistroComprobante;
-		// 		// 									//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
-		// 		// 									ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
-		// 		// 									ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
-		// 		// 									ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
-		// 		// 									ITEMS.RUC_PRUEBA = numeroRuc;
-		// 		// 									//ITEMS.RUC_COPIA = antiguo_Ruc;
-		// 		// 									ITEMS.FECHA_ANTIGUA =fecha_antigua;
-		// 	    // 									ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
-		// 		// 									ITEMS.key = ITEMS.keySeg;
-		// 		// 									ITEMS.RUC = ruc;
-		// 		// 									ITEMS.RAZON_SOCIAL = Nombre;
-		// 		// 									ITEMS.COD_TIPO_COMP = Key_comprobante;
-		// 		// 									ITEMS.validacion_guardado= false;//30062022
-		// 		// 									ITEMS.VALIDAR_DATOS = false;//01/09/2022
+												if (ITEMS.keySeg === seleccion.keySeg) {
+													ITEMS.NROD0 = datosComprobante01.NROD0;
+													ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
+													ITEMS.COD_SAP = COD_SAP;
+													ITEMS.visibleState = true;
+													ITEMS.TIPODOCI = tipoNif;
+													ITEMS.COPIA_TIPODOC =tipodoc;
+													ITEMS.TIPO_COMP = SelectedTipoDocumento;
+													ITEMS.FECHA_COMP = FechaComprobante;
+													ITEMS.COMPROBANTE = DescRegistroComprobante;
+													//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
+													ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
+													ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
+													ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
+													ITEMS.RUC_PRUEBA = numeroRuc;
+													//ITEMS.RUC_COPIA = antiguo_Ruc;
+													ITEMS.FECHA_ANTIGUA =fecha_antigua;
+			    									ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
+													ITEMS.key = ITEMS.keySeg;
+													ITEMS.RUC = ruc;
+													ITEMS.RAZON_SOCIAL = Nombre;
+													ITEMS.COD_TIPO_COMP = Key_comprobante;
+													ITEMS.validacion_guardado= false;//30062022
+													ITEMS.VALIDAR_DATOS = false;//01/09/2022
 													
-		// 		// 									ITEMS.desglose.map(function (items02) {
-		// 		// 								if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
-		// 		// 									items02.COMPROBANTE = DescRegistroComprobante;
-		// 		// 									}
+													ITEMS.desglose.map(function (items02) {
+												if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
+													items02.COMPROBANTE = DescRegistroComprobante;
+													}
 													
-		// 		// 									});
+													});
 													
 
-		// 		// 									ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
-		// 		// 									ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
-		// 		// 									ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
-		// 		// 									ModelProyect.setProperty("/nroPos", seleccion.keySeg);
-		// 		// 									validar_tabs = true;
-		// 		// 									sap.ui.core.BusyIndicator.hide();
-		// 		// 								}
-		// 		// 								}
-		// 		// 							});
+													ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
+													ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
+													ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
+													ModelProyect.setProperty("/nroPos", seleccion.keySeg);
+													validar_tabs = true;
+													sap.ui.core.BusyIndicator.hide();
+												}
+												}
+											});
 												
-		// 		// 								ModelProyect.setProperty("/visbleCampo", true);
-		// 		// 								MessageToast.show("DNI existente: " + Nombre);
+												ModelProyect.setProperty("/visbleCampo", true);
+												MessageToast.show("DNI existente: " + Nombre);
 
-		// 		// 								ModelProyect.setProperty("/razonSocial", Nombre);
-		// 		// 								ModelProyect.setProperty("/visbleCampo", true);//24/07/2022
+												ModelProyect.setProperty("/razonSocial", Nombre);
+												ModelProyect.setProperty("/visbleCampo", true);//24/07/2022
 												
-		// 		// 								//ModelProyect.setProperty("/monedas", "---Seleccionar---");
-		// 		// 								//ModelProyect.setProperty("/Glosa", "");
-		// 		// 								//ModelProyect.setProperty("/Orden_Interna", "");
-		// 		// 								//ModelProyect.setProperty("/Numero_viaje", "");
-		// 		// 								sap.ui.core.BusyIndicator.hide();
+												//ModelProyect.setProperty("/monedas", "---Seleccionar---");
+												//ModelProyect.setProperty("/Glosa", "");
+												//ModelProyect.setProperty("/Orden_Interna", "");
+												//ModelProyect.setProperty("/Numero_viaje", "");
+												sap.ui.core.BusyIndicator.hide();
 
-		// 		// 							}else{
-		// 		// 							MessageBox.error("El DNI ingresado no es valido.");
-		// 		// 							ModelProyect.setProperty("/razonSocial", "");
-		// 		// 							ModelProyect.setProperty("/visbleCampo", true);//24/07/2022
-		// 		// 							//ModelProyect.setProperty("/Glosa", "");//24/07/2022
-		// 		// 							sap.ui.core.BusyIndicator.hide();
-		// 		// 							}
+											}else{
+											MessageBox.error("El DNI ingresado no es valido.");
+											ModelProyect.setProperty("/razonSocial", "");
+											ModelProyect.setProperty("/visbleCampo", true);//24/07/2022
+											//ModelProyect.setProperty("/Glosa", "");//24/07/2022
+											sap.ui.core.BusyIndicator.hide();
+											}
 
 										
-		// 		// 							ModelProyect.refresh(true);
-		// 		// 							return;
-		// 		// 						}else if (datos === "Proveedor no existe, por favor completar datos"){
-		// 		// 							MessageBox.warning("El DNI no existe como dato maestro de proveedor.", {
-		// 		// 							actions: ["Aceptar"],
-		// 		// 							//title: "Llenar los campos faltantes",
-		// 		// 							emphasizedAction: "",
-		// 		// 							onClose: async function (sAction) {
-		// 		// 								if (sAction === "Aceptar") {
+											ModelProyect.refresh(true);
+											return;
+										}else if (datos === "Proveedor no existe, por favor completar datos"){
+											MessageBox.warning("El DNI no existe como dato maestro de proveedor.", {
+											actions: ["Aceptar"],
+											//title: "Llenar los campos faltantes",
+											emphasizedAction: "",
+											onClose: async function (sAction) {
+												if (sAction === "Aceptar") {
 												
-		// 		// 								}
-		// 		// 								ModelProyect.setProperty("/razonSocial", "");
-		// 		// 								ModelProyect.setProperty("/visbleCampo", false);//24/07/2022
-		// 		// 								ModelProyect.setProperty("/Glosa", "");//24/07/2022
-		// 		// 								DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
-		// 		// 								if (te.keySeg === seleccion.keySeg) {
-		// 		// 								te.RUC = "";
-		// 		// 								te.RAZON_SOCIAL ="" ;                   
+												}
+												ModelProyect.setProperty("/razonSocial", "");
+												ModelProyect.setProperty("/visbleCampo", false);//24/07/2022
+												ModelProyect.setProperty("/Glosa", "");//24/07/2022
+												DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
+												if (te.keySeg === seleccion.keySeg) {
+												te.RUC = "";
+												te.RAZON_SOCIAL ="" ;                   
 													
-		// 		// 								}	
-		// 		// 								});
-		// 		// 								sap.ui.core.BusyIndicator.hide();
-		// 		// 							}
-		// 		// 						});	
+												}	
+												});
+												sap.ui.core.BusyIndicator.hide();
+											}
+										});	
 									
-		// 		// 						}
-		// 		// 					},
-		// 		// 					error: function () {
-		// 		// 						MessageBox.error("Ocurrio un error al obtener los datos de codigo generico");
-		// 		// 						sap.ui.core.BusyIndicator.hide();
-		// 		// 					}
-		// 		// 				});
+										}
+									},
+									error: function () {
+										MessageBox.error("Ocurrio un error al obtener los datos de codigo generico");
+										sap.ui.core.BusyIndicator.hide();
+									}
+								});
 							
-		// 		// 	}	
+					}	
 						
 						
-		// 		// 	}	
+					}	
 						
 					
-		// 		// 	});
-		// 		// });
+					});
+				});
 					
-		// 		// }else{
+				}else{
 				
-		// 		// if(validacionFecha != true){
-		// 		// 	MessageBox.error("Formato Incorrecto , por favor revisar.");
-		// 		// 	sap.ui.core.BusyIndicator.hide();	
-		// 		// 	return false;	
-		// 		// 	}
+				if(validacionFecha != true){
+					MessageBox.error("Formato Incorrecto , por favor revisar.");
+					sap.ui.core.BusyIndicator.hide();	
+					return false;	
+					}
 				
 				
-		// 		// var nuevo_NroCompro = "";
-		// 		// var antiguo_NroCompro = "";
-		// 		// var fecha_antigua	="";
-		// 		// var tipocomprobante_antiguo="";
-		// 		// var tipodoc="";
+				var nuevo_NroCompro = "";
+				var antiguo_NroCompro = "";
+				var fecha_antigua	="";
+				var tipocomprobante_antiguo="";
+				var tipodoc="";
 				
-		// 		// DataComprobanteConfirmacion.forEach(function (ITEMS_02) {//27/07/2022
-		// 		// 	if(ITEMS_02.COMPROBANTE === DescRegistroComprobante  && ITEMS_02.keySeg !== seleccion.keySeg){
-		// 		// 		validacion_comprobant = true;				
+				DataComprobanteConfirmacion.forEach(function (ITEMS_02) {//27/07/2022
+					if(ITEMS_02.COMPROBANTE === DescRegistroComprobante  && ITEMS_02.keySeg !== seleccion.keySeg){
+						validacion_comprobant = true;				
 							
-		// 		// }
-		// 		// });
+				}
+				});
 				
-		// 		// if(validacion_comprobant){//27/07/2022
+				if(validacion_comprobant){//27/07/2022
 					
-		// 		// 		MessageBox.warning("Ya existe el número de comprobante.", {
-		// 		// 			actions: ["Aceptar"],
-		// 		// 			//title: "Llenar los campos faltantes",
-		// 		// 			emphasizedAction: "",
-		// 		// 			onClose: async function (sAction) {
-		// 		// 				if (sAction === "Aceptar") {
+						MessageBox.warning("Ya existe el número de comprobante.", {
+							actions: ["Aceptar"],
+							//title: "Llenar los campos faltantes",
+							emphasizedAction: "",
+							onClose: async function (sAction) {
+								if (sAction === "Aceptar") {
 								
-		// 		// 				}
+								}
 								
-		// 		// 				sap.ui.core.BusyIndicator.hide();
-		// 		// 			}
-		// 		// 		});
-		// 		// 		ModelProyect.setProperty("/razonSocial", "");
-		// 		// 		ModelProyect.setProperty("/ruc", "");
-		// 		// 		ModelProyect.setProperty("/visbleCampo", false);
-		// 		// 		return;
-		// 		// 	}
-		// 		// var datitos = {
-		// 		// 	"FLAG": "X",
-		// 		// 	"ZET_VALIDA_COMPROBANTESet": [{
-		// 		// 		"COMPROBANTE": DescRegistroComprobante,
-		// 		// 		"MENSAJE": "",
-		// 		// 		"RUC": "",
-		// 		// 		"TIPO_COMP": Key_comprobante,
-		// 		// 		"FECHA_COMP": formato_defecha
-		// 		// 	}]
-		// 		// }
-		// 		// $.ajax({
-		// 		// 	url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV",
-		// 		// 	type: "GET",
-		// 		// 	headers: {
-		// 		// 		"x-CSRF-Token": "Fetch"
-		// 		// 	}
-		// 		// }).always(function (data, status, response) {
-		// 		// 	var token = response.getResponseHeader("x-csrf-token");
-		// 		// 	$.ajax({
-		// 		// 		url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_VALIDA_COMPROBANTE_CABSet",
-		// 		// 		method: "POST",
-		// 		// 		headers: {
-		// 		// 			"x-CSRF-Token": token
-		// 		// 		},
-		// 		// 		async: true,
-		// 		// 		contentType: "application/json",
-		// 		// 		dataType: "json",
-		// 		// 		data: JSON.stringify(datitos),
-		// 		// 	}).always(function (data, status, response) {
-		// 		// 	var mensaje_compro = data.d.ZET_VALIDA_COMPROBANTESet.results[0].MENSAJE;
-		// 		// 	if (mensaje_compro === "Ya existe el número de comprobante") {
-		// 		// 	MessageBox.error("Ya existe el número de comprobante");
-		// 		// 	sap.ui.core.BusyIndicator.hide();
-		// 		// 	}else{
+								sap.ui.core.BusyIndicator.hide();
+							}
+						});
+						ModelProyect.setProperty("/razonSocial", "");
+						ModelProyect.setProperty("/ruc", "");
+						ModelProyect.setProperty("/visbleCampo", false);
+						return;
+					}
+				var datitos = {
+					"FLAG": "X",
+					"ZET_VALIDA_COMPROBANTESet": [{
+						"COMPROBANTE": DescRegistroComprobante,
+						"MENSAJE": "",
+						"RUC": "",
+						"TIPO_COMP": Key_comprobante,
+						"FECHA_COMP": formato_defecha
+					}]
+				}
+				$.ajax({
+					url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV",
+					type: "GET",
+					headers: {
+						"x-CSRF-Token": "Fetch"
+					}
+				}).always(function (data, status, response) {
+					var token = response.getResponseHeader("x-csrf-token");
+					$.ajax({
+						url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_VALIDA_COMPROBANTE_CABSet",
+						method: "POST",
+						headers: {
+							"x-CSRF-Token": token
+						},
+						async: true,
+						contentType: "application/json",
+						dataType: "json",
+						data: JSON.stringify(datitos),
+					}).always(function (data, status, response) {
+					var mensaje_compro = data.d.ZET_VALIDA_COMPROBANTESet.results[0].MENSAJE;
+					if (mensaje_compro === "Ya existe el número de comprobante") {
+					MessageBox.error("Ya existe el número de comprobante");
+					sap.ui.core.BusyIndicator.hide();
+					}else{
 						
-		// 		// 	DataComprobanteConfirmacion.forEach(function (ITEMS) {
+					DataComprobanteConfirmacion.forEach(function (ITEMS) {
 					
-		// 		// 	if (ITEMS.keySeg === seleccion.keySeg) {
-		// 		// 	//antiguo_NroCompro = ITEMS.COMPROBANTE;
+					if (ITEMS.keySeg === seleccion.keySeg) {
+					//antiguo_NroCompro = ITEMS.COMPROBANTE;
 	
-		// 		// 	if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
-		// 		// 	if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
-		// 		// 	nuevo_NroCompro =DescRegistroComprobante;
-		// 		// 	}else{
-		// 		// 	nuevo_NroCompro ="";	
-		// 		// 	}
-		// 		// 	}
+					if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
+					if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
+					nuevo_NroCompro =DescRegistroComprobante;
+					}else{
+					nuevo_NroCompro ="";	
+					}
+					}
 					
-		// 		// 	if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
-		// 		// 	tipodoc = ITEMS.TIPODOCI;
-		// 		// 	}
+					if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
+					tipodoc = ITEMS.TIPODOCI;
+					}
 						
-		// 		// 		if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
-		// 		// 		fecha_antigua = ITEMS.FECHA_COMP;
-		// 		// 		}
+						if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
+						fecha_antigua = ITEMS.FECHA_COMP;
+						}
 					
-		// 		// 		if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP){
-		// 		// 		tipocomprobante_antiguo =ITEMS.TIPO_COMP;
-		// 		// 		}
+						if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP){
+						tipocomprobante_antiguo =ITEMS.TIPO_COMP;
+						}
 						
 	
-		// 		// 		if (ITEMS.keySeg === seleccion.keySeg) {
-		// 		// 			ITEMS.NROD0 = datosComprobante01.NROD0;
-		// 		// 			ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
-		// 		// 			ITEMS.COD_SAP = COD_SAP;
-		// 		// 			ITEMS.visibleState = true;
-		// 		// 			ITEMS.TIPO_COMP = SelectedTipoDocumento;
-		// 		// 			ITEMS.FECHA_COMP = FechaComprobante;
-		// 		// 			ITEMS.COPIA_TIPODOC =tipodoc;
-		// 		// 			ITEMS.COMPROBANTE = DescRegistroComprobante;
-		// 		// 			ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
-		// 		// 			ITEMS.key = ITEMS.keySeg;
-		// 		// 			//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
-		// 		// 			ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
-		// 		// 			ITEMS.FECHA_ANTIGUA =fecha_antigua;
-		// 		// 			ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
-		// 		// 			ITEMS.COD_TIPO_COMP = Key_comprobante;
-		// 		// 			ITEMS.validacion_guardado= false;//30062022
-		// 		// 			ITEMS.VALIDAR_DATOS = false;//01/09/2022
+						if (ITEMS.keySeg === seleccion.keySeg) {
+							ITEMS.NROD0 = datosComprobante01.NROD0;
+							ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
+							ITEMS.COD_SAP = COD_SAP;
+							ITEMS.visibleState = true;
+							ITEMS.TIPO_COMP = SelectedTipoDocumento;
+							ITEMS.FECHA_COMP = FechaComprobante;
+							ITEMS.COPIA_TIPODOC =tipodoc;
+							ITEMS.COMPROBANTE = DescRegistroComprobante;
+							ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
+							ITEMS.key = ITEMS.keySeg;
+							//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
+							ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
+							ITEMS.FECHA_ANTIGUA =fecha_antigua;
+							ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
+							ITEMS.COD_TIPO_COMP = Key_comprobante;
+							ITEMS.validacion_guardado= false;//30062022
+							ITEMS.VALIDAR_DATOS = false;//01/09/2022
 	
-		// 		// 			ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
-		// 		// 			ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
-		// 		// 			ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
-		// 		// 			ModelProyect.setProperty("/nroPos", seleccion.keySeg);
-		// 		// 			validar_tabs = false;
-		// 		// 			sap.ui.core.BusyIndicator.hide();
-		// 		// 		}
-		// 		// 		}
-		// 		// 	});
-		// 		// 	MessageToast.show(mensaje_compro);
-		// 		// 	ModelProyect.setProperty("/visbleCampo", true);
-		// 		// 	ModelProyect.setProperty("/razonSocial", "");
-		// 		// 	sap.ui.core.BusyIndicator.hide();	
-		// 		// 	}
-		// 		// 	});
-		// 		// });
+							ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
+							ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
+							ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
+							ModelProyect.setProperty("/nroPos", seleccion.keySeg);
+							validar_tabs = false;
+							sap.ui.core.BusyIndicator.hide();
+						}
+						}
+					});
+					MessageToast.show(mensaje_compro);
+					ModelProyect.setProperty("/visbleCampo", true);
+					ModelProyect.setProperty("/razonSocial", "");
+					sap.ui.core.BusyIndicator.hide();	
+					}
+					});
+				});
 				
 				
 					
-		// 		// }
-		// 		// }
-		// 		// else{
-		// 		// DataComprobanteConfirmacion.forEach(function (ITEMS) {
+				}
+				}
+				else{
+				DataComprobanteConfirmacion.forEach(function (ITEMS) {
 					
-		// 		// if (ITEMS.keySeg === seleccion.keySeg) {
+				if (ITEMS.keySeg === seleccion.keySeg) {
 			
-		// 		// 	if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
-		// 		// 	tipodoc = ITEMS.TIPODOCI;
-		// 		// 	}
+					if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
+					tipodoc = ITEMS.TIPODOCI;
+					}
 					
-		// 		// 	if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
-		// 		// 	fecha_antigua = ITEMS.FECHA_COMP;
-		// 		// 	}
+					if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
+					fecha_antigua = ITEMS.FECHA_COMP;
+					}
 				
-		// 		// 	if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP){
-		// 		// 	tipocomprobante_antiguo =ITEMS.TIPO_COMP;
-		// 		// 	}
+					if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP){
+					tipocomprobante_antiguo =ITEMS.TIPO_COMP;
+					}
 					
 
-		// 		// 	if (ITEMS.keySeg === seleccion.keySeg) {
-		// 		// 		ITEMS.NROD0 = datosComprobante01.NROD0;
-		// 		// 		ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
-		// 		// 		ITEMS.COD_SAP = COD_SAP;
-		// 		// 		ITEMS.visibleState = true;
-		// 		// 		ITEMS.TIPO_COMP = SelectedTipoDocumento;
-		// 		// 		ITEMS.FECHA_COMP = FechaComprobante;
-		// 		// 		ITEMS.COPIA_TIPODOC =tipodoc;
-		// 		// 		ITEMS.key = ITEMS.keySeg;
-		// 		// 		ITEMS.FECHA_ANTIGUA =fecha_antigua;
-		// 		// 		ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
-		// 		// 		ITEMS.COD_TIPO_COMP = Key_comprobante;
-		// 		// 		ITEMS.COMPROBANTE = DescRegistroComprobante;
-		// 		// 		ITEMS.RUC = ruc;
-		// 		// 		ITEMS.validacion_guardado= false;//30062022
-		// 		// 		ITEMS.VALIDAR_DATOS = false;//01/09/2022
+					if (ITEMS.keySeg === seleccion.keySeg) {
+						ITEMS.NROD0 = datosComprobante01.NROD0;
+						ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
+						ITEMS.COD_SAP = COD_SAP;
+						ITEMS.visibleState = true;
+						ITEMS.TIPO_COMP = SelectedTipoDocumento;
+						ITEMS.FECHA_COMP = FechaComprobante;
+						ITEMS.COPIA_TIPODOC =tipodoc;
+						ITEMS.key = ITEMS.keySeg;
+						ITEMS.FECHA_ANTIGUA =fecha_antigua;
+						ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
+						ITEMS.COD_TIPO_COMP = Key_comprobante;
+						ITEMS.COMPROBANTE = DescRegistroComprobante;
+						ITEMS.RUC = ruc;
+						ITEMS.validacion_guardado= false;//30062022
+						ITEMS.VALIDAR_DATOS = false;//01/09/2022
 
-		// 		// 		ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
-		// 		// 		ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
-		// 		// 		ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
-		// 		// 		ModelProyect.setProperty("/nroPos", seleccion.keySeg);
-		// 		// 		validar_tabs = false;
-		// 		// 		sap.ui.core.BusyIndicator.hide();
-		// 		// 	}
-		// 		// 	}
-		// 		// });	
+					ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
+						ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
+						ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
+				 		ModelProyect.setProperty("/nroPos", seleccion.keySeg);
+				 		validar_tabs = false;
+				 		sap.ui.core.BusyIndicator.hide();
+			 	}
+			 		}
+			 	 });	
 					
-		// 		// MessageToast.show("RUC existente");
-		// 		// sap.ui.core.BusyIndicator.hide();
-		// 		}
+			 	 MessageToast.show("RUC existente");
+			 	 sap.ui.core.BusyIndicator.hide();
+			 	}
 		
-		// 	//sap.ui.core.BusyIndicator.hide();
-		// },
+			 sap.ui.core.BusyIndicator.hide();
+		},
 
 		onPressTab: function (oEvent) {
 			var oView = this.getView();
@@ -10116,7 +10116,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		// 				"cache-control": "no-cache"
 		// 			},
 		// 			data: data,
-		// 			url: "/SUNAT_COMPROBANTE/f0104b35-c03e-4cfa-885f-8b83ef9475d3/oauth2/token/",
+		// 			url: "/SUNAT_COMPROBANTE/f0104b35-c03e-4cfa-885f-8b83ef9475d3/oauth2/token/", bbde92bb-1503-48bc-8f4e-2ac333c6a28c
 		// 			success: function (data1, textStatus, jqXHR) {
 		// 				console.log(data1);
 	

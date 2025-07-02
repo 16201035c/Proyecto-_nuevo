@@ -197,7 +197,7 @@ sap.ui.define([
 				DataGlosa.forEach(function (items, index) {
 				condicion = false;
 
-				if (items.POSIC === seleBaseImp.POSIC) {
+				if (items.POSIC.toString() === seleBaseImp.POSIC.toString()) {
 					
 					
 					// si el indicador es diferente a c0 , que realize la suma de base imponible,igv y inafecto.
@@ -234,9 +234,11 @@ sap.ui.define([
 						}else{
 						items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
 						impuesto = parseFloat(seleBaseImp.BASE_IMP) * Igvprueba;
-						calculoimp = impuesto / 100;	
+						calculoimp = impuesto / 100;
+						
 							
 						}
+						seleBaseImp.IGV = calculoimp ; //
 						items.IGV = calculoimp.toString();
 						items.INAFECTO = parseFloat(seleBaseImp.INAFECTO).toFixed(2);
 
@@ -642,32 +644,56 @@ sap.ui.define([
 			var sRegistroComprobante = Proyect.getProperty("/sRegistroComprobantes");
 			var prueba   			 ="";
 			var Selección_edi = Proyect.getProperty("/Selección_edi");
+			var DataGlosa     = Proyect.getProperty("/DataGlosa")[0] ;
 
-			ProductCollection.forEach(function (objeto) {
-				if (Selección_edi === objeto) {
-					objeto.COMPROBANTE		= sRegistroComprobante;
-					objeto.FECHA_COMP = fecha_Comprobante;
-					objeto.COD_TIPO_COMP = Key_comprobante;
-					objeto.COD_TIPO_COMP= tipoNif;
-					objeto.RUC= Ruc;
-					objeto.RAZON_SOCIAL= Razon_Social;
-					objeto.WAERS= Monedas;
-					objeto.GLOSA= Glosa;
-					objeto.desglose= Selección_edi.desglose;
-													
-				}
+			MessageBox.information("¿Desea guardar el comprobante?", {
+				actions: ["Aceptar", "Cancelar"],
+				onClose: function (sAction) {
+					if (sAction === "Aceptar") {	
+
+						ProductCollection.forEach(function (objeto) {
+							if (Selección_edi === objeto) {
+								objeto.COMPROBANTE		= sRegistroComprobante;
+								objeto.FECHA_COMP = fecha_Comprobante;
+								objeto.COD_TIPO_COMP = Key_comprobante;
+								objeto.COD_TIPO_COMP= tipoNif;
+								objeto.RUC= Ruc;
+								objeto.RAZON_SOCIAL= Razon_Social;
+								objeto.WAERS= Monedas;
+								objeto.GLOSA= Glosa;
+								objeto.desglose= Selección_edi.desglose;
+																
+							}
+								
+					   });
+					   sap.ui.core.BusyIndicator.hide(0);
+					   Proyect.setProperty("/sRegistroComprobantes","");
+						Proyect.setProperty("/fecha_Comprobante1","");
+						Proyect.setProperty("/Key_comprobante","");
+						Proyect.setProperty("/tipoNif","");
+						Proyect.setProperty("/ruc","");
+						Proyect.setProperty("/razonSocial","");
+						Proyect.setProperty("/monedas","");
+						Proyect.setProperty("/Glosa","");	
+						this.EditarDeta.close();
+
+					}else {
+						sap.ui.core.BusyIndicator.hide(0);
+						Proyect.setProperty("/sRegistroComprobantes","");
+						 Proyect.setProperty("/fecha_Comprobante1","");
+						 Proyect.setProperty("/Key_comprobante","");
+						 Proyect.setProperty("/tipoNif","");
+						 Proyect.setProperty("/ruc","");
+						 Proyect.setProperty("/razonSocial","");
+						 Proyect.setProperty("/monedas","");
+						 Proyect.setProperty("/Glosa","");	
+						 this.EditarDeta.close();
+
+					}
+
 					
-		   });
-		   sap.ui.core.BusyIndicator.hide(0);
-		   Proyect.setProperty("/sRegistroComprobantes","");
-			Proyect.setProperty("/fecha_Comprobante1","");
-			Proyect.setProperty("/Key_comprobante","");
-			Proyect.setProperty("/tipoNif","");
-			Proyect.setProperty("/ruc","");
-			Proyect.setProperty("/razonSocial","");
-			Proyect.setProperty("/monedas","");
-			Proyect.setProperty("/Glosa","");	
-			this.EditarDeta.close();
+				}
+			});
 
 		},
 
@@ -677,7 +703,10 @@ sap.ui.define([
 			var Proyect = oView.getModel("Proyect");
 			var ruc = Proyect.getProperty("/ruc");
 			var tipoNif = Proyect.getProperty("/tipoNif");
-	
+			var data2			= "";
+
+			
+			
 			if(tipoNif == "DNI"){
 
 				if (ruc == undefined || ruc ==""){
@@ -687,8 +716,232 @@ sap.ui.define([
 					Proyect.setProperty("/razonSocial", "")
 
 				}else if(ruc.length == "8"){
+
+					// var data = "grant_type=client_credentials&scope=https%3A%2F%2Fapi.sunat.gob.pe%2Fv1%2Fcontribuyente%2Fcontribuyentes&client_id=7f6dec91-4e2d-4e6b-9ca4-4a9598946916&client_secret=D2oPZhtORGVEhElz6ums4w==";
+					// var data = "grant_type=client_credentials&scope=https://api.sunat.gob.pe/v1/contribuyente/contribuyentes&client_id=7f6dec91-4e2d-4e6b-9ca4-4a9598946916&client_secret=D2oPZhtORGVEhElz6ums4w==";
+					let data =  {
+							"grant_type": "client_credentials",
+							"scope": "https://api.sunat.gob.pe/v1/contribuyente/contribuyentes",
+							"client_id": "7f6dec91-4e2d-4e6b-9ca4-4a9598946916",
+							"client_secret": "D2oPZhtORGVEhElz6ums4w==",
+							"username": "46432887",
+							"password": "Julioromero12"
+						}
+
+					jQuery.ajax({
+				 	type: "POST",
+				 	crossDomain: true,
+				 	headers: {
+				 		"content-type": "application/x-www-form-urlencoded",
+
+				 		"cache-control": "no-cache"
+				 	},
+					async: true,
+				 	data: data,
+				 	url: "/SUNAT_COMPROBANTE/7f6dec91-4e2d-4e6b-9ca4-4a9598946916/oauth2/token/",
+				 	success: function (data1, textStatus, jqXHR) {
+				 		console.log(data1);
+	
+						data2 = data1.access_token;
+						Proyect.setProperty("/razonSocial", "Claudia Romero")
+	
+						// datos = {
+				 		// 	"numRuc": "20100103738",
+				 		// 	"codComp": "01",
+				 		// 	"numeroSerie": "FH02",
+				 		// 	"numero": "0048226",
+						// 	"fechaEmision": "13/01/2022",
+						// 	"monto": "114.00"
+						// };
 					
-					Proyect.setProperty("/razonSocial", "Claudia Romero")
+	
+					},
+					error: function (er) {
+						MessageBox.error("Ocurrio un error al obtener el token");
+						sap.ui.core.BusyIndicator.hide();
+						console.log(er);
+				 	}
+				 });
+
+				//  jQuery.ajax({
+				// 		type: "GET",
+				// 		url: "/SUNAT_RUC/"+ ruc+"/validarcomprobante",
+
+				// 		async: true,
+				// 		success: async function (data1, textStatus, jqXHR) {
+				// 			console.log(data1)
+				// 			var condicion_01 = data1.condicion.toUpperCase(); //convierte de minuscula a mayuscula
+				// 			var estado_01 = data1.estado.toUpperCase(); //convierte de minuscula a mayuscula
+				// 			var mensajes = "";
+				// 			switch (condicion_01) {
+				// 			case "NO HALLADO":
+				// 				mensajes = "NO HALLADO";
+				// 				break;
+				// 			case "NO HABIDO":
+				// 				mensajes = "NO HABIDO";
+				// 				break;
+
+				// 			}
+
+				// 			switch (estado_01) {
+
+				// 			case "BAJA DEFINITIVA":
+
+				// 				if (mensajes.length > 0) {
+				// 					mensajes += " y BAJA DEFINITIVA";
+				// 				} else {
+				// 					mensajes = "BAJA DEFINITIVA";
+				// 				}
+				// 				break;
+				// 			case "BAJA DE OFICIO":
+
+				// 				if (mensajes.length > 0) {
+				// 					mensajes += " y BAJA DE OFICIO";
+				// 				} else {
+				// 					mensajes = "BAJA DE OFICIO";
+				// 				}
+				// 				break;
+				// 			}
+				// 			var numeroRuc = "";
+				// 			var nuevo_NroCompro = "";
+				// 			var antiguo_NroCompro = "";
+				// 			var fecha_antigua	="";
+				// 			var tipocomprobante_antiguo="";
+				// 			var tipodoc	="";
+				// 			var antiguo_Ruc	="";
+
+				// 			if (mensajes.length > 0) {
+				// 				MessageBox.information("El RUC esta " + mensajes);
+				// 				ModelProyect.setProperty("/razonSocial", "");
+				// 				sap.ui.core.BusyIndicator.hide();
+				// 				return;
+
+				// 			} else if (estado_01 === "ACTIVO" && condicion_01 === "HABIDO") {
+				// 				DataComprobanteConfirmacion.forEach(function (ITEMS) {
+								
+				// 					if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
+									
+				// 						//antiguo_NroCompro = ITEMS.COMPROBANTE;
+				// 						//antiguo_Ruc = ITEMS.RUC;                   
+
+									
+				// 					if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
+				// 					if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
+				// 					nuevo_NroCompro =DescRegistroComprobante;
+				// 					}else{
+				// 					nuevo_NroCompro ="";	
+				// 					}
+				// 					}
+									
+				// 					if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
+				// 					if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
+				// 						numeroRuc = ruc;
+				// 					}else{
+				// 						numeroRuc = "";
+				// 					}
+				// 					}
+									
+				// 					if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
+				// 						fecha_antigua = ITEMS.FECHA_COMP;
+										
+				// 					}
+									
+									
+				// 					if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
+				// 						tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
+				// 					}
+									
+				// 					if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
+				// 						tipodoc = ITEMS.TIPODOCI;
+				// 					}
+									
+				// 					if (ITEMS.keySeg === seleccion.keySeg) {
+				// 						ITEMS.NROD0 = datosComprobante01.NROD0;
+				// 						ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
+				// 						ITEMS.COD_SAP = COD_SAP;
+				// 						ITEMS.visibleState = true;
+				// 						ITEMS.TIPODOCI = tipoNif;
+				// 						ITEMS.COPIA_TIPODOC =tipodoc;
+				// 						ITEMS.TIPO_COMP = SelectedTipoDocumento;
+				// 						ITEMS.FECHA_COMP = FechaComprobante;
+				// 						ITEMS.COMPROBANTE = DescRegistroComprobante;
+				// 						//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
+				// 						ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
+				// 						ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
+				// 						ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
+				// 						ITEMS.RUC_PRUEBA = numeroRuc;
+				// 						//ITEMS.RUC_COPIA = antiguo_Ruc;
+				// 						ITEMS.FECHA_ANTIGUA =fecha_antigua;
+				// 						ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
+				// 						ITEMS.key = ITEMS.keySeg;
+				// 						ITEMS.RUC = ruc;
+				// 						ITEMS.RAZON_SOCIAL = data1.nombre;
+				// 						ITEMS.COD_TIPO_COMP = Key_comprobante;
+				// 						ITEMS.validacion_guardado= false;//30062022
+				// 						ITEMS.VALIDAR_DATOS = false;//01/09/2022
+								
+				// 					ITEMS.desglose.map(function (items02) {
+				// 					if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
+				// 						items02.COMPROBANTE = DescRegistroComprobante;
+				// 						}
+
+				// 						});
+										
+				// 						ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
+				// 						ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
+				// 						ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
+				// 						ModelProyect.setProperty("/nroPos", seleccion.keySeg);
+				// 						validar_tabs = true;
+				// 					}
+				// 					} 
+								
+				// 				});
+							
+				// 				ModelProyect.setProperty("/razonSocial", data1.nombre);
+				// 				ModelProyect.setProperty("/visbleCampo", true);
+				// 				ModelProyect.setProperty("/editableMonto_compro", false);
+				// 				MessageToast.show("RUC existente");
+				// 				sap.ui.core.BusyIndicator.hide();
+				// 			} else {
+				// 				MessageBox.information("El RUC esta " + estado_01 + " y " + condicion_01);
+				// 				ModelProyect.setProperty("/razonSocial", "");
+				// 				//ModelProyect.setProperty("/Orden_Interna", "");
+				// 				//ModelProyect.setProperty("/Numero_viaje", "");
+				// 				//ModelProyect.setProperty("/Glosa", "");
+				// 				ModelProyect.setProperty("/visbleCampo", false);
+				// 				DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
+				// 				if (te.keySeg === seleccion.keySeg) {
+				// 				te.RUC = "";
+				// 				te.RAZON_SOCIAL ="" ;                   
+									
+				// 				}	
+				// 				});
+				// 			}
+				// 			sap.ui.core.BusyIndicator.hide();
+				// 		},
+
+				// 		error: function (er) {
+				// 			MessageBox.error("Ruc invalido.");
+				// 			ModelProyect.setProperty("/razonSocial", "");
+				// 			//ModelProyect.setProperty("/Orden_Interna", "");
+				// 			//ModelProyect.setProperty("/Numero_viaje", "");
+				// 			//ModelProyect.setProperty("/Glosa", "");
+				// 			ModelProyect.setProperty("/visbleCampo", false);
+				// 			DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
+				// 			if (te.keySeg === seleccion.keySeg) {
+				// 			te.RUC = "";
+				// 			te.RAZON_SOCIAL ="" ;                   
+								
+				// 			}	
+				// 			});
+							
+				// 			sap.ui.core.BusyIndicator.hide();
+				// 			console.log(er);
+				// 		}
+				// 	});
+			
+					// 
+					
 					
 				}else{
 					Proyect.setProperty("/ruc", "")
@@ -1359,6 +1612,7 @@ sap.ui.define([
 
 		GuardarComprobanteCr:function(){ //17.04.2025
 			var vista 			     = this.getView();
+			var that = this ;
 			var Proyect 		     = vista.getModel("Proyect");
 			var sRegistroComprobante = Proyect.getProperty("/sRegistroComprobantes");
 			var fecha_Comprobante  	 = Proyect.getProperty("/fecha_Comprobante1");
@@ -1398,6 +1652,11 @@ sap.ui.define([
 				return;
             }
 
+			MessageBox.information("¿Desea guardar el comprobante?", {
+				actions: ["Aceptar", "Cancelar"],
+				onClose: function (sAction) {
+					if (sAction === "Aceptar") {	
+
 			if(ProductCollection !== undefined){ //06/10/2024
 				ProductCollection.forEach(function (items2) {
 				
@@ -1411,134 +1670,142 @@ sap.ui.define([
 				if(repite == true){
 					MessageBox.warning("El comprobante ya fue registrado");//06/10/2024
 					return;
-				}			
-		
-
-				var estructura = {
-					key				: arrayguardar_comp.length +1,
-					keySeg			:arrayguardar_comp.length +1,
-					NROD0			:"",
-					DOC_PAGO		:"",
-					COD_SAP			:"",
-					ID_DOC_SRV		:"",
-					COMPROBANTE		:sRegistroComprobante,
-					COD_TIPO_COMP	: Key_comprobante,
-					TIPO_COMP		: "",
-					TIPODOCI    	:  tipoNif,
-					FECHA_COMP		: fecha_Comprobante,
-					TIPO_NIF		: "",
-					RUC				: Ruc,
-					RAZON_SOCIAL	: Razon_Social,
-					WAERS			: Monedas,
-					ESTADO			:"",
-					GLOSA   		: Glosa,
-					ORDEN_INT		: "",
-					VIAJES			: "",
-					REF_FACTURA		: "",
-					EST_COMP		: "",
-					COD_EST_COMP	: "",
-					DOC_COMP			:"",
-					DOC_CONT			:"",
-					DOC_PAGO_SOLICITUD  :"",
-					FECHA_CONT			:"",
-					FECHA_COMPENSA		:"",
-					desglose: [{	
-					"COMPROBANTE":sRegistroComprobante,
-					"POSIC": "1",
-					"COD_CONT": DataGlosa.COD_CONT,
-					"BASE_IMP": DataGlosa.BASE_IMP,
-					"IGV": DataGlosa.IGV,
-					"INAFECTO": DataGlosa.INAFECTO,
-					"TOTAL": DataGlosa.TOTAL,
-					"IND_IMP": DataGlosa.IND_IMP,
-					"imp": "",
+				}	
+				
+							var estructura = {
+								key				: arrayguardar_comp.length +1,
+								keySeg			:arrayguardar_comp.length +1,
+								NROD0			:"",
+								DOC_PAGO		:"",
+								COD_SAP			:"",
+								ID_DOC_SRV		:"",
+								COMPROBANTE		:sRegistroComprobante,
+								COD_TIPO_COMP	: Key_comprobante,
+								TIPO_COMP		: "",
+								TIPODOCI    	:  tipoNif,
+								FECHA_COMP		: fecha_Comprobante,
+								TIPO_NIF		: "",
+								RUC				: Ruc,
+								RAZON_SOCIAL	: Razon_Social,
+								WAERS			: Monedas,
+								ESTADO			:"",
+								GLOSA   		: Glosa,
+								ORDEN_INT		: "",
+								VIAJES			: "",
+								REF_FACTURA		: "",
+								EST_COMP		: "",
+								COD_EST_COMP	: "",
+								DOC_COMP			:"",
+								DOC_CONT			:"",
+								DOC_PAGO_SOLICITUD  :"",
+								FECHA_CONT			:"",
+								FECHA_COMPENSA		:"",
+								desglose: [{	
+								"COMPROBANTE":sRegistroComprobante,
+								"POSIC": "1",
+								"COD_CONT": DataGlosa.COD_CONT,
+								"BASE_IMP": DataGlosa.BASE_IMP,
+								"IGV": DataGlosa.IGV,
+								"INAFECTO": DataGlosa.INAFECTO,
+								"TOTAL": DataGlosa.TOTAL,
+								"IND_IMP": DataGlosa.IND_IMP,
+								"imp": "",
+								
+								}]
+								
+							}
+							ProductCollection.push(estructura);
+				
+							
+							// const informacion =ProductCollection.concat(arrayguardar_comp); // 22/04/2025
+							
+							
+							Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
+							Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
+							Proyect.setProperty("/ProductCollection",ProductCollection);
+							Proyect.setProperty("/sRegistroComprobantes","");
+							Proyect.setProperty("/fecha_Comprobante1","");
+							Proyect.setProperty("/Key_comprobante","");
+							Proyect.setProperty("/tipoNif","");
+							Proyect.setProperty("/ruc","");
+							Proyect.setProperty("/razonSocial","");
+							Proyect.setProperty("/monedas","");
+							Proyect.setProperty("/Glosa","");						
+							that.AgregarComprobante.close();
+			
 					
-					}]
-					
-				}
-				ProductCollection.push(estructura);
-	
-				
-				// const informacion =ProductCollection.concat(arrayguardar_comp); // 22/04/2025
-				
-				
-				Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
-				Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
-				Proyect.setProperty("/ProductCollection",ProductCollection);
-				Proyect.setProperty("/sRegistroComprobantes","");
-				Proyect.setProperty("/fecha_Comprobante1","");
-				Proyect.setProperty("/Key_comprobante","");
-				Proyect.setProperty("/tipoNif","");
-				Proyect.setProperty("/ruc","");
-				Proyect.setProperty("/razonSocial","");
-				Proyect.setProperty("/monedas","");
-				Proyect.setProperty("/Glosa","");						
-				this.AgregarComprobante.close();
-
 
 			}else {
 
-				var estructura = {
-					key				: arrayguardar_comp.length +1,
-					keySeg			:arrayguardar_comp.length +1,
-					NROD0			:"",
-					DOC_PAGO		:"",
-					COD_SAP			:"",
-					ID_DOC_SRV		:"",
-					COMPROBANTE		:sRegistroComprobante,
-					COD_TIPO_COMP	: Key_comprobante,
-					TIPO_COMP		: "",
-					TIPODOCI    	:  tipoNif,
-					FECHA_COMP		: fecha_Comprobante,
-					TIPO_NIF		: "",
-					RUC				: Ruc,
-					RAZON_SOCIAL	: Razon_Social,
-					WAERS			: Monedas,
-					ESTADO			:"",
-					GLOSA   		: Glosa,
-					ORDEN_INT		: "",
-					VIAJES			: "",
-					REF_FACTURA		: "",
-					EST_COMP		: "",
-					COD_EST_COMP	: "",
-					DOC_COMP			:"",
-					DOC_CONT			:"",
-					DOC_PAGO_SOLICITUD  :"",
-					FECHA_CONT			:"",
-					FECHA_COMPENSA		:"",
-					desglose: [{	
-					"COMPROBANTE":sRegistroComprobante,
-					"POSIC": "1",
-					"COD_CONT": DataGlosa.COD_CONT,
-					"BASE_IMP": DataGlosa.BASE_IMP,
-					"IGV": DataGlosa.IGV,
-					"INAFECTO": DataGlosa.INAFECTO,
-					"TOTAL": DataGlosa.TOTAL,
-					"IND_IMP": DataGlosa.IND_IMP,
-					"imp": "",
-					
-					}]
-					
-				}
-				arrayguardar_comp.push(estructura);
-               
-	
-				Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
-				Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
-				Proyect.setProperty("/ProductCollection",arrayguardar_comp);
-				Proyect.setProperty("/sRegistroComprobantes","");
-				Proyect.setProperty("/fecha_Comprobante1","");
-				Proyect.setProperty("/Key_comprobante","");
-				Proyect.setProperty("/tipoNif","");
-				Proyect.setProperty("/ruc","");
-				Proyect.setProperty("/razonSocial","");
-				Proyect.setProperty("/monedas","");
-				Proyect.setProperty("/Glosa","");						
-				this.AgregarComprobante.close();
-				arrayguardar_comp = [];
+		
+
+							var estructura = {
+								key				: arrayguardar_comp.length +1,
+								keySeg			:arrayguardar_comp.length +1,
+								NROD0			:"",
+								DOC_PAGO		:"",
+								COD_SAP			:"",
+								ID_DOC_SRV		:"",
+								COMPROBANTE		:sRegistroComprobante,
+								COD_TIPO_COMP	: Key_comprobante,
+								TIPO_COMP		: "",
+								TIPODOCI    	:  tipoNif,
+								FECHA_COMP		: fecha_Comprobante,
+								TIPO_NIF		: "",
+								RUC				: Ruc,
+								RAZON_SOCIAL	: Razon_Social,
+								WAERS			: Monedas,
+								ESTADO			:"",
+								GLOSA   		: Glosa,
+								ORDEN_INT		: "",
+								VIAJES			: "",
+								REF_FACTURA		: "",
+								EST_COMP		: "",
+								COD_EST_COMP	: "",
+								DOC_COMP			:"",
+								DOC_CONT			:"",
+								DOC_PAGO_SOLICITUD  :"",
+								FECHA_CONT			:"",
+								FECHA_COMPENSA		:"",
+								desglose: [{	
+								"COMPROBANTE":sRegistroComprobante,
+								"POSIC": "1",
+								"COD_CONT": DataGlosa.COD_CONT,
+								"BASE_IMP": DataGlosa.BASE_IMP,
+								"IGV": DataGlosa.IGV,
+								"INAFECTO": DataGlosa.INAFECTO,
+								"TOTAL": DataGlosa.TOTAL,
+								"IND_IMP": DataGlosa.IND_IMP,
+								"imp": "",
+								
+								}]
+								
+							}
+							arrayguardar_comp.push(estructura);
+						   
+				
+							Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
+							Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
+							Proyect.setProperty("/ProductCollection",arrayguardar_comp);
+							Proyect.setProperty("/sRegistroComprobantes","");
+							Proyect.setProperty("/fecha_Comprobante1","");
+							Proyect.setProperty("/Key_comprobante","");
+							Proyect.setProperty("/tipoNif","");
+							Proyect.setProperty("/ruc","");
+							Proyect.setProperty("/razonSocial","");
+							Proyect.setProperty("/monedas","");
+							Proyect.setProperty("/Glosa","");						
+							that.AgregarComprobante.close();
+							arrayguardar_comp = [];
+
+						
+
 
 			}	
-			
+		}
+
+	}
+})
 		
 		},
 
@@ -1669,6 +1936,47 @@ sap.ui.define([
 			// 	}
 			// });
 			sap.ui.core.BusyIndicator.hide();
+		},
+
+		quitarGrupos:function(oEvent){
+			var vista = this.getView();
+			var Proyect = vista.getModel("Proyect");
+			var that= this;
+			var selectSolicitudER = vista.byId("idProductsTable");
+			var selecciones   =       selectSolicitudER.getSelectedItems();
+			var ProductCollection = Proyect.getProperty("/ProductCollection");
+
+
+			MessageBox.information("¿Desea eliminar el comprobante?", {
+				actions: ["Aceptar", "Cancelar"],
+				onClose: function (sAction) {
+					if (sAction === "Aceptar") {
+						sap.ui.core.BusyIndicator.show(0);
+
+						var posiciones	= selecciones.map(function (objeto) {
+							var path = objeto.getBindingContext("Proyect").getPath();
+							var objetos = Proyect.getProperty(path);
+							return objetos;
+						});
+
+
+						for (var i = 0; i < ProductCollection.length; i++) {
+							posiciones.forEach(function(obj){
+								if (ProductCollection[i] === obj) {
+									ProductCollection.splice(i, 1);
+								}
+							})
+							
+						}
+						MessageBox.success("El comprobante fue eliminado exitosamente");
+						sap.ui.core.BusyIndicator.hide();
+						Proyect.refresh(true);
+				}
+
+					}
+				})
+
+			
 		},
 
 		pressAgregarComproCR:function(){ //17.04.2025
