@@ -79,7 +79,7 @@
                                             <!--<Button press="livechangeIden" type="Unstyled"  width="5rem" />-->
                                         </form:fields>
                                         <form:fields>
-                                            <Button text="{i18n>Nombre_Boton}" press="livechangeIden" type="Emphasized" width="7rem" class="sapUiSmallMarginTop"
+                                            <Button text="{i18n>Nombre_Boton}" press="validacion_sunat" type="Emphasized" width="7rem" class="sapUiSmallMarginTop"
                                                 enabled="true" visible="{Proyect>/visble_btnValidar}"/>
                                         </form:fields>
                                     </form:FormElement>

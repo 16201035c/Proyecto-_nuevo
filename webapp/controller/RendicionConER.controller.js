@@ -8,20 +8,20 @@ sap.ui.define([
 	"rendicionER/libs/xlsx",
 	"sap/ui/model/json/JSONModel",
 	'sap/ui/core/BusyIndicator'
-], function (Controller, BaseController, Filter, FilterOperator, MessageBox,models,xlsxjs,JSONModel,BusyIndicator) {
+], function (Controller, BaseController, Filter, FilterOperator, MessageBox, models, xlsxjs, JSONModel, BusyIndicator) {
 	"use strict";
-	var arraydatos=[];
-	var arraysolic=[];
+	var arraydatos = [];
+	var arraysolic = [];
 	var tipoUsr = "";
 	var consBusc = false;
-	var parametroApp ="";
+	var parametroApp = "";
 	//var validacion_guardado =false;//30062022
-	const HostName	= location.hostname.includes("webide") ? "" : "/sap/fiori/rendicioner" ;
+	const HostName = location.hostname.includes("webide") ? "" : "/sap/fiori/rendicioner";
 	// var arrayTablas=[];
 	var urlPage = "";
-	var ValidacionlevObs= false;
-	var ValidacionRendiEr= false;
-	var arrayguardar_comp	 =[];
+	var ValidacionlevObs = false;
+	var ValidacionRendiEr = false;
+	var arrayguardar_comp = [];
 
 	return BaseController.extend("rendicionER.controller.RendicionConER", {
 		onInit: function () {
@@ -30,14 +30,14 @@ sap.ui.define([
 			// const querystring	= location.hostname;
 			// console.log(querystring)
 		},
-		
+
 		handleRouteMatched: function () {
 			// this.userLoged();
 			var oFilter = this.getView().byId("filter"),
 				that = this;
 			var vista = this.getView();
 			var ModelProyect = vista.getModel("Proyect");
-				
+
 			oFilter.addEventDelegate({
 				"onAfterRendering": function (oEvent) {
 					var oResourceBundle = that.getOwnerComponent().getModel("i18n").getResourceBundle();
@@ -48,7 +48,7 @@ sap.ui.define([
 				}
 			});
 		},
-		
+
 		onGoHome: function (er) {
 			MessageBox.warning("¿Deseas volver al menú de aplicaciones?", {
 				actions: ["Aceptar", "Cancelar"],
@@ -61,54 +61,54 @@ sap.ui.define([
 				}
 			});
 		},
-		
-		onAfterRendering:function(){
+
+		onAfterRendering: function () {
 			var vista = this.getView();
 			var ModelProyect = vista.getModel("Proyect");
-			var contadorGlobal = vista.getModel("contadorGlobal").getProperty("/contador");	
-			var data2			="";
-			var that			=this;
-			var queryString 	= window.location.host;
+			var contadorGlobal = vista.getModel("contadorGlobal").getProperty("/contador");
+			var data2 = "";
+			var that = this;
+			var queryString = window.location.host;
 
-			
-			
-			if(contadorGlobal === 0){
+
+
+			if (contadorGlobal === 0) {
 				// parametroApp    = vista.getModel("parametroApp").getProperty("/parametro");
 				this.getOwnerComponent().getRouter().navTo("DetalleSolcitudConER");
-				
-				
-				if(queryString.includes("n8pid6w2h2")){
+
+
+				if (queryString.includes("n8pid6w2h2")) {
 					urlPage = "https://flpnwc-n8pid6w2h2.dispatcher.us2.hana.ondemand.com/sites?siteId=9a6f515e-eb45-4d6a-9a51-932c1dba144a&appState=lean#Shell-home";
-				}else{
+				} else {
 					urlPage = "https://flpnwc-dwc4zd7e0s.dispatcher.us2.hana.ondemand.com/sites?siteId=cd08e08d-5ca9-4e8b-a352-374cb609125d&appState=lean#Shell-home";
 				}
-				
-					try {
 
-		            if (sap.ushell && sap.ushell.cpv2 && sap.ushell.cpv2.services && sap.ushell.cpv2.services.cloudServices && sap.ushell.cpv2.services.cloudServices.SiteService) {
-		                var oLocalSiteService = sap.ushell.cpv2.services.cloudServices.SiteService();
-		                var oRoles = oLocalSiteService.siteModel.getProperty("/roles");
-		                var oProperty;
-		
-		                for (oProperty in oRoles) {
-		                    if (oRoles.hasOwnProperty(oProperty)) {
-		                    	
-								if(oProperty.toString() === "rendiciones" || oProperty.toString() === "empleadoER"){
-									
+				try {
+
+					if (sap.ushell && sap.ushell.cpv2 && sap.ushell.cpv2.services && sap.ushell.cpv2.services.cloudServices && sap.ushell.cpv2.services.cloudServices.SiteService) {
+						var oLocalSiteService = sap.ushell.cpv2.services.cloudServices.SiteService();
+						var oRoles = oLocalSiteService.siteModel.getProperty("/roles");
+						var oProperty;
+
+						for (oProperty in oRoles) {
+							if (oRoles.hasOwnProperty(oProperty)) {
+
+								if (oProperty.toString() === "rendiciones" || oProperty.toString() === "empleadoER") {
+
 									ValidacionRendiEr = true;
-								}else if(oProperty.toString() === "levantarObs" || oProperty.toString() ===  "levObsER" ){
-									
-								    ValidacionlevObs = true;
+								} else if (oProperty.toString() === "levantarObs" || oProperty.toString() === "levObsER") {
+
+									ValidacionlevObs = true;
 								}
-								
-		                    }
-		                }
-	
-		            }
-			        } catch (oException) {
-						
-			        }
-			        
+
+							}
+						}
+
+					}
+				} catch (oException) {
+
+				}
+
 				that.limpiar();
 				that.servicioIgv();
 				that.selectSociedad();
@@ -119,87 +119,87 @@ sap.ui.define([
 				that.ListaGastosCr();
 				that.listaIndicador();
 				that.ValidacionTipoCambio();
-				ModelProyect.setProperty("/DatosComprobantes",[]);
-				ModelProyect.setProperty("/KeySociedad","300");
-				ModelProyect.setProperty("/seleccion_CECO","id1");
-				ModelProyect.setProperty("/enableCeco",false);
+				ModelProyect.setProperty("/DatosComprobantes", []);
+				ModelProyect.setProperty("/KeySociedad", "300");
+				ModelProyect.setProperty("/seleccion_CECO", "id1");
+				ModelProyect.setProperty("/enableCeco", false);
 				ModelProyect.setProperty("/enableEditar", false);
 				ModelProyect.setProperty("/enableElim", false);
-				ModelProyect.setProperty("/btnEliminarTabla",false);
+				ModelProyect.setProperty("/btnEliminarTabla", false);
 				ModelProyect.setSizeLimit(9999999999999999999999);//nuevo 22/06/2022
 				vista.getModel("contadorGlobal").setProperty("/contador", 1);
-				
+
 				that.oRouter = sap.ui.core.UIComponent.getRouterFor(that);
 				that.oRouter.getTarget("RendicionConER").attachDisplay(jQuery.proxy(that.userlog, that));
-				
+
 				consBusc = true;
-			
+
 			}
-			
-				
+
+
 		},
 
-		cerrarImputacion:function(){
+		cerrarImputacion: function () {
 			this.AgregarComprobante.close();
 		},
 
-		cerrardetalle:function(){//17/04/2025
+		cerrardetalle: function () {//17/04/2025
 			this.AbrirDeta.close();
 		},
 
 
-		pressDetalle:function(oEvent){//17/04/2025
+		pressDetalle: function (oEvent) {//17/04/2025
 			var oView = this.getView();
 			var ModelProyect = oView.getModel("Proyect");
 			var detalle = oEvent.getSource().oParent.oBindingContexts.Proyect.sPath;
-			var detalleSelec  = ModelProyect.getProperty(detalle).desglose;
+			var detalleSelec = ModelProyect.getProperty(detalle).desglose;
 			ModelProyect.setProperty("/DetalleGlosa", detalleSelec);
 
 			if (!this.AbrirDeta) {
 				this.AbrirDeta = sap.ui.xmlfragment("rendicionER.fragments.DetalleCompro", this);
 				oView.addDependent(this.AbrirDeta);
 			}
-			
-			this.AbrirDeta.open();	
+
+			this.AbrirDeta.open();
 		},
 
 		pressBaseImponibleyInafecto: function (oEvent) {//17/04/2025
-			var datos						= "";
-			var vista						= this.getView();
-			var suma						= 0;
-			var calculo 					= "";
-			var ModelProyect				= vista.getModel("Proyect");
-			var Igvprueba					= parseFloat("18");
-			var idBaseImp					= oEvent.mParameters.value;
-			var impuesto					= "";		
-			var seleccion					= oEvent.getSource().oParent.oBindingContexts.Proyect.sPath;
-			var seleBaseImp 				= ModelProyect.getProperty(seleccion);
-			var subTotal					= ModelProyect.getProperty("/subTotal");
-			var ImporteSolic				= ModelProyect.getProperty("/importe");
-			var calculoimp					= "";
-			var sumaBase					= 0;
-			var sumatotal					= 0;
-			var impuestoC					= 0;
-			var sumafinal					= 0;
-			var totalbaseImp				= 0;
-			var sumatoria					= 0;
-			var sumaTodoTotal				= 0;
-			var sumaTotal					= 0;
-			var baseImp 					= 0;
-			var calculototal				= 0;
-			var condicion					= false;
-			var acumulador					= 0;
-			var totalFixed					= 0;
-			var datos_selecciones			=ModelProyect.getProperty("/datos_selecciones");//21/07/2022
-			var DataGlosa					= ModelProyect.getProperty("/DataGlosa");
-			
+			var datos = "";
+			var vista = this.getView();
+			var suma = 0;
+			var calculo = "";
+			var ModelProyect = vista.getModel("Proyect");
+			var Igvprueba = parseFloat("18");
+			var idBaseImp = oEvent.mParameters.value;
+			var impuesto = "";
+			var seleccion = oEvent.getSource().oParent.oBindingContexts.Proyect.sPath;
+			var seleBaseImp = ModelProyect.getProperty(seleccion);
+			var subTotal = ModelProyect.getProperty("/subTotal");
+			var ImporteSolic = ModelProyect.getProperty("/importe");
+			var calculoimp = "";
+			var sumaBase = 0;
+			var sumatotal = 0;
+			var impuestoC = 0;
+			var sumafinal = 0;
+			var totalbaseImp = 0;
+			var sumatoria = 0;
+			var sumaTodoTotal = 0;
+			var sumaTotal = 0;
+			var baseImp = 0;
+			var calculototal = 0;
+			var condicion = false;
+			var acumulador = 0;
+			var totalFixed = 0;
+			var datos_selecciones = ModelProyect.getProperty("/datos_selecciones");//21/07/2022
+			var DataGlosa = ModelProyect.getProperty("/DataGlosa");
+
 			// DataComprobanteConfirmacion.forEach(function(items2){
-				DataGlosa.forEach(function (items, index) {
+			DataGlosa.forEach(function (items, index) {
 				condicion = false;
 
 				if (items.POSIC.toString() === seleBaseImp.POSIC.toString()) {
-					
-					
+
+
 					// si el indicador es diferente a c0 , que realize la suma de base imponible,igv y inafecto.
 					if (items.BASE_IMP === "") {
 						items.BASE_IMP = "0.00";
@@ -227,18 +227,18 @@ sap.ui.define([
 					}
 
 					if (seleBaseImp.IND_IMP !== "C0") {
-						if(seleBaseImp.IND_IMP === "C2"){//05/09/2022
-						items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
-						impuesto = parseFloat(seleBaseImp.BASE_IMP) * Igvprueba;
-						calculoimp = impuesto / 100;
-						}else{
-						items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
-						impuesto = parseFloat(seleBaseImp.BASE_IMP) * Igvprueba;
-						calculoimp = impuesto / 100;
-						
-							
+						if (seleBaseImp.IND_IMP === "C2") {//05/09/2022
+							items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
+							impuesto = parseFloat(seleBaseImp.BASE_IMP) * Igvprueba;
+							calculoimp = impuesto / 100;
+						} else {
+							items.BASE_IMP = parseFloat(seleBaseImp.BASE_IMP).toFixed(2);
+							impuesto = parseFloat(seleBaseImp.BASE_IMP) * Igvprueba;
+							calculoimp = impuesto / 100;
+
+
 						}
-						seleBaseImp.IGV = calculoimp ; //
+						seleBaseImp.IGV = calculoimp; //
 						items.IGV = calculoimp.toString();
 						items.INAFECTO = parseFloat(seleBaseImp.INAFECTO).toFixed(2);
 
@@ -276,7 +276,7 @@ sap.ui.define([
 						baseImp += parseFloat(items.BASE_IMP);
 						impuestoC = "0.00";
 					}
-				
+
 				}
 
 				if (!condicion) {
@@ -319,8 +319,8 @@ sap.ui.define([
 			// 		items2.totalImp = parseFloat(baseImp).toFixed(2);
 			// 		items2.totalNoGr = parseFloat(sumatoria).toFixed(2);
 			// 		items2.totales = totalFixed;
-					
-					
+
+
 			// 	}
 			// 	ModelProyect.refresh(true);
 			// 	// acumulador += parseFloat(totalFixed);
@@ -330,7 +330,7 @@ sap.ui.define([
 			// DataComprobanteConfirmacion.forEach(function (items_02) { //agregado por claudia//18/07/2022
 			// if(items_02.keySeg === datos_selecciones.keySeg){//21/07/2022
 			// 	items_02.desglose.forEach(function (items_03) {
-				
+
 			// 	if(items_03.POSIC === seleBaseImp.POSIC){
 			// 	if(items_03.IND_IMP !== "C0"){
 			// 	if(items_03.imputacion.length > 0){
@@ -338,9 +338,9 @@ sap.ui.define([
 			// 	var formateo_porcentaje	= parseFloat(obj.porcentajeII) / 100;
 			// 		obj.IMP= (formateo_porcentaje * items_03.BASE_IMP).toFixed(2) ;	
 			// 		obj.IMP_TOTAL = items_03.BASE_IMP;
-					
+
 			// 	});	
-					
+
 			// 	}
 			// 	}else{
 			// 	if(items_03.imputacion.length > 0){
@@ -348,25 +348,25 @@ sap.ui.define([
 			// 	var formateo_porcentaje	= parseFloat(obj.porcentajeII) / 100;
 			// 		obj.IMP= (formateo_porcentaje * items_03.INAFECTO).toFixed(2) ;	
 			// 		obj.IMP_TOTAL =  items_03.INAFECTO;
-					
+
 			// 	});	
-					
+
 			// 	}	
 			// 	}	
 			// 	}	
-					
+
 			// 	});
 			// }
 			// });
-			
+
 			// DataComprobanteConfirmacion.forEach(function (items_021) {//21/07/2022
 			// items_021.desglose.forEach(function (items_032) {
 			// acumulador += parseFloat(items_032.TOTAL);	
 			// });
 			// });
-			
+
 			// var resta_saldo = parseFloat(acumulador) - parseFloat(ImporteSolic) ;// cambio 04/06/2022
-		
+
 			// ModelProyect.setProperty("/ImporteRend", acumulador.toFixed(2));
 			// if (parseFloat(ImporteSolic) < acumulador) {   // cambio de 04/06/2022
 			// 	ModelProyect.setProperty("/estado_saldo", "Success");
@@ -386,10 +386,10 @@ sap.ui.define([
 		},
 
 		seleccionComp: function (oEvent) { // 22/04/2025
-			var vista  = this.getView();	
+			var vista = this.getView();
 			var Proyect = vista.getModel("Proyect");
-			var selectSolicitudER	= vista.byId("idProductsTable");
-			var selecciones   =       selectSolicitudER.getSelectedItems();
+			var selectSolicitudER = vista.byId("idProductsTable");
+			var selecciones = selectSolicitudER.getSelectedItems();
 			if (selecciones.length > 0) {
 				Proyect.setProperty("/enableElim", true);
 				Proyect.setProperty("/enableEditar", true);
@@ -400,38 +400,38 @@ sap.ui.define([
 		},
 
 		changeIndicador: function (args) {//17/04/2025
-			var oView						= this.getView();
-			var ModelProyect				= oView.getModel("Proyect");
-			var selectInd					= args.getSource().oParent.oBindingContexts.Proyect.sPath;
-			var selecIndicador				= ModelProyect.getProperty(selectInd);
+			var oView = this.getView();
+			var ModelProyect = oView.getModel("Proyect");
+			var selectInd = args.getSource().oParent.oBindingContexts.Proyect.sPath;
+			var selecIndicador = ModelProyect.getProperty(selectInd);
 			var AgregarComprobantes = ModelProyect.getProperty("/AgregarComprobantes");
-			var subTotal					= ModelProyect.getProperty("/subTotal");
-			var impueDet					= ModelProyect.getProperty("/impueDet");
-			var subTotalComp				= ModelProyect.getProperty("/subTotalComp");
-			var noGrabada					= ModelProyect.getProperty("/noGrabada");
-			var impuesto01					= 0;
-			var IGV 						= ModelProyect.getProperty("/IGV");
-			var igv0						= parseFloat(IGV);
-			var importe_Solic				= ModelProyect.getProperty("/importe");
-			var calcular_Saldo				= 0;
-			var contador_calculado			= 0;
-			var datos_selecciones			=ModelProyect.getProperty("/datos_selecciones");//26/07/2022
-			var datosIndicador				= ModelProyect.getProperty("/datosIndicador");
-			
+			var subTotal = ModelProyect.getProperty("/subTotal");
+			var impueDet = ModelProyect.getProperty("/impueDet");
+			var subTotalComp = ModelProyect.getProperty("/subTotalComp");
+			var noGrabada = ModelProyect.getProperty("/noGrabada");
+			var impuesto01 = 0;
+			var IGV = ModelProyect.getProperty("/IGV");
+			var igv0 = parseFloat(IGV);
+			var importe_Solic = ModelProyect.getProperty("/importe");
+			var calcular_Saldo = 0;
+			var contador_calculado = 0;
+			var datos_selecciones = ModelProyect.getProperty("/datos_selecciones");//26/07/2022
+			var datosIndicador = ModelProyect.getProperty("/datosIndicador");
+
 			// AgregarComprobantes.forEach(function (items2) {
 			// 	if (items2.keySeg === selecIndicador.POSIC.toString()) {//26/07/2022
 			// 		items2.validacion_guardado= false;
 			// 		items2.desglose.forEach(function (items, index) {
 			// 		datosIndicador.forEach(function(clñ){
 			// 		if(clñ.INDICADOR === selecIndicador.IND_IMP){
-						
+
 			// 			ModelProyect.setProperty("/IGV",clñ.PORCENTAJE);		
 			// 			}	
 			// 		});		
-						
+
 			// 			items.IND_IMP = selecIndicador.IND_IMP;
 			// 			items.NUEVO_IND= items.IND_IMP;
-						
+
 
 			// 			if (selecIndicador.IND_IMP === "C0") {
 
@@ -495,23 +495,23 @@ sap.ui.define([
 			// } else {
 			// 	ModelProyect.setProperty("/estado_saldo", "Error");
 			// }
-			if(selecIndicador.IND_IMP === "C0"){
-				selecIndicador.BASE_IMP="0.00";
-				selecIndicador.IGV="0.00";
-				selecIndicador.INAFECTO="0.00";
-				selecIndicador.TOTAL="0.00";
-				ModelProyect.setProperty("/editableBaseI",false);
-				ModelProyect.setProperty("/editableBaseIGV",false);
-				ModelProyect.setProperty("/editableInafecto",true);
+			if (selecIndicador.IND_IMP === "C0") {
+				selecIndicador.BASE_IMP = "0.00";
+				selecIndicador.IGV = "0.00";
+				selecIndicador.INAFECTO = "0.00";
+				selecIndicador.TOTAL = "0.00";
+				ModelProyect.setProperty("/editableBaseI", false);
+				ModelProyect.setProperty("/editableBaseIGV", false);
+				ModelProyect.setProperty("/editableInafecto", true);
 
-			}else{
-				selecIndicador.BASE_IMP="0.00";
-				selecIndicador.IGV="0.00";
-				selecIndicador.INAFECTO="0.00";
-				selecIndicador.TOTAL="0.00";
-				ModelProyect.setProperty("/editableBaseI",true);
-				ModelProyect.setProperty("/editableBaseIGV",true);
-				ModelProyect.setProperty("/editableInafecto",true);
+			} else {
+				selecIndicador.BASE_IMP = "0.00";
+				selecIndicador.IGV = "0.00";
+				selecIndicador.INAFECTO = "0.00";
+				selecIndicador.TOTAL = "0.00";
+				ModelProyect.setProperty("/editableBaseI", true);
+				ModelProyect.setProperty("/editableBaseIGV", true);
+				ModelProyect.setProperty("/editableInafecto", true);
 			}
 
 			// ModelProyect.setProperty("/ImporteRend", contador_calculado.toFixed(2));
@@ -519,519 +519,438 @@ sap.ui.define([
 			ModelProyect.refresh(true);
 		},
 
-		ListaGastosCr:function(){ //17.04.2025
+		ListaGastosCr: function () { //17.04.2025
 			var vista = this.getView();
 			var Proyect = vista.getModel("Proyect");
-			var that= this;
-			Proyect.setProperty("/datosGastosCr",models.oDataGastos());	
+			var that = this;
+			Proyect.setProperty("/datosGastosCr", models.oDataGastos());
 			sap.ui.core.BusyIndicator.hide();
-		},
-		
-		listaIndicador:function(){ //17.04.2025
-			var vista = this.getView();
-			var Proyect = vista.getModel("Proyect");
-			var that= this;
-			Proyect.setProperty("/datosIndicador",models.oDataIndicador());	
-			sap.ui.core.BusyIndicator.hide();
-		},
-		
-		EliminacionFolder : async function (Sends){
-			try {
-			const results = await Promise.all(Sends.map(send=> 
-			// "/sap/fiori/irequestbvregistrodocliq"+
-				fetch(HostName  + send.URL,
-					{
-						method		:"POST",
-						body		:send.data,
-						processData	:false,
-						contentType	:false,
-					}
-				)
-			)) 
-			const finalData	   = await Promise.all(results.map(result => 
-					result.json()));
-				return 	finalData ;
-				console.log(finalData);
-			}
-			catch(err) {
-				console.log(err);
-			}
-			
-		},
-		CreacionDocumento_Folder : async function (Sends){
-			try {
-			const results = await Promise.all(Sends.map(send=> 
-			// "/sap/fiori/irequestbvregistrodocliq"+
-				fetch(HostName+send.URL,
-				{
-				method		:"POST",
-				body		:send.data,
-				processData	:false,
-				contentType	:false,
-				}
-				)
-			)) 
-			const finalData	   = await Promise.all(results.map(result => 
-					result.json()));
-				return 	finalData ;
-				console.log(finalData);
-			}
-			catch(err) {
-				console.log(err);
-			}
-			
 		},
 
-		Editar_Compro:function(){ // 22.04.2025
+		listaIndicador: function () { //17.04.2025
+			var vista = this.getView();
+			var Proyect = vista.getModel("Proyect");
+			var that = this;
+			Proyect.setProperty("/datosIndicador", models.oDataIndicador());
+			sap.ui.core.BusyIndicator.hide();
+		},
+
+		EliminacionFolder: async function (Sends) {
+			try {
+				const results = await Promise.all(Sends.map(send =>
+					// "/sap/fiori/irequestbvregistrodocliq"+
+					fetch(HostName + send.URL,
+						{
+							method: "POST",
+							body: send.data,
+							processData: false,
+							contentType: false,
+						}
+					)
+				))
+				const finalData = await Promise.all(results.map(result =>
+					result.json()));
+				return finalData;
+				console.log(finalData);
+			}
+			catch (err) {
+				console.log(err);
+			}
+
+		},
+		CreacionDocumento_Folder: async function (Sends) {
+			try {
+				const results = await Promise.all(Sends.map(send =>
+					// "/sap/fiori/irequestbvregistrodocliq"+
+					fetch(HostName + send.URL,
+						{
+							method: "POST",
+							body: send.data,
+							processData: false,
+							contentType: false,
+						}
+					)
+				))
+				const finalData = await Promise.all(results.map(result =>
+					result.json()));
+				return finalData;
+				console.log(finalData);
+			}
+			catch (err) {
+				console.log(err);
+			}
+
+		},
+
+		Editar_Compro: function () { // 22.04.2025
 			sap.ui.core.BusyIndicator.show(0);
-			var vista   = this.getView();	
+			var vista = this.getView();
 			var Proyect = vista.getModel("Proyect");
 			var selectSolicitudER = vista.byId("idProductsTable");
-			var selecciones   =       selectSolicitudER.getSelectedItems();
+			var selecciones = selectSolicitudER.getSelectedItems();
 			var ProductCollection = Proyect.getProperty("/ProductCollection");
-			var prueba    ="";
-			
-			var posiciones			= selecciones.map(function (objeto) {
+			var prueba = "";
+
+			var posiciones = selecciones.map(function (objeto) {
 				var path = objeto.getBindingContext("Proyect").getPath();
 				var objetos = Proyect.getProperty(path);
 				return objetos;
 			});
 
-		   posiciones.forEach(function (objeto) {			
-			 prueba = objeto;
-	   		});
-			
+			posiciones.forEach(function (objeto) {
+				prueba = objeto;
+			});
+
 			if (!this.EditarDeta) {
 				this.EditarDeta = sap.ui.xmlfragment("rendicionER.fragments.EditarComprobante", this);
 				vista.addDependent(this.EditarDeta);
 			}
 
-			Proyect.setProperty("/sRegistroComprobantes",posiciones[0].COMPROBANTE);
-			 Proyect.setProperty("/fecha_Comprobante1",posiciones[0].FECHA_COMP);
-			 Proyect.setProperty("/Key_comprobante", posiciones[0].COD_TIPO_COMP);
-			 Proyect.setProperty("/tipoNif", posiciones[0].TIPODOCI);
-			 Proyect.setProperty("/ruc", posiciones[0].RUC);
-			 Proyect.setProperty("/razonSocial", posiciones[0].RAZON_SOCIAL);
-			 Proyect.setProperty("/monedas", posiciones[0].WAERS);
-			 Proyect.setProperty("/Glosa", posiciones[0].GLOSA);
-			 Proyect.setProperty("/DataGlosa1",posiciones[0].desglose);
-			 Proyect.setProperty("/Selección_edi", prueba);
-			
+			Proyect.setProperty("/sRegistroComprobantes", posiciones[0].COMPROBANTE);
+			Proyect.setProperty("/fecha_Comprobante1", posiciones[0].FECHA_COMP);
+			Proyect.setProperty("/Key_comprobante", posiciones[0].COD_TIPO_COMP);
+			Proyect.setProperty("/tipoNif", posiciones[0].TIPODOCI);
+			Proyect.setProperty("/ruc", posiciones[0].RUC);
+			Proyect.setProperty("/razonSocial", posiciones[0].RAZON_SOCIAL);
+			Proyect.setProperty("/monedas", posiciones[0].WAERS);
+			Proyect.setProperty("/Glosa", posiciones[0].GLOSA);
+			Proyect.setProperty("/DataGlosa1", posiciones[0].desglose);
+			Proyect.setProperty("/Selección_edi", prueba);
+
 			this.EditarDeta.open();
-			sap.ui.core.BusyIndicator.hide(0);		
+			sap.ui.core.BusyIndicator.hide(0);
 		},
 
-		cerrarEditar:function(){//26/02/2025
+		cerrarEditar: function () {//26/02/2025
 			this.EditarDeta.close();
 		},
 
-		GuardarComprobanteCrEdit:function(){//22.04.2025
+		GuardarComprobanteCrEdit: function () {//22.04.2025
 
 			sap.ui.core.BusyIndicator.show(0);
-			var vista   = this.getView();	
+			var vista = this.getView();
 			var Proyect = vista.getModel("Proyect");
 			var selectSolicitudER = vista.byId("idProductsTable");
-			var selecciones   =       selectSolicitudER.getSelectedItems();
+			var selecciones = selectSolicitudER.getSelectedItems();
 			var ProductCollection = Proyect.getProperty("/ProductCollection");
-			var fecha_Comprobante  	 = Proyect.getProperty("/fecha_Comprobante1");
-			var Key_comprobante 	 = Proyect.getProperty("/Key_comprobante");
-			var tipoNif 			 = Proyect.getProperty("/tipoNif");
-			var datostipoDoc         = Proyect.getProperty("/datostipoDoc");
-			var Ruc 				 = Proyect.getProperty("/ruc");
-			var Razon_Social		 = Proyect.getProperty("/razonSocial");
-			var Monedas				 = Proyect.getProperty("/monedas");
-			var Glosa                =Proyect.getProperty("/Glosa");
+			var fecha_Comprobante = Proyect.getProperty("/fecha_Comprobante1");
+			var Key_comprobante = Proyect.getProperty("/Key_comprobante");
+			var tipoNif = Proyect.getProperty("/tipoNif");
+			var datostipoDoc = Proyect.getProperty("/datostipoDoc");
+			var Ruc = Proyect.getProperty("/ruc");
+			var Razon_Social = Proyect.getProperty("/razonSocial");
+			var Monedas = Proyect.getProperty("/monedas");
+			var Glosa = Proyect.getProperty("/Glosa");
 			var sRegistroComprobante = Proyect.getProperty("/sRegistroComprobantes");
-			var prueba   			 ="";
+			var prueba = "";
 			var Selección_edi = Proyect.getProperty("/Selección_edi");
-			var DataGlosa     = Proyect.getProperty("/DataGlosa")[0] ;
+			var DataGlosa = Proyect.getProperty("/DataGlosa")[0];
 
 			MessageBox.information("¿Desea guardar el comprobante?", {
 				actions: ["Aceptar", "Cancelar"],
 				onClose: function (sAction) {
-					if (sAction === "Aceptar") {	
+					if (sAction === "Aceptar") {
 
 						ProductCollection.forEach(function (objeto) {
 							if (Selección_edi === objeto) {
-								objeto.COMPROBANTE		= sRegistroComprobante;
+								objeto.COMPROBANTE = sRegistroComprobante;
 								objeto.FECHA_COMP = fecha_Comprobante;
 								objeto.COD_TIPO_COMP = Key_comprobante;
-								objeto.COD_TIPO_COMP= tipoNif;
-								objeto.RUC= Ruc;
-								objeto.RAZON_SOCIAL= Razon_Social;
-								objeto.WAERS= Monedas;
-								objeto.GLOSA= Glosa;
-								objeto.desglose= Selección_edi.desglose;
-																
+								objeto.COD_TIPO_COMP = tipoNif;
+								objeto.RUC = Ruc;
+								objeto.RAZON_SOCIAL = Razon_Social;
+								objeto.WAERS = Monedas;
+								objeto.GLOSA = Glosa;
+								objeto.desglose = Selección_edi.desglose;
+
 							}
-								
-					   });
-					   sap.ui.core.BusyIndicator.hide(0);
-					   Proyect.setProperty("/sRegistroComprobantes","");
-						Proyect.setProperty("/fecha_Comprobante1","");
-						Proyect.setProperty("/Key_comprobante","");
-						Proyect.setProperty("/tipoNif","");
-						Proyect.setProperty("/ruc","");
-						Proyect.setProperty("/razonSocial","");
-						Proyect.setProperty("/monedas","");
-						Proyect.setProperty("/Glosa","");	
+
+						});
+						sap.ui.core.BusyIndicator.hide(0);
+						Proyect.setProperty("/sRegistroComprobantes", "");
+						Proyect.setProperty("/fecha_Comprobante1", "");
+						Proyect.setProperty("/Key_comprobante", "");
+						Proyect.setProperty("/tipoNif", "");
+						Proyect.setProperty("/ruc", "");
+						Proyect.setProperty("/razonSocial", "");
+						Proyect.setProperty("/monedas", "");
+						Proyect.setProperty("/Glosa", "");
 						this.EditarDeta.close();
 
-					}else {
+					} else {
 						sap.ui.core.BusyIndicator.hide(0);
-						Proyect.setProperty("/sRegistroComprobantes","");
-						 Proyect.setProperty("/fecha_Comprobante1","");
-						 Proyect.setProperty("/Key_comprobante","");
-						 Proyect.setProperty("/tipoNif","");
-						 Proyect.setProperty("/ruc","");
-						 Proyect.setProperty("/razonSocial","");
-						 Proyect.setProperty("/monedas","");
-						 Proyect.setProperty("/Glosa","");	
-						 this.EditarDeta.close();
+						Proyect.setProperty("/sRegistroComprobantes", "");
+						Proyect.setProperty("/fecha_Comprobante1", "");
+						Proyect.setProperty("/Key_comprobante", "");
+						Proyect.setProperty("/tipoNif", "");
+						Proyect.setProperty("/ruc", "");
+						Proyect.setProperty("/razonSocial", "");
+						Proyect.setProperty("/monedas", "");
+						Proyect.setProperty("/Glosa", "");
+						this.EditarDeta.close();
 
 					}
 
-					
+
 				}
 			});
 
 		},
 
-		livechangeIden:function(){ // 17/04/2025
+		validacion_sunat: async function () {
+			var vista = this.getView();
+			var Proyect = vista.getModel("Proyect");
+			var Ruc_BENE = 10464328870;
+			let tokenSunat;
+
+
+			let sendCredentials = {
+				"grant_type": "client_credentials",
+				"scope": "https://api.sunat.gob.pe/v1/contribuyente/contribuyentes",
+				"client_id": "7f6dec91-4e2d-4e6b-9ca4-4a9598946916",
+				"client_secret": "D2oPZhtORGVEhElz6ums4w==",
+				"username": "46432887",
+				"password": "Julioromero12"
+			}
+
+			await jQuery.ajax({
+				type: "POST",
+				headers: {
+					"content-type": "application/x-www-form-urlencoded"
+				},
+				data: sendCredentials,
+				url: "/v1/clientesextranet/7f6dec91-4e2d-4e6b-9ca4-4a9598946916/oauth2/token/",
+				success: function (oReponse, textStatus, jqXHR) {
+					console.log(oReponse);
+					tokenSunat = oReponse.access_token;
+				},
+				error: function (er) {
+					MessageBox.error("Ocurrio un error al obtener el token");
+					sap.ui.core.BusyIndicator.hide();
+					console.log(er);
+				}
+			});
+
+			let sendValidComp = {
+				"numRuc": "20550083613",
+				"codComp": "01",
+				"numeroSerie": "F005",
+				"numero": "4059",
+				"fechaEmision": "12/01/2022",
+				"monto": "302.45"
+			};
+			try {
+				// fetch("/contribuyente/contribuyentes/10464328870/validarcomprobante", {
+				// 	method: "POST",
+				// 	headers: {
+				// 	  "Authorization": "Bearer eyJraWQiOiJhcGkuc3VuYXQuZ29iLnBlLmtpZDEwMSIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3ZjZkZWM5MS00ZTJkLTRlNmItOWNhNC00YTk1OTg5NDY5MTYiLCJhdWQiOiJbe1wiYXBpXCI6XCJodHRwczpcL1wvYXBpLnN1bmF0LmdvYi5wZVwiLFwicmVjdXJzb1wiOlt7XCJpZFwiOlwiXC92MVwvY29udHJpYnV5ZW50ZVwvY29udHJpYnV5ZW50ZXNcIixcImluZGljYWRvclwiOlwiMFwiLFwiZ3RcIjpcIjAxMDAwMFwifV19XSIsIm5iZiI6MTc1MjE5NjA2MywiY2xpZW50SWQiOiI3ZjZkZWM5MS00ZTJkLTRlNmItOWNhNC00YTk1OTg5NDY5MTYiLCJpc3MiOiJodHRwczpcL1wvYXBpLXNlZ3VyaWRhZC5zdW5hdC5nb2IucGVcL3YxXC9jbGllbnRlc2V4dHJhbmV0XC83ZjZkZWM5MS00ZTJkLTRlNmItOWNhNC00YTk1OTg5NDY5MTZcL29hdXRoMlwvdG9rZW5cLyIsImV4cCI6MTc1MjE5OTY2MywiZ3JhbnRUeXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwiaWF0IjoxNzUyMTk2MDYzfQ.QR6q1Ffh9mSBPkAJ_WRQ00DAAfp95kvhOpmJrbu1VciOQlkmyreBn9SPRJesxQNZQcgvL34HELSdp0J5Xxv4xBkRHK1MSTKdflP0xdiEiZsqauAYPTj2uO91S-YWaQePm4vcaIAOTCmbE6IzxNHcydhHVVzvg8UZs5zkBnsH0FspX6ffiIXHrWxlfSVF0ahaVYndhfhS7hTd05IwlWZiKchnNlHmidYdAVkY72hitmt482D6Uieyx9KBPRCC0F6f93QUg5Ed0Qt6n5fhe3sYqE6NFuHYk9SlOhvWs_p5o0hoIQJyXtX9m8td4UX1mojH8WFpwSLHAfhnc0Y9yv5KkA",
+				// 	  "Content-Type": "application/json"
+				// 	},
+				// 	body: JSON.stringify(sendValidComp)
+				//   }).then(r => r.json()).then(console.log).catch(console.error);
+				await jQuery.ajax({
+					type: "POST",
+					url: "/contribuyente/contribuyentes/10464328870/validarcomprobante",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer eyJraWQiOiJhcGkuc3VuYXQuZ29iLnBlLmtpZDEwMSIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3ZjZkZWM5MS00ZTJkLTRlNmItOWNhNC00YTk1OTg5NDY5MTYiLCJhdWQiOiJbe1wiYXBpXCI6XCJodHRwczpcL1wvYXBpLnN1bmF0LmdvYi5wZVwiLFwicmVjdXJzb1wiOlt7XCJpZFwiOlwiXC92MVwvY29udHJpYnV5ZW50ZVwvY29udHJpYnV5ZW50ZXNcIixcImluZGljYWRvclwiOlwiMFwiLFwiZ3RcIjpcIjAxMDAwMFwifV19XSIsIm5iZiI6MTc1MjE5NjA2MywiY2xpZW50SWQiOiI3ZjZkZWM5MS00ZTJkLTRlNmItOWNhNC00YTk1OTg5NDY5MTYiLCJpc3MiOiJodHRwczpcL1wvYXBpLXNlZ3VyaWRhZC5zdW5hdC5nb2IucGVcL3YxXC9jbGllbnRlc2V4dHJhbmV0XC83ZjZkZWM5MS00ZTJkLTRlNmItOWNhNC00YTk1OTg5NDY5MTZcL29hdXRoMlwvdG9rZW5cLyIsImV4cCI6MTc1MjE5OTY2MywiZ3JhbnRUeXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwiaWF0IjoxNzUyMTk2MDYzfQ.QR6q1Ffh9mSBPkAJ_WRQ00DAAfp95kvhOpmJrbu1VciOQlkmyreBn9SPRJesxQNZQcgvL34HELSdp0J5Xxv4xBkRHK1MSTKdflP0xdiEiZsqauAYPTj2uO91S-YWaQePm4vcaIAOTCmbE6IzxNHcydhHVVzvg8UZs5zkBnsH0FspX6ffiIXHrWxlfSVF0ahaVYndhfhS7hTd05IwlWZiKchnNlHmidYdAVkY72hitmt482D6Uieyx9KBPRCC0F6f93QUg5Ed0Qt6n5fhe3sYqE6NFuHYk9SlOhvWs_p5o0hoIQJyXtX9m8td4UX1mojH8WFpwSLHAfhnc0Y9yv5KkA"
+					},
+					data: JSON.stringify(sendValidComp),
+					success: function (oReponse) {
+						console.log("Respuesta SUNAT:", oReponse);
+					},
+					error: async function (er) {
+						console.log("Error");
+
+					}
+				});
+			} catch (error) {
+				console.log("Respuesta SUNAT:", error);
+			}
+
+
+
+		},
+
+		livechangeIden: function (data2) { // 17/04/2025
 
 			var oView = this.getView();
 			var Proyect = oView.getModel("Proyect");
 			var ruc = Proyect.getProperty("/ruc");
 			var tipoNif = Proyect.getProperty("/tipoNif");
-			var data2			= "";
+			var data2 = "";
+			var that = this;
+			var token = data2;
+			var mensajes = "";
 
-			
-			
-			if(tipoNif == "DNI"){
+			if (tipoNif == "DNI") {
 
-				if (ruc == undefined || ruc ==""){
+				if (ruc == undefined || ruc == "") {
 
 					MessageBox.warning("Registrar el N° de DNI");
 					Proyect.setProperty("/ruc", "");
 					Proyect.setProperty("/razonSocial", "")
 
-				}else if(ruc.length == "8"){
+				} else if (ruc.length == "8") {
 
-					// var data = "grant_type=client_credentials&scope=https%3A%2F%2Fapi.sunat.gob.pe%2Fv1%2Fcontribuyente%2Fcontribuyentes&client_id=7f6dec91-4e2d-4e6b-9ca4-4a9598946916&client_secret=D2oPZhtORGVEhElz6ums4w==";
-					// var data = "grant_type=client_credentials&scope=https://api.sunat.gob.pe/v1/contribuyente/contribuyentes&client_id=7f6dec91-4e2d-4e6b-9ca4-4a9598946916&client_secret=D2oPZhtORGVEhElz6ums4w==";
-					let data =  {
-							"grant_type": "client_credentials",
-							"scope": "https://api.sunat.gob.pe/v1/contribuyente/contribuyentes",
-							"client_id": "7f6dec91-4e2d-4e6b-9ca4-4a9598946916",
-							"client_secret": "D2oPZhtORGVEhElz6ums4w==",
-							"username": "46432887",
-							"password": "Julioromero12"
-						}
-
+					var url = "/api/v1/dni/" + ruc + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJjbGF1ZGlhbmF0YWxpYUBnbWFpbC5jb20ifQ.EAUumIj-AnW-jM4fK2trPp7B4GeJISzviQXCkod8oIQ";
 					jQuery.ajax({
-				 	type: "POST",
-				 	crossDomain: true,
-				 	headers: {
-				 		"content-type": "application/x-www-form-urlencoded",
+						type: "GET",
+						url: url,
+						cache: false,
+						async: true,
+						success: function (data) {
 
-				 		"cache-control": "no-cache"
-				 	},
-					async: true,
-				 	data: data,
-				 	url: "/SUNAT_COMPROBANTE/7f6dec91-4e2d-4e6b-9ca4-4a9598946916/oauth2/token/",
-				 	success: function (data1, textStatus, jqXHR) {
-				 		console.log(data1);
-	
-						data2 = data1.access_token;
-						Proyect.setProperty("/razonSocial", "Claudia Romero")
-	
-						// datos = {
-				 		// 	"numRuc": "20100103738",
-				 		// 	"codComp": "01",
-				 		// 	"numeroSerie": "FH02",
-				 		// 	"numero": "0048226",
-						// 	"fechaEmision": "13/01/2022",
-						// 	"monto": "114.00"
-						// };
-					
-	
-					},
-					error: function (er) {
-						MessageBox.error("Ocurrio un error al obtener el token");
-						sap.ui.core.BusyIndicator.hide();
-						console.log(er);
-				 	}
-				 });
+						},
+						error: function (er) {
+							console.error("Error:", er);
+							MessageBox.error("Código: " + er.status + " - " + er.statusText);
+						}
+					});
 
-				//  jQuery.ajax({
-				// 		type: "GET",
-				// 		url: "/SUNAT_RUC/"+ ruc+"/validarcomprobante",
-
-				// 		async: true,
-				// 		success: async function (data1, textStatus, jqXHR) {
-				// 			console.log(data1)
-				// 			var condicion_01 = data1.condicion.toUpperCase(); //convierte de minuscula a mayuscula
-				// 			var estado_01 = data1.estado.toUpperCase(); //convierte de minuscula a mayuscula
-				// 			var mensajes = "";
-				// 			switch (condicion_01) {
-				// 			case "NO HALLADO":
-				// 				mensajes = "NO HALLADO";
-				// 				break;
-				// 			case "NO HABIDO":
-				// 				mensajes = "NO HABIDO";
-				// 				break;
-
-				// 			}
-
-				// 			switch (estado_01) {
-
-				// 			case "BAJA DEFINITIVA":
-
-				// 				if (mensajes.length > 0) {
-				// 					mensajes += " y BAJA DEFINITIVA";
-				// 				} else {
-				// 					mensajes = "BAJA DEFINITIVA";
-				// 				}
-				// 				break;
-				// 			case "BAJA DE OFICIO":
-
-				// 				if (mensajes.length > 0) {
-				// 					mensajes += " y BAJA DE OFICIO";
-				// 				} else {
-				// 					mensajes = "BAJA DE OFICIO";
-				// 				}
-				// 				break;
-				// 			}
-				// 			var numeroRuc = "";
-				// 			var nuevo_NroCompro = "";
-				// 			var antiguo_NroCompro = "";
-				// 			var fecha_antigua	="";
-				// 			var tipocomprobante_antiguo="";
-				// 			var tipodoc	="";
-				// 			var antiguo_Ruc	="";
-
-				// 			if (mensajes.length > 0) {
-				// 				MessageBox.information("El RUC esta " + mensajes);
-				// 				ModelProyect.setProperty("/razonSocial", "");
-				// 				sap.ui.core.BusyIndicator.hide();
-				// 				return;
-
-				// 			} else if (estado_01 === "ACTIVO" && condicion_01 === "HABIDO") {
-				// 				DataComprobanteConfirmacion.forEach(function (ITEMS) {
-								
-				// 					if (ITEMS.keySeg === seleccion.keySeg) {//21/07/2022
-									
-				// 						//antiguo_NroCompro = ITEMS.COMPROBANTE;
-				// 						//antiguo_Ruc = ITEMS.RUC;                   
-
-									
-				// 					if(ITEMS.COMPROBANTE1 !== "" && ITEMS.COMPROBANTE1 !== undefined){
-				// 					if(ITEMS.COMPROBANTE_ANTIGUO !== ITEMS.COMPROBANTE1 && ITEMS.DATOS_SAP === true){//nuevo cambio 09/06/2022
-				// 					nuevo_NroCompro =DescRegistroComprobante;
-				// 					}else{
-				// 					nuevo_NroCompro ="";	
-				// 					}
-				// 					}
-									
-				// 					if(ITEMS.RUC_PRUEBA !== "" && ITEMS.RUC_PRUEBA !== undefined){
-				// 					if (ITEMS.RUC_COPIA !== ITEMS.RUC_PRUEBA && ITEMS.DATOS_SAP === true) {//nuevo cambio 09/06/2022
-				// 						numeroRuc = ruc;
-				// 					}else{
-				// 						numeroRuc = "";
-				// 					}
-				// 					}
-									
-				// 					if(ITEMS.FECHA_COMP === ITEMS.FECHA_ANTIGUA ){
-				// 						fecha_antigua = ITEMS.FECHA_COMP;
-										
-				// 					}
-									
-									
-				// 					if(ITEMS.TIPO_COMPRO_ANTIGUO === ITEMS.COD_TIPO_COMP ){
-				// 						tipocomprobante_antiguo =ITEMS.COD_TIPO_COMP;
-				// 					}
-									
-				// 					if(ITEMS.TIPODOCI === ITEMS.COPIA_TIPODOC){
-				// 						tipodoc = ITEMS.TIPODOCI;
-				// 					}
-									
-				// 					if (ITEMS.keySeg === seleccion.keySeg) {
-				// 						ITEMS.NROD0 = datosComprobante01.NROD0;
-				// 						ITEMS.DOC_PAGO = datosComprobante01.DOC_PAGO;
-				// 						ITEMS.COD_SAP = COD_SAP;
-				// 						ITEMS.visibleState = true;
-				// 						ITEMS.TIPODOCI = tipoNif;
-				// 						ITEMS.COPIA_TIPODOC =tipodoc;
-				// 						ITEMS.TIPO_COMP = SelectedTipoDocumento;
-				// 						ITEMS.FECHA_COMP = FechaComprobante;
-				// 						ITEMS.COMPROBANTE = DescRegistroComprobante;
-				// 						//ITEMS.COMPROBANTE_ANTIGUO = antiguo_NroCompro;
-				// 						ITEMS.COMPROBANTE_PRUEBA = DescRegistroComprobante;
-				// 						ITEMS.COMPROBANTE_EDITADO = nuevo_NroCompro;
-				// 						ITEMS.RUC_EDITADO = numeroRuc;//27.06/2022
-				// 						ITEMS.RUC_PRUEBA = numeroRuc;
-				// 						//ITEMS.RUC_COPIA = antiguo_Ruc;
-				// 						ITEMS.FECHA_ANTIGUA =fecha_antigua;
-				// 						ITEMS.TIPO_COMPRO_ANTIGUO=tipocomprobante_antiguo;
-				// 						ITEMS.key = ITEMS.keySeg;
-				// 						ITEMS.RUC = ruc;
-				// 						ITEMS.RAZON_SOCIAL = data1.nombre;
-				// 						ITEMS.COD_TIPO_COMP = Key_comprobante;
-				// 						ITEMS.validacion_guardado= false;//30062022
-				// 						ITEMS.VALIDAR_DATOS = false;//01/09/2022
-								
-				// 					ITEMS.desglose.map(function (items02) {
-				// 					if (DescRegistroComprobante === ITEMS.COMPROBANTE && ITEMS.RUC === ruc) {//21/07/2022
-				// 						items02.COMPROBANTE = DescRegistroComprobante;
-				// 						}
-
-				// 						});
-										
-				// 						ModelProyect.setProperty("/COMPROBANTE", DescRegistroComprobante);
-				// 						ModelProyect.setProperty("/FECHA_COMP", FechaComprobante);
-				// 						ModelProyect.setProperty("/TIPO_COMP", SelectedTipoDocumento);
-				// 						ModelProyect.setProperty("/nroPos", seleccion.keySeg);
-				// 						validar_tabs = true;
-				// 					}
-				// 					} 
-								
-				// 				});
-							
-				// 				ModelProyect.setProperty("/razonSocial", data1.nombre);
-				// 				ModelProyect.setProperty("/visbleCampo", true);
-				// 				ModelProyect.setProperty("/editableMonto_compro", false);
-				// 				MessageToast.show("RUC existente");
-				// 				sap.ui.core.BusyIndicator.hide();
-				// 			} else {
-				// 				MessageBox.information("El RUC esta " + estado_01 + " y " + condicion_01);
-				// 				ModelProyect.setProperty("/razonSocial", "");
-				// 				//ModelProyect.setProperty("/Orden_Interna", "");
-				// 				//ModelProyect.setProperty("/Numero_viaje", "");
-				// 				//ModelProyect.setProperty("/Glosa", "");
-				// 				ModelProyect.setProperty("/visbleCampo", false);
-				// 				DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
-				// 				if (te.keySeg === seleccion.keySeg) {
-				// 				te.RUC = "";
-				// 				te.RAZON_SOCIAL ="" ;                   
-									
-				// 				}	
-				// 				});
-				// 			}
-				// 			sap.ui.core.BusyIndicator.hide();
-				// 		},
-
-				// 		error: function (er) {
-				// 			MessageBox.error("Ruc invalido.");
-				// 			ModelProyect.setProperty("/razonSocial", "");
-				// 			//ModelProyect.setProperty("/Orden_Interna", "");
-				// 			//ModelProyect.setProperty("/Numero_viaje", "");
-				// 			//ModelProyect.setProperty("/Glosa", "");
-				// 			ModelProyect.setProperty("/visbleCampo", false);
-				// 			DataComprobanteConfirmacion.forEach(function(te){//24/07/2022
-				// 			if (te.keySeg === seleccion.keySeg) {
-				// 			te.RUC = "";
-				// 			te.RAZON_SOCIAL ="" ;                   
-								
-				// 			}	
-				// 			});
-							
-				// 			sap.ui.core.BusyIndicator.hide();
-				// 			console.log(er);
-				// 		}
-				// 	});
-			
-					// 
-					
-					
-				}else{
+				} else {
 					Proyect.setProperty("/ruc", "")
 					MessageBox.warning("Son max. 8 digitos");
-				
-				}
-			}else if(tipoNif == "RUC"){
 
-				if (ruc == undefined || ruc ==""){
+				}
+			} else if (tipoNif == "RUC") {
+
+				if (ruc == undefined || ruc == "") {
 
 					MessageBox.warning("Registrar el N° de RUC");
 					Proyect.setProperty("/ruc", "")
 					Proyect.setProperty("/razonSocial", "")
 
-				}else if(ruc.length == "11"){
-					
-					Proyect.setProperty("/razonSocial", "CENTRO COMERCIAL PLAZA NORTE S.A.C.")
-					
-				}else{
+				} else if (ruc.length == "11") {
+
+					var url = "/api/v1/ruc/" + ruc + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJjbGF1ZGlhbmF0YWxpYUBnbWFpbC5jb20ifQ.EAUumIj-AnW-jM4fK2trPp7B4GeJISzviQXCkod8oIQ";
+					jQuery.ajax({
+						type: "GET",
+						url: url,
+						cache: false,
+						async: true,
+						success: function (data) {
+							switch (data.condicion) {
+								case "NO HALLADO":
+									mensajes = "NO HALLADO";
+									break;
+								case "NO HABIDO":
+									mensajes = "NO HABIDO";
+									break;
+
+							}
+
+							switch (data.estado) {
+
+								case "BAJA DEFINITIVA":
+
+									if (mensajes.length > 0) {
+										mensajes += " y BAJA DEFINITIVA";
+									} else {
+										mensajes = "BAJA DEFINITIVA";
+									}
+									break;
+								case "BAJA DE OFICIO":
+
+									if (mensajes.length > 0) {
+										mensajes += " y BAJA DE OFICIO";
+									} else {
+										mensajes = "BAJA DE OFICIO";
+									}
+									break;
+							}
+							if (mensajes.length > 0) {
+								MessageBox.information("El RUC esta " + mensajes);
+								ModelProyect.setProperty("/razonSocial", "");
+								sap.ui.core.BusyIndicator.hide();
+								return;
+
+							} else if (data.estado === "ACTIVO" && data.condicion === "HABIDO") {
+								Proyect.setProperty("/razonSocial", data.razonSocial);
+							}
+
+
+						},
+						error: function (er) {
+							console.error("Error:", er);
+							MessageBox.error("Código: " + er.status + " - " + er.statusText);
+						}
+					});
+
+
+				} else {
 					MessageBox.warning("Son max. 11 digitos");
 					Proyect.setProperty("/ruc", "");
 				}
-				
-			}else{
+
+			} else {
 				MessageBox.warning("Seleccionar el tipo de documento");
 				Proyect.setProperty("/ruc", "")
 				Proyect.setProperty("/razonSocial", "")
-			}	
-	
-			},
-			
-			changeTipoDoc:function(){ //17/04/2025
-				var oView						= this.getView();
-				var Proyect				= oView.getModel("Proyect")
-				var tipoNif 					= Proyect.getProperty("/tipoNif");
-	
-				if(tipoNif == "DNI"){
-					Proyect.setProperty("/ruc", "");
-					Proyect.setProperty("/razonSocial", "")
-
-				}else{
-					Proyect.setProperty("/ruc", "");
-					Proyect.setProperty("/razonSocial", "")
-
-				}
-				
-			} ,
-
-		Validarcampos:function(){//28/08/2024
-			var vista 			= this.getView();
-			var Proyect 		= vista.getModel("Proyect");
-			var arrayguardar_comp	=[];
-			var sRegistroComprobante = 	Proyect.getProperty("/sRegistroComprobantes");
-			var fecha_Comprobante  	=	 Proyect.getProperty("/fecha_Comprobante1");
-			var Key_comprobante 	= Proyect.getProperty("/Key_comprobante");
-			var tipoNif 			= Proyect.getProperty("/tipoNif");
-			var Ruc 				= Proyect.getProperty("/ruc");
-			var Razon_Social		= Proyect.getProperty("/razonSocial");
-			var Monedas				= Proyect.getProperty("/monedas");
-			var Glosa               =Proyect.getProperty("/Glosa");
-			var contador			=0;
-			var camposVacios        = false;
-
-			
-			if(sRegistroComprobante == "" || sRegistroComprobante == undefined){
-				camposVacios=true;
-			}
-			if(fecha_Comprobante == "" || fecha_Comprobante == undefined){
-				camposVacios=true;
-			}
-			
-			if(Key_comprobante == "" || Key_comprobante == undefined){
-				camposVacios=true;
-			}
-			if(tipoNif == "" || tipoNif == undefined){
-				camposVacios=true;
-			}
-			if(Ruc == "" || Ruc == undefined){
-				camposVacios=true;
-			}
-			if(Razon_Social ==""){
-				camposVacios=true;
 			}
 
-			if(Monedas == "" || Monedas == undefined){
-				camposVacios=true;
+
+		},
+
+		changeTipoDoc: function () { //17/04/2025
+			var oView = this.getView();
+			var Proyect = oView.getModel("Proyect")
+			var tipoNif = Proyect.getProperty("/tipoNif");
+
+			if (tipoNif == "DNI") {
+				Proyect.setProperty("/ruc", "");
+				Proyect.setProperty("/razonSocial", "")
+
+			} else {
+				Proyect.setProperty("/ruc", "");
+				Proyect.setProperty("/razonSocial", "")
+
 			}
 
-			if(Glosa == "" || Glosa == undefined){
-				camposVacios=true;
+		},
+
+		Validarcampos: function () {//28/08/2024
+			var vista = this.getView();
+			var Proyect = vista.getModel("Proyect");
+			var arrayguardar_comp = [];
+			var sRegistroComprobante = Proyect.getProperty("/sRegistroComprobantes");
+			var fecha_Comprobante = Proyect.getProperty("/fecha_Comprobante1");
+			var Key_comprobante = Proyect.getProperty("/Key_comprobante");
+			var tipoNif = Proyect.getProperty("/tipoNif");
+			var Ruc = Proyect.getProperty("/ruc");
+			var Razon_Social = Proyect.getProperty("/razonSocial");
+			var Monedas = Proyect.getProperty("/monedas");
+			var Glosa = Proyect.getProperty("/Glosa");
+			var contador = 0;
+			var camposVacios = false;
+
+
+			if (sRegistroComprobante == "" || sRegistroComprobante == undefined) {
+				camposVacios = true;
+			}
+			if (fecha_Comprobante == "" || fecha_Comprobante == undefined) {
+				camposVacios = true;
+			}
+
+			if (Key_comprobante == "" || Key_comprobante == undefined) {
+				camposVacios = true;
+			}
+			if (tipoNif == "" || tipoNif == undefined) {
+				camposVacios = true;
+			}
+			if (Ruc == "" || Ruc == undefined) {
+				camposVacios = true;
+			}
+			if (Razon_Social == "") {
+				camposVacios = true;
+			}
+
+			if (Monedas == "" || Monedas == undefined) {
+				camposVacios = true;
+			}
+
+			if (Glosa == "" || Glosa == undefined) {
+				camposVacios = true;
 			}
 
 			return camposVacios;
@@ -1039,19 +958,19 @@ sap.ui.define([
 		},
 
 		handleUploadComplete2: function (oEvent) {
-			var file			= oEvent.getParameter("files") && oEvent.getParameter("files")[0];
-			let that			= this;
-			var vista			= this.getView();
-			var FileUpExcel 	= vista.byId("fileUploader");
-			let excelData		= {};
-			var headers 		= [];
-			var ModelProyect	= vista.getModel("Proyect");
-			var data2			= ModelProyect.getProperty("/ProductCollection");
+			var file = oEvent.getParameter("files") && oEvent.getParameter("files")[0];
+			let that = this;
+			var vista = this.getView();
+			var FileUpExcel = vista.byId("fileUploader");
+			let excelData = {};
+			var headers = [];
+			var ModelProyect = vista.getModel("Proyect");
+			var data2 = ModelProyect.getProperty("/ProductCollection");
 			var comprobanteDatos = [];
-			var contDatos        = 0;
-			
-	
-			
+			var contDatos = 0;
+
+
+
 			if (file && window.FileReader) {
 				let reader = new FileReader();
 				const rABS = !!reader.readAsBinaryString
@@ -1081,485 +1000,485 @@ sap.ui.define([
 		},
 
 		Estructuracion: async function (dataExcel) {
-			var that				= this;
-			var oView				= this.getView();
-			var Proyect		        = oView.getModel("Proyect");
-			var datas				= Proyect.getProperty("/ProductCollection");
-			var comprobAnt			= "";
-			var RucAnt				="";//21/07/2022
-			var keyComp 			= 1;
-			var keyDesg 			= 1;
-			var nombreRuc			= "ABC Consultores";
-			var estadoSolic 		= Proyect.getProperty("/estadoSolic");
-			var importe 			= Proyect.getProperty("/importe");
-			var solicitud			= Proyect.getProperty("/solicitud");
-			var COD_SAP 			= Proyect.getProperty("/COD_SAP");
-			var importe_rendido 	= Proyect.getProperty("/ImporteRend");
-			var moneda				= Proyect.getProperty("/moneda");
-			var validar_ruc 		= false;
-			var array_estructura	= [];
-			let Array               =[];
-			var hoy 			    = new Date();
-			var mes 				= hoy.getMonth() + 1;
-			var hoyp				= hoy.getDate().toString();
-			var array_CamposVacios	=[];
-			
-			
+			var that = this;
+			var oView = this.getView();
+			var Proyect = oView.getModel("Proyect");
+			var datas = Proyect.getProperty("/ProductCollection");
+			var comprobAnt = "";
+			var RucAnt = "";//21/07/2022
+			var keyComp = 1;
+			var keyDesg = 1;
+			var nombreRuc = "ABC Consultores";
+			var estadoSolic = Proyect.getProperty("/estadoSolic");
+			var importe = Proyect.getProperty("/importe");
+			var solicitud = Proyect.getProperty("/solicitud");
+			var COD_SAP = Proyect.getProperty("/COD_SAP");
+			var importe_rendido = Proyect.getProperty("/ImporteRend");
+			var moneda = Proyect.getProperty("/moneda");
+			var validar_ruc = false;
+			var array_estructura = [];
+			let Array = [];
+			var hoy = new Date();
+			var mes = hoy.getMonth() + 1;
+			var hoyp = hoy.getDate().toString();
+			var array_CamposVacios = [];
+
+
 			if (hoyp < 10) {
 				var hoyn = "0" + hoy.getDate().toString();
 			} else {
 				var hoyn = hoy.getDate().toString();
 			}
-	
+
 			if (mes < 10) {
 				mes = "0" + mes.toString();
 			}
-			
-			var fechaActual			= hoy.getFullYear().toString() + mes.toString() +hoyn.toString();
-			
-			if (datas == 0 || datas == undefined){
-				
+
+			var fechaActual = hoy.getFullYear().toString() + mes.toString() + hoyn.toString();
+
+			if (datas == 0 || datas == undefined) {
+
 				keyComp;
 
 				try {
 
 					for (var i = dataExcel.length - 1; i >= 0; i--) {
-						
-						dataExcel[i].filaExcel = i+2;
-						
+
+						dataExcel[i].filaExcel = i + 2;
+
 						if (Object.keys(dataExcel[i]).length < 4) {
 							dataExcel.splice(i, 1);
-							
-						}else if(Object.keys(dataExcel[i]).length < 13 && Object.keys(dataExcel[i]).length > 3){
+
+						} else if (Object.keys(dataExcel[i]).length < 13 && Object.keys(dataExcel[i]).length > 3) {
 							array_CamposVacios.push(dataExcel[i].filaExcel);
 							dataExcel.splice(i, 1);
-							
-						}else{
-						dataExcel[i]["__EMPTY_3"].toString().padStart(5, "0")  + "-" + dataExcel[i]["__EMPTY_4"].toString().padStart(9, "0");	
-						Array.push(dataExcel[i]);	
+
+						} else {
+							dataExcel[i]["__EMPTY_3"].toString().padStart(5, "0") + "-" + dataExcel[i]["__EMPTY_4"].toString().padStart(9, "0");
+							Array.push(dataExcel[i]);
 						}
 					}
-					
+
 					//Validacion de campos vacios en el excel 
-				if(array_CamposVacios.length > 0){
-				   sap.m.MessageBox.warning("Las filas " + array_CamposVacios.join(" , ") + " del excel cargado contienen campos vacios, porfavor verificar su documento.");
-				   return;
-				}	
-				
-				let array_estru = dataExcel.map(obj => obj["__EMPTY_3"].toString().padStart(5, "0") +"-"+ obj["__EMPTY_4"].toString().padStart(9, "0") + " "+ obj["__EMPTY_5"].toString());//21/07/2022
-				let isDuplicate = array_estru.some((item, index) => index !== array_estru.indexOf(item))
-
-				
-				if (isDuplicate) {
-					sap.m.MessageBox.warning("Existen Comprobantes duplicados en el adjunto");
-					return;
-				}
-
-				// let isDuplicateListaExcel = Array.filter((item, index) => datas.findIndex(obj1 => obj1.COMPROBANTE === item["__EMPTY_3"].toString().padStart(5, "0")  + "-" + item["__EMPTY_4"].toString().padStart(9, "0") && obj1.RUC === item["__EMPTY_5"].toString()) !== -1)
-
-				// if (isDuplicateListaExcel.length !== 0) {
-				// 	sap.m.MessageBox.warning("Existen Comprobantes duplicados en la lista con el adjunto");
-				// 	return;
-				// }
-				
-				dataExcel = Array ;
-				
-				dataExcel.forEach(function (comp, index) {
-
-					if (comp.__EMPTY_1 === "Tipo de comprobante") {
+					if (array_CamposVacios.length > 0) {
+						sap.m.MessageBox.warning("Las filas " + array_CamposVacios.join(" , ") + " del excel cargado contienen campos vacios, porfavor verificar su documento.");
 						return;
 					}
-					
-					var fechaCambio = comp["__EMPTY_2"].replaceAll("/", "").replaceAll(".", "");
-					var fechaFormato = fechaCambio.substr(0, 2) + "/" + fechaCambio.substr(2, 2) + "/" + fechaCambio.substr(4, 4);
-					var baseImp = comp["__EMPTY_9"];
-					var glosa = comp["__EMPTY_8"];
-					var IGV = comp["__EMPTY_10"];
-					var INAFECTO = comp["__EMPTY_11"];
-					var TOTAL = comp["__EMPTY_12"];
-					var Ceco = comp["__EMPTY_13"].toString();
-					var indImp = comp["__EMPTY_6"].split(" - ")[0];
-					// var Moneda = comp["__EMPTY_6"];
-					var Serie = comp["__EMPTY_3"].toString().padStart(5, "0");//cambio de 15/06/2022;
-					var numComp = comp["__EMPTY_4"].toString().padStart(9, "0");
-					// var razSoc			= comp["Razon social"];
-					var Ruc = comp["__EMPTY_5"];
-					var tipComp = comp["__EMPTY_1"];
-					var CodComp = comp["__EMPTY_1"].split(" - ")[0];
-					var tipGasto = comp["__EMPTY_7"].split(" - ")[0];
 
-					if (baseImp === "") {
-						baseImp = "0.00";
-					} else {
-						baseImp = parseFloat(baseImp).toFixed(2);
-						if (isNaN(baseImp) || baseImp === "0") {
+					let array_estru = dataExcel.map(obj => obj["__EMPTY_3"].toString().padStart(5, "0") + "-" + obj["__EMPTY_4"].toString().padStart(9, "0") + " " + obj["__EMPTY_5"].toString());//21/07/2022
+					let isDuplicate = array_estru.some((item, index) => index !== array_estru.indexOf(item))
+
+
+					if (isDuplicate) {
+						sap.m.MessageBox.warning("Existen Comprobantes duplicados en el adjunto");
+						return;
+					}
+
+					// let isDuplicateListaExcel = Array.filter((item, index) => datas.findIndex(obj1 => obj1.COMPROBANTE === item["__EMPTY_3"].toString().padStart(5, "0")  + "-" + item["__EMPTY_4"].toString().padStart(9, "0") && obj1.RUC === item["__EMPTY_5"].toString()) !== -1)
+
+					// if (isDuplicateListaExcel.length !== 0) {
+					// 	sap.m.MessageBox.warning("Existen Comprobantes duplicados en la lista con el adjunto");
+					// 	return;
+					// }
+
+					dataExcel = Array;
+
+					dataExcel.forEach(function (comp, index) {
+
+						if (comp.__EMPTY_1 === "Tipo de comprobante") {
+							return;
+						}
+
+						var fechaCambio = comp["__EMPTY_2"].replaceAll("/", "").replaceAll(".", "");
+						var fechaFormato = fechaCambio.substr(0, 2) + "/" + fechaCambio.substr(2, 2) + "/" + fechaCambio.substr(4, 4);
+						var baseImp = comp["__EMPTY_9"];
+						var glosa = comp["__EMPTY_8"];
+						var IGV = comp["__EMPTY_10"];
+						var INAFECTO = comp["__EMPTY_11"];
+						var TOTAL = comp["__EMPTY_12"];
+						var Ceco = comp["__EMPTY_13"].toString();
+						var indImp = comp["__EMPTY_6"].split(" - ")[0];
+						// var Moneda = comp["__EMPTY_6"];
+						var Serie = comp["__EMPTY_3"].toString().padStart(5, "0");//cambio de 15/06/2022;
+						var numComp = comp["__EMPTY_4"].toString().padStart(9, "0");
+						// var razSoc			= comp["Razon social"];
+						var Ruc = comp["__EMPTY_5"];
+						var tipComp = comp["__EMPTY_1"];
+						var CodComp = comp["__EMPTY_1"].split(" - ")[0];
+						var tipGasto = comp["__EMPTY_7"].split(" - ")[0];
+
+						if (baseImp === "") {
 							baseImp = "0.00";
+						} else {
+							baseImp = parseFloat(baseImp).toFixed(2);
+							if (isNaN(baseImp) || baseImp === "0") {
+								baseImp = "0.00";
+							}
 						}
-					}
 
-					if (IGV === "") {
-						IGV = "0.00";
-					} else {
-						IGV = parseFloat(IGV).toFixed(2);
-						if (isNaN(IGV) || IGV === "0") {
+						if (IGV === "") {
 							IGV = "0.00";
+						} else {
+							IGV = parseFloat(IGV).toFixed(2);
+							if (isNaN(IGV) || IGV === "0") {
+								IGV = "0.00";
+							}
 						}
-					}
 
-					if (INAFECTO === "") {
-						INAFECTO = "0.00";
-					} else {
-						INAFECTO = parseFloat(INAFECTO).toFixed(2);
-						if (isNaN(INAFECTO) || INAFECTO === "0") {
+						if (INAFECTO === "") {
 							INAFECTO = "0.00";
+						} else {
+							INAFECTO = parseFloat(INAFECTO).toFixed(2);
+							if (isNaN(INAFECTO) || INAFECTO === "0") {
+								INAFECTO = "0.00";
+							}
 						}
-					}
 
-					if (TOTAL === "") {
-						TOTAL = "0.00";
-					} else {
-						TOTAL = parseFloat(TOTAL).toFixed(2);
-						if (isNaN(TOTAL) || TOTAL === "0") {
+						if (TOTAL === "") {
 							TOTAL = "0.00";
+						} else {
+							TOTAL = parseFloat(TOTAL).toFixed(2);
+							if (isNaN(TOTAL) || TOTAL === "0") {
+								TOTAL = "0.00";
+							}
 						}
-					}
 
-					if (comprobAnt !== Serie + numComp && (RucAnt !== Ruc.toString() || RucAnt === Ruc.toString())) {//21/07/2022
-						// keyDesg = 1;
-						
-						var estructura = {
-							//SCastillo
-							NROD0     : solicitud,
-							DOC_PAGO  : "",
-							COD_SAP		: COD_SAP,
-							//SCastillo
-							keySeg		: keyComp,
-							key			: keyComp,
-							COMPROBANTE	: Serie + "-" + numComp,
-							TIPO_COMP	: tipComp,
-							COD_TIPO_COMP: CodComp,
-							TIPO_PRUEBA	: CodComp,//16/08/2022
-							//SCastillo
-							TIPODOCI	: Ruc.toString().length > 8 ? "RUC" : "DNI",
-							//SCastillo
-							FECHA_COMP	: fechaFormato,
-							FECHA_PRUEBA :fechaFormato,//16/08/2022
-							RUC			: Ruc.toString(),
-							RAZON_SOCIAL: "",
-							WAERS		: moneda,
-							KOSTL		: "",
-							ESTADO		: "",
-							//SCastillo
-							GLOSA		: glosa,
-							PRUEBA_GLOSA : glosa,//16/08/2022
-							DATOS_SAP	:false ,
-							iconComp	: "sap-icon://pending",
-							EST_COMP	: "COMP. PEND. APR.",
-							COD_EST_COMP: "CPA",
-							stateComp	: "Warning",
-							VALIDA_GRABADO:false,
-							COMPROBANTE_ANTIGUO	:Serie + "-" + numComp,
-							COMPROBANTE_PRUEBA  :Serie + "-" + numComp,//16/08/2022
-							RUC_COPIA		: Ruc.toString(),
-							VALIDAR_DATOS	:false,//01/09/2022
-							//SCastillo
-							//COMP. PEND. APR
-							desglose: [{
-								stateCeco: "Success",
-								iconCeco: "sap-icon://sys-enter-2",
-								POSIC: keyDesg,
+						if (comprobAnt !== Serie + numComp && (RucAnt !== Ruc.toString() || RucAnt === Ruc.toString())) {//21/07/2022
+							// keyDesg = 1;
+
+							var estructura = {
+								//SCastillo
+								NROD0: solicitud,
+								DOC_PAGO: "",
+								COD_SAP: COD_SAP,
+								//SCastillo
+								keySeg: keyComp,
+								key: keyComp,
 								COMPROBANTE: Serie + "-" + numComp,
-								COD_CONT: tipGasto,
-								// TIPO			: tipGasto,
-								centro: Ceco === undefined ? "" : Ceco,
-								BASE_IMP: baseImp,
-								IGV: IGV,
-								INAFECTO: INAFECTO,
-								TOTAL: TOTAL,
-								IND_IMP: indImp,
-								imp: "",
-								validaciones1: false,
-								validacionBase: false,
-								validacionInafecto: true,
-								validacionIndicador: true,							
-							}],
-							archivoAd: [],
-							DeleteArchivo : []
-						};
+								TIPO_COMP: tipComp,
+								COD_TIPO_COMP: CodComp,
+								TIPO_PRUEBA: CodComp,//16/08/2022
+								//SCastillo
+								TIPODOCI: Ruc.toString().length > 8 ? "RUC" : "DNI",
+								//SCastillo
+								FECHA_COMP: fechaFormato,
+								FECHA_PRUEBA: fechaFormato,//16/08/2022
+								RUC: Ruc.toString(),
+								RAZON_SOCIAL: "",
+								WAERS: moneda,
+								KOSTL: "",
+								ESTADO: "",
+								//SCastillo
+								GLOSA: glosa,
+								PRUEBA_GLOSA: glosa,//16/08/2022
+								DATOS_SAP: false,
+								iconComp: "sap-icon://pending",
+								EST_COMP: "COMP. PEND. APR.",
+								COD_EST_COMP: "CPA",
+								stateComp: "Warning",
+								VALIDA_GRABADO: false,
+								COMPROBANTE_ANTIGUO: Serie + "-" + numComp,
+								COMPROBANTE_PRUEBA: Serie + "-" + numComp,//16/08/2022
+								RUC_COPIA: Ruc.toString(),
+								VALIDAR_DATOS: false,//01/09/2022
+								//SCastillo
+								//COMP. PEND. APR
+								desglose: [{
+									stateCeco: "Success",
+									iconCeco: "sap-icon://sys-enter-2",
+									POSIC: keyDesg,
+									COMPROBANTE: Serie + "-" + numComp,
+									COD_CONT: tipGasto,
+									// TIPO			: tipGasto,
+									centro: Ceco === undefined ? "" : Ceco,
+									BASE_IMP: baseImp,
+									IGV: IGV,
+									INAFECTO: INAFECTO,
+									TOTAL: TOTAL,
+									IND_IMP: indImp,
+									imp: "",
+									validaciones1: false,
+									validacionBase: false,
+									validacionInafecto: true,
+									validacionIndicador: true,
+								}],
+								archivoAd: [],
+								DeleteArchivo: []
+							};
 
-						array_estructura.push(JSON.parse(JSON.stringify(estructura)));
-						
-						// array_estructura.map(function(items_o){//27/07/2022
-							
-						// if(items_o.COD_TIPO_COMP === "KX"){
-						// items_o.TIPODOCI = "DEXT";	
-						
-						// }else if((items_o.COD_TIPO_COMP  === "SK" || items_o.COD_TIPO_COMP  === "PM")){
-							
-						// items_o.TIPODOCI = "DNI";	
-						// }else{
-							
-						// items_o.TIPODOCI = "RUC";	
-						// }
-						
-						// items_o.desglose.map(function(xs){
-						// 	if(xs.IND_IMP === "C0"){
-								
-						// 	xs.BASE_IMP ="0.00";
-						// 	xs.IGV ="0.00";		
-						// 	xs.imputacion.map(function(rz){
-						// 	rz.IMP = xs.INAFECTO;
-						// 	rz.IMP_TOTAL = xs.INAFECTO;
-						
-						// });	
-							
-						// 	}	
-						// });
-						
-						// });
+							array_estructura.push(JSON.parse(JSON.stringify(estructura)));
 
-						keyComp++
+							// array_estructura.map(function(items_o){//27/07/2022
 
-					}
+							// if(items_o.COD_TIPO_COMP === "KX"){
+							// items_o.TIPODOCI = "DEXT";	
 
-					comprobAnt = Serie + numComp;
-					RucAnt =Ruc.toString();//21/07/2022
-				});
-				// var informacion = datas.concat(array_estructura);
+							// }else if((items_o.COD_TIPO_COMP  === "SK" || items_o.COD_TIPO_COMP  === "PM")){
 
-				Proyect.setProperty("/ProductCollection" , array_estructura);
+							// items_o.TIPODOCI = "DNI";	
+							// }else{
 
-			} catch (e) {
-				sap.ui.core.BusyIndicator.hide();
-				sap.m.MessageBox.error("Error en el formato vuelva a intentarlo");
-			}
+							// items_o.TIPODOCI = "RUC";	
+							// }
+
+							// items_o.desglose.map(function(xs){
+							// 	if(xs.IND_IMP === "C0"){
+
+							// 	xs.BASE_IMP ="0.00";
+							// 	xs.IGV ="0.00";		
+							// 	xs.imputacion.map(function(rz){
+							// 	rz.IMP = xs.INAFECTO;
+							// 	rz.IMP_TOTAL = xs.INAFECTO;
+
+							// });	
+
+							// 	}	
+							// });
+
+							// });
+
+							keyComp++
+
+						}
+
+						comprobAnt = Serie + numComp;
+						RucAnt = Ruc.toString();//21/07/2022
+					});
+					// var informacion = datas.concat(array_estructura);
+
+					Proyect.setProperty("/ProductCollection", array_estructura);
+
+				} catch (e) {
+					sap.ui.core.BusyIndicator.hide();
+					sap.m.MessageBox.error("Error en el formato vuelva a intentarlo");
+				}
 
 
-			}else if (datas.length > 0) {
+			} else if (datas.length > 0) {
 				keyComp = datas.length + 1;
 
 				try {
 
 					for (var i = dataExcel.length - 1; i >= 0; i--) {
-						
-						dataExcel[i].filaExcel = i+2;
-						
+
+						dataExcel[i].filaExcel = i + 2;
+
 						if (Object.keys(dataExcel[i]).length < 4) {
 							dataExcel.splice(i, 1);
-							
-						}else if(Object.keys(dataExcel[i]).length < 13 && Object.keys(dataExcel[i]).length > 3){
+
+						} else if (Object.keys(dataExcel[i]).length < 13 && Object.keys(dataExcel[i]).length > 3) {
 							array_CamposVacios.push(dataExcel[i].filaExcel);
 							dataExcel.splice(i, 1);
-							
-						}else{
-						dataExcel[i]["__EMPTY_3"].toString().padStart(5, "0")  + "-" + dataExcel[i]["__EMPTY_4"].toString().padStart(9, "0");	
-						Array.push(dataExcel[i]);	
+
+						} else {
+							dataExcel[i]["__EMPTY_3"].toString().padStart(5, "0") + "-" + dataExcel[i]["__EMPTY_4"].toString().padStart(9, "0");
+							Array.push(dataExcel[i]);
 						}
 					}
-					
+
 					//Validacion de campos vacios en el excel 
-				if(array_CamposVacios.length > 0){
-				   sap.m.MessageBox.warning("Las filas " + array_CamposVacios.join(" , ") + " del excel cargado contienen campos vacios, porfavor verificar su documento.");
-				   return;
-				}	
-				
-				let array_estru = dataExcel.map(obj => obj["__EMPTY_3"].toString().padStart(5, "0") +"-"+ obj["__EMPTY_4"].toString().padStart(9, "0") + " "+ obj["__EMPTY_5"].toString());//21/07/2022
-				let isDuplicate = array_estru.some((item, index) => index !== array_estru.indexOf(item))
-
-				
-				if (isDuplicate) {
-					sap.m.MessageBox.warning("Existen Comprobantes duplicados en el adjunto");
-					return;
-				}
-
-				let isDuplicateListaExcel = Array.filter((item, index) => datas.findIndex(obj1 => obj1.COMPROBANTE === item["__EMPTY_3"].toString().padStart(5, "0")  + "-" + item["__EMPTY_4"].toString().padStart(9, "0") && obj1.RUC === item["__EMPTY_5"].toString()) !== -1)
-
-				if (isDuplicateListaExcel.length !== 0) {
-					sap.m.MessageBox.warning("Existen Comprobantes duplicados en la lista con el adjunto");
-					return;
-				}
-				
-				dataExcel = Array ;
-				
-				dataExcel.forEach(function (comp, index) {
-
-					if (comp.__EMPTY_1 === "Tipo de comprobante") {
+					if (array_CamposVacios.length > 0) {
+						sap.m.MessageBox.warning("Las filas " + array_CamposVacios.join(" , ") + " del excel cargado contienen campos vacios, porfavor verificar su documento.");
 						return;
 					}
-					
-					var fechaCambio = comp["__EMPTY_2"].replaceAll("/", "").replaceAll(".", "");
-					var fechaFormato = fechaCambio.substr(0, 2) + "/" + fechaCambio.substr(2, 2) + "/" + fechaCambio.substr(4, 4);
-					var baseImp = comp["__EMPTY_9"];
-					var glosa = comp["__EMPTY_8"];
-					var IGV = comp["__EMPTY_10"];
-					var INAFECTO = comp["__EMPTY_11"];
-					var TOTAL = comp["__EMPTY_12"];
-					var Ceco = comp["__EMPTY_13"].toString();
-					var indImp = comp["__EMPTY_6"].split(" - ")[0];
-					// var Moneda = comp["__EMPTY_6"];
-					var Serie = comp["__EMPTY_3"].toString().padStart(5, "0");//cambio de 15/06/2022;
-					var numComp = comp["__EMPTY_4"].toString().padStart(9, "0");
-					// var razSoc			= comp["Razon social"];
-					var Ruc = comp["__EMPTY_5"];
-					var tipComp = comp["__EMPTY_1"];
-					var CodComp = comp["__EMPTY_1"].split(" - ")[0];
-					var tipGasto = comp["__EMPTY_7"].split(" - ")[0];
 
-					if (baseImp === "") {
-						baseImp = "0.00";
-					} else {
-						baseImp = parseFloat(baseImp).toFixed(2);
-						if (isNaN(baseImp) || baseImp === "0") {
+					let array_estru = dataExcel.map(obj => obj["__EMPTY_3"].toString().padStart(5, "0") + "-" + obj["__EMPTY_4"].toString().padStart(9, "0") + " " + obj["__EMPTY_5"].toString());//21/07/2022
+					let isDuplicate = array_estru.some((item, index) => index !== array_estru.indexOf(item))
+
+
+					if (isDuplicate) {
+						sap.m.MessageBox.warning("Existen Comprobantes duplicados en el adjunto");
+						return;
+					}
+
+					let isDuplicateListaExcel = Array.filter((item, index) => datas.findIndex(obj1 => obj1.COMPROBANTE === item["__EMPTY_3"].toString().padStart(5, "0") + "-" + item["__EMPTY_4"].toString().padStart(9, "0") && obj1.RUC === item["__EMPTY_5"].toString()) !== -1)
+
+					if (isDuplicateListaExcel.length !== 0) {
+						sap.m.MessageBox.warning("Existen Comprobantes duplicados en la lista con el adjunto");
+						return;
+					}
+
+					dataExcel = Array;
+
+					dataExcel.forEach(function (comp, index) {
+
+						if (comp.__EMPTY_1 === "Tipo de comprobante") {
+							return;
+						}
+
+						var fechaCambio = comp["__EMPTY_2"].replaceAll("/", "").replaceAll(".", "");
+						var fechaFormato = fechaCambio.substr(0, 2) + "/" + fechaCambio.substr(2, 2) + "/" + fechaCambio.substr(4, 4);
+						var baseImp = comp["__EMPTY_9"];
+						var glosa = comp["__EMPTY_8"];
+						var IGV = comp["__EMPTY_10"];
+						var INAFECTO = comp["__EMPTY_11"];
+						var TOTAL = comp["__EMPTY_12"];
+						var Ceco = comp["__EMPTY_13"].toString();
+						var indImp = comp["__EMPTY_6"].split(" - ")[0];
+						// var Moneda = comp["__EMPTY_6"];
+						var Serie = comp["__EMPTY_3"].toString().padStart(5, "0");//cambio de 15/06/2022;
+						var numComp = comp["__EMPTY_4"].toString().padStart(9, "0");
+						// var razSoc			= comp["Razon social"];
+						var Ruc = comp["__EMPTY_5"];
+						var tipComp = comp["__EMPTY_1"];
+						var CodComp = comp["__EMPTY_1"].split(" - ")[0];
+						var tipGasto = comp["__EMPTY_7"].split(" - ")[0];
+
+						if (baseImp === "") {
 							baseImp = "0.00";
+						} else {
+							baseImp = parseFloat(baseImp).toFixed(2);
+							if (isNaN(baseImp) || baseImp === "0") {
+								baseImp = "0.00";
+							}
 						}
-					}
 
-					if (IGV === "") {
-						IGV = "0.00";
-					} else {
-						IGV = parseFloat(IGV).toFixed(2);
-						if (isNaN(IGV) || IGV === "0") {
+						if (IGV === "") {
 							IGV = "0.00";
+						} else {
+							IGV = parseFloat(IGV).toFixed(2);
+							if (isNaN(IGV) || IGV === "0") {
+								IGV = "0.00";
+							}
 						}
-					}
 
-					if (INAFECTO === "") {
-						INAFECTO = "0.00";
-					} else {
-						INAFECTO = parseFloat(INAFECTO).toFixed(2);
-						if (isNaN(INAFECTO) || INAFECTO === "0") {
+						if (INAFECTO === "") {
 							INAFECTO = "0.00";
+						} else {
+							INAFECTO = parseFloat(INAFECTO).toFixed(2);
+							if (isNaN(INAFECTO) || INAFECTO === "0") {
+								INAFECTO = "0.00";
+							}
 						}
-					}
 
-					if (TOTAL === "") {
-						TOTAL = "0.00";
-					} else {
-						TOTAL = parseFloat(TOTAL).toFixed(2);
-						if (isNaN(TOTAL) || TOTAL === "0") {
+						if (TOTAL === "") {
 							TOTAL = "0.00";
+						} else {
+							TOTAL = parseFloat(TOTAL).toFixed(2);
+							if (isNaN(TOTAL) || TOTAL === "0") {
+								TOTAL = "0.00";
+							}
 						}
-					}
 
-					if (comprobAnt !== Serie + numComp && (RucAnt !== Ruc.toString() || RucAnt === Ruc.toString())) {//21/07/2022
-						// keyDesg = 1;
-						
-						var estructura = {
-							//SCastillo
-							NROD0     : solicitud,
-							DOC_PAGO  : "",
-							COD_SAP		: COD_SAP,
-							//SCastillo
-							keySeg		: keyComp,
-							key			: keyComp,
-							COMPROBANTE	: Serie + "-" + numComp,
-							TIPO_COMP	: tipComp,
-							COD_TIPO_COMP: CodComp,
-							TIPO_PRUEBA	: CodComp,//16/08/2022
-							//SCastillo
-							TIPODOCI	: Ruc.toString().length > 8 ? "RUC" : "DNI",
-							//SCastillo
-							FECHA_COMP	: fechaFormato,
-							FECHA_PRUEBA :fechaFormato,//16/08/2022
-							RUC			: Ruc.toString(),
-							RAZON_SOCIAL: "",
-							WAERS		: moneda,
-							KOSTL		: "",
-							ESTADO		: "",
-							//SCastillo
-							GLOSA		: glosa,
-							PRUEBA_GLOSA : glosa,//16/08/2022
-							DATOS_SAP	:false ,
-							iconComp	: "sap-icon://pending",
-							EST_COMP	: "COMP. PEND. APR.",
-							COD_EST_COMP: "CPA",
-							stateComp	: "Warning",
-							VALIDA_GRABADO:false,
-							COMPROBANTE_ANTIGUO	:Serie + "-" + numComp,
-							COMPROBANTE_PRUEBA  :Serie + "-" + numComp,//16/08/2022
-							RUC_COPIA		: Ruc.toString(),
-							VALIDAR_DATOS	:false,//01/09/2022
-							//SCastillo
-							//COMP. PEND. APR
-							desglose: [{
-								stateCeco: "Success",
-								iconCeco: "sap-icon://sys-enter-2",
-								POSIC: keyDesg,
+						if (comprobAnt !== Serie + numComp && (RucAnt !== Ruc.toString() || RucAnt === Ruc.toString())) {//21/07/2022
+							// keyDesg = 1;
+
+							var estructura = {
+								//SCastillo
+								NROD0: solicitud,
+								DOC_PAGO: "",
+								COD_SAP: COD_SAP,
+								//SCastillo
+								keySeg: keyComp,
+								key: keyComp,
 								COMPROBANTE: Serie + "-" + numComp,
-								COD_CONT: tipGasto,
-								// TIPO			: tipGasto,
-								centro: Ceco === undefined ? "" : Ceco,
-								BASE_IMP: baseImp,
-								IGV: IGV,
-								INAFECTO: INAFECTO,
-								TOTAL: TOTAL,
-								IND_IMP: indImp,
-								imp: "",
-								validaciones1: false,
-								validacionBase: false,
-								validacionInafecto: true,
-								validacionIndicador: true,							
-							}],
-							archivoAd: [],
-							DeleteArchivo : []
-						};
+								TIPO_COMP: tipComp,
+								COD_TIPO_COMP: CodComp,
+								TIPO_PRUEBA: CodComp,//16/08/2022
+								//SCastillo
+								TIPODOCI: Ruc.toString().length > 8 ? "RUC" : "DNI",
+								//SCastillo
+								FECHA_COMP: fechaFormato,
+								FECHA_PRUEBA: fechaFormato,//16/08/2022
+								RUC: Ruc.toString(),
+								RAZON_SOCIAL: "",
+								WAERS: moneda,
+								KOSTL: "",
+								ESTADO: "",
+								//SCastillo
+								GLOSA: glosa,
+								PRUEBA_GLOSA: glosa,//16/08/2022
+								DATOS_SAP: false,
+								iconComp: "sap-icon://pending",
+								EST_COMP: "COMP. PEND. APR.",
+								COD_EST_COMP: "CPA",
+								stateComp: "Warning",
+								VALIDA_GRABADO: false,
+								COMPROBANTE_ANTIGUO: Serie + "-" + numComp,
+								COMPROBANTE_PRUEBA: Serie + "-" + numComp,//16/08/2022
+								RUC_COPIA: Ruc.toString(),
+								VALIDAR_DATOS: false,//01/09/2022
+								//SCastillo
+								//COMP. PEND. APR
+								desglose: [{
+									stateCeco: "Success",
+									iconCeco: "sap-icon://sys-enter-2",
+									POSIC: keyDesg,
+									COMPROBANTE: Serie + "-" + numComp,
+									COD_CONT: tipGasto,
+									// TIPO			: tipGasto,
+									centro: Ceco === undefined ? "" : Ceco,
+									BASE_IMP: baseImp,
+									IGV: IGV,
+									INAFECTO: INAFECTO,
+									TOTAL: TOTAL,
+									IND_IMP: indImp,
+									imp: "",
+									validaciones1: false,
+									validacionBase: false,
+									validacionInafecto: true,
+									validacionIndicador: true,
+								}],
+								archivoAd: [],
+								DeleteArchivo: []
+							};
 
-						array_estructura.push(JSON.parse(JSON.stringify(estructura)));
-						
-						// array_estructura.map(function(items_o){//27/07/2022
-							
-						// if(items_o.COD_TIPO_COMP === "KX"){
-						// items_o.TIPODOCI = "DEXT";	
-						
-						// }else if((items_o.COD_TIPO_COMP  === "SK" || items_o.COD_TIPO_COMP  === "PM")){
-							
-						// items_o.TIPODOCI = "DNI";	
-						// }else{
-							
-						// items_o.TIPODOCI = "RUC";	
-						// }
-						
-						// items_o.desglose.map(function(xs){
-						// 	if(xs.IND_IMP === "C0"){
-								
-						// 	xs.BASE_IMP ="0.00";
-						// 	xs.IGV ="0.00";		
-						// 	xs.imputacion.map(function(rz){
-						// 	rz.IMP = xs.INAFECTO;
-						// 	rz.IMP_TOTAL = xs.INAFECTO;
-						
-						// });	
-							
-						// 	}	
-						// });
-						
-						// });
+							array_estructura.push(JSON.parse(JSON.stringify(estructura)));
 
-						keyComp++
+							// array_estructura.map(function(items_o){//27/07/2022
 
-					}
+							// if(items_o.COD_TIPO_COMP === "KX"){
+							// items_o.TIPODOCI = "DEXT";	
 
-					comprobAnt = Serie + numComp;
-					RucAnt =Ruc.toString();//21/07/2022
-				});
-				var informacion = datas.concat(array_estructura);
+							// }else if((items_o.COD_TIPO_COMP  === "SK" || items_o.COD_TIPO_COMP  === "PM")){
 
-				Proyect.setProperty("/ProductCollection" , informacion);
+							// items_o.TIPODOCI = "DNI";	
+							// }else{
 
-			} catch (e) {
-				sap.ui.core.BusyIndicator.hide();
-				sap.m.MessageBox.error("Error en el formato vuelva a intentarlo");
-			}
+							// items_o.TIPODOCI = "RUC";	
+							// }
+
+							// items_o.desglose.map(function(xs){
+							// 	if(xs.IND_IMP === "C0"){
+
+							// 	xs.BASE_IMP ="0.00";
+							// 	xs.IGV ="0.00";		
+							// 	xs.imputacion.map(function(rz){
+							// 	rz.IMP = xs.INAFECTO;
+							// 	rz.IMP_TOTAL = xs.INAFECTO;
+
+							// });	
+
+							// 	}	
+							// });
+
+							// });
+
+							keyComp++
+
+						}
+
+						comprobAnt = Serie + numComp;
+						RucAnt = Ruc.toString();//21/07/2022
+					});
+					var informacion = datas.concat(array_estructura);
+
+					Proyect.setProperty("/ProductCollection", informacion);
+
+				} catch (e) {
+					sap.ui.core.BusyIndicator.hide();
+					sap.m.MessageBox.error("Error en el formato vuelva a intentarlo");
+				}
 			}
 
 
 
 		},
 
-		selecTipo_Comprobante:function(){// 17.04.2025
+		selecTipo_Comprobante: function () {// 17.04.2025
 			var oView = this.getView();
 			var ModelProyect = oView.getModel("Proyect");
-			var datos_filtro =[];
+			var datos_filtro = [];
 			// var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_CLASE_DOCSet"; //
 			// jQuery.ajax({
 			// 	type: "GET",
@@ -1577,20 +1496,20 @@ sap.ui.define([
 			// 			DENOMINACION: "---Seleccionar---"
 			// 		}
 			// 		datos.unshift(selectDoc);
-					var datos=[{
-						CLASE:"",
-						DENOMINACION:"---Seleccionar---"
-					},{
-						CLASE:"FAC",
-						DENOMINACION:"Facturas"
-					},{
-						CLASE:"BO",
-						DENOMINACION:"Boletas"
-					}
-				]
-					
-					
-					ModelProyect.setProperty("/TipoDocumento", datos);
+			var datos = [{
+				CLASE: "",
+				DENOMINACION: "---Seleccionar---"
+			}, {
+				CLASE: "FAC",
+				DENOMINACION: "Facturas"
+			}, {
+				CLASE: "BO",
+				DENOMINACION: "Boletas"
+			}
+			]
+
+
+			ModelProyect.setProperty("/TipoDocumento", datos);
 			// 	},
 			// 	error: function () {
 			// 		MessageBox.error("Ocurrio un error al obtener los datos", {
@@ -1606,215 +1525,207 @@ sap.ui.define([
 			// 		});
 			// 	}
 			// });	
-			
-			
+
+
 		},
 
-		GuardarComprobanteCr:function(){ //17.04.2025
-			var vista 			     = this.getView();
-			var that = this ;
-			var Proyect 		     = vista.getModel("Proyect");
+		GuardarComprobanteCr: function () { //17.04.2025
+			var vista = this.getView();
+			var that = this;
+			var Proyect = vista.getModel("Proyect");
 			var sRegistroComprobante = Proyect.getProperty("/sRegistroComprobantes");
-			var fecha_Comprobante  	 = Proyect.getProperty("/fecha_Comprobante1");
-			var Key_comprobante 	 = Proyect.getProperty("/Key_comprobante");
-			var tipoNif 			 = Proyect.getProperty("/tipoNif");
-			var datostipoDoc         = Proyect.getProperty("/datostipoDoc");
-			var Ruc 				 = Proyect.getProperty("/ruc");
-			var Razon_Social		 = Proyect.getProperty("/razonSocial");
-			var Monedas				 = Proyect.getProperty("/monedas");
-			var Glosa                =Proyect.getProperty("/Glosa");
-			var contador			 =0;
-			var DataGlosa            =Proyect.getProperty("/DataGlosa")[0];
-			var camposVacios         = false;
-			var validarCampos        = this.Validarcampos();
-			var ProductCollection    = Proyect.getProperty("/ProductCollection");
-			var repite  = false;
-			
-			
-			
-			if(validarCampos === true){
-				camposVacios=true;				
+			var fecha_Comprobante = Proyect.getProperty("/fecha_Comprobante1");
+			var Key_comprobante = Proyect.getProperty("/Key_comprobante");
+			var tipoNif = Proyect.getProperty("/tipoNif");
+			var datostipoDoc = Proyect.getProperty("/datostipoDoc");
+			var Ruc = Proyect.getProperty("/ruc");
+			var Razon_Social = Proyect.getProperty("/razonSocial");
+			var Monedas = Proyect.getProperty("/monedas");
+			var Glosa = Proyect.getProperty("/Glosa");
+			var contador = 0;
+			var DataGlosa = Proyect.getProperty("/DataGlosa")[0];
+			var camposVacios = false;
+			var validarCampos = this.Validarcampos();
+			var ProductCollection = Proyect.getProperty("/ProductCollection");
+			var repite = false;
+
+
+
+			if (validarCampos === true) {
+				camposVacios = true;
 			}
-			if(DataGlosa.TOTAL == "0.00"){
-				camposVacios=true;
+			if (DataGlosa.TOTAL == "0.00") {
+				camposVacios = true;
 			}
 
-			if(DataGlosa.IND_IMP == ""){
-				camposVacios=true;
+			if (DataGlosa.IND_IMP == "") {
+				camposVacios = true;
 			}
 
-			if(DataGlosa.TOTAL == "0.00"){
-				camposVacios=true;
+			if (DataGlosa.TOTAL == "0.00") {
+				camposVacios = true;
 			}
 
-            if(camposVacios == true){
+			if (camposVacios == true) {
 				MessageBox.warning("Completar los campos obligatorios");
 				return;
-            }
+			}
 
 			MessageBox.information("¿Desea guardar el comprobante?", {
 				actions: ["Aceptar", "Cancelar"],
 				onClose: function (sAction) {
-					if (sAction === "Aceptar") {	
+					if (sAction === "Aceptar") {
 
-			if(ProductCollection !== undefined){ //06/10/2024
-				ProductCollection.forEach(function (items2) {
-				
-					if(items2.COMPROBANTE == sRegistroComprobante){
-						repite = true;
-					}
-	
-				});
+						if (ProductCollection !== undefined) { //06/10/2024
+							ProductCollection.forEach(function (items2) {
+
+								if (items2.COMPROBANTE == sRegistroComprobante) {
+									repite = true;
+								}
+
+							});
 
 
-				if(repite == true){
-					MessageBox.warning("El comprobante ya fue registrado");//06/10/2024
-					return;
-				}	
-				
+							if (repite == true) {
+								MessageBox.warning("El comprobante ya fue registrado");//06/10/2024
+								return;
+							}
+
 							var estructura = {
-								key				: arrayguardar_comp.length +1,
-								keySeg			:arrayguardar_comp.length +1,
-								NROD0			:"",
-								DOC_PAGO		:"",
-								COD_SAP			:"",
-								ID_DOC_SRV		:"",
-								COMPROBANTE		:sRegistroComprobante,
-								COD_TIPO_COMP	: Key_comprobante,
-								TIPO_COMP		: "",
-								TIPODOCI    	:  tipoNif,
-								FECHA_COMP		: fecha_Comprobante,
-								TIPO_NIF		: "",
-								RUC				: Ruc,
-								RAZON_SOCIAL	: Razon_Social,
-								WAERS			: Monedas,
-								ESTADO			:"",
-								GLOSA   		: Glosa,
-								ORDEN_INT		: "",
-								VIAJES			: "",
-								REF_FACTURA		: "",
-								EST_COMP		: "",
-								COD_EST_COMP	: "",
-								DOC_COMP			:"",
-								DOC_CONT			:"",
-								DOC_PAGO_SOLICITUD  :"",
-								FECHA_CONT			:"",
-								FECHA_COMPENSA		:"",
-								desglose: [{	
-								"COMPROBANTE":sRegistroComprobante,
-								"POSIC": "1",
-								"COD_CONT": DataGlosa.COD_CONT,
-								"BASE_IMP": DataGlosa.BASE_IMP,
-								"IGV": DataGlosa.IGV,
-								"INAFECTO": DataGlosa.INAFECTO,
-								"TOTAL": DataGlosa.TOTAL,
-								"IND_IMP": DataGlosa.IND_IMP,
-								"imp": "",
-								
+								key: arrayguardar_comp.length + 1,
+								keySeg: arrayguardar_comp.length + 1,
+								NROD0: "",
+								DOC_PAGO: "",
+								COD_SAP: "",
+								ID_DOC_SRV: "",
+								COMPROBANTE: sRegistroComprobante,
+								COD_TIPO_COMP: Key_comprobante,
+								TIPO_COMP: "",
+								TIPODOCI: tipoNif,
+								FECHA_COMP: fecha_Comprobante,
+								TIPO_NIF: "",
+								RUC: Ruc,
+								RAZON_SOCIAL: Razon_Social,
+								WAERS: Monedas,
+								ESTADO: "",
+								GLOSA: Glosa,
+								ORDEN_INT: "",
+								VIAJES: "",
+								REF_FACTURA: "",
+								EST_COMP: "",
+								COD_EST_COMP: "",
+								DOC_COMP: "",
+								DOC_CONT: "",
+								DOC_PAGO_SOLICITUD: "",
+								FECHA_CONT: "",
+								FECHA_COMPENSA: "",
+								desglose: [{
+									"COMPROBANTE": sRegistroComprobante,
+									"POSIC": "1",
+									"COD_CONT": DataGlosa.COD_CONT,
+									"BASE_IMP": DataGlosa.BASE_IMP,
+									"IGV": DataGlosa.IGV,
+									"INAFECTO": DataGlosa.INAFECTO,
+									"TOTAL": DataGlosa.TOTAL,
+									"IND_IMP": DataGlosa.IND_IMP,
+									"imp": "",
+
 								}]
-								
+
 							}
 							ProductCollection.push(estructura);
-				
-							
-							// const informacion =ProductCollection.concat(arrayguardar_comp); // 22/04/2025
-							
-							
-							Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
-							Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
-							Proyect.setProperty("/ProductCollection",ProductCollection);
-							Proyect.setProperty("/sRegistroComprobantes","");
-							Proyect.setProperty("/fecha_Comprobante1","");
-							Proyect.setProperty("/Key_comprobante","");
-							Proyect.setProperty("/tipoNif","");
-							Proyect.setProperty("/ruc","");
-							Proyect.setProperty("/razonSocial","");
-							Proyect.setProperty("/monedas","");
-							Proyect.setProperty("/Glosa","");						
+							Proyect.setProperty("/RegistroCompro", sRegistroComprobante);
+							Proyect.setProperty("/GuardarComrpobantes", arrayguardar_comp);
+							Proyect.setProperty("/ProductCollection", ProductCollection);
+							Proyect.setProperty("/sRegistroComprobantes", "");
+							Proyect.setProperty("/fecha_Comprobante1", "");
+							Proyect.setProperty("/Key_comprobante", "");
+							Proyect.setProperty("/tipoNif", "");
+							Proyect.setProperty("/ruc", "");
+							Proyect.setProperty("/razonSocial", "");
+							Proyect.setProperty("/monedas", "");
+							Proyect.setProperty("/Glosa", "");
 							that.AgregarComprobante.close();
-			
-					
 
-			}else {
 
-		
+
+						} else {
+
+
 
 							var estructura = {
-								key				: arrayguardar_comp.length +1,
-								keySeg			:arrayguardar_comp.length +1,
-								NROD0			:"",
-								DOC_PAGO		:"",
-								COD_SAP			:"",
-								ID_DOC_SRV		:"",
-								COMPROBANTE		:sRegistroComprobante,
-								COD_TIPO_COMP	: Key_comprobante,
-								TIPO_COMP		: "",
-								TIPODOCI    	:  tipoNif,
-								FECHA_COMP		: fecha_Comprobante,
-								TIPO_NIF		: "",
-								RUC				: Ruc,
-								RAZON_SOCIAL	: Razon_Social,
-								WAERS			: Monedas,
-								ESTADO			:"",
-								GLOSA   		: Glosa,
-								ORDEN_INT		: "",
-								VIAJES			: "",
-								REF_FACTURA		: "",
-								EST_COMP		: "",
-								COD_EST_COMP	: "",
-								DOC_COMP			:"",
-								DOC_CONT			:"",
-								DOC_PAGO_SOLICITUD  :"",
-								FECHA_CONT			:"",
-								FECHA_COMPENSA		:"",
-								desglose: [{	
-								"COMPROBANTE":sRegistroComprobante,
-								"POSIC": "1",
-								"COD_CONT": DataGlosa.COD_CONT,
-								"BASE_IMP": DataGlosa.BASE_IMP,
-								"IGV": DataGlosa.IGV,
-								"INAFECTO": DataGlosa.INAFECTO,
-								"TOTAL": DataGlosa.TOTAL,
-								"IND_IMP": DataGlosa.IND_IMP,
-								"imp": "",
-								
+								key: arrayguardar_comp.length + 1,
+								keySeg: arrayguardar_comp.length + 1,
+								NROD0: "",
+								DOC_PAGO: "",
+								COD_SAP: "",
+								ID_DOC_SRV: "",
+								COMPROBANTE: sRegistroComprobante,
+								COD_TIPO_COMP: Key_comprobante,
+								TIPO_COMP: "",
+								TIPODOCI: tipoNif,
+								FECHA_COMP: fecha_Comprobante,
+								TIPO_NIF: "",
+								RUC: Ruc,
+								RAZON_SOCIAL: Razon_Social,
+								WAERS: Monedas,
+								ESTADO: "",
+								GLOSA: Glosa,
+								ORDEN_INT: "",
+								VIAJES: "",
+								REF_FACTURA: "",
+								EST_COMP: "",
+								COD_EST_COMP: "",
+								DOC_COMP: "",
+								DOC_CONT: "",
+								DOC_PAGO_SOLICITUD: "",
+								FECHA_CONT: "",
+								FECHA_COMPENSA: "",
+								desglose: [{
+									"COMPROBANTE": sRegistroComprobante,
+									"POSIC": "1",
+									"COD_CONT": DataGlosa.COD_CONT,
+									"BASE_IMP": DataGlosa.BASE_IMP,
+									"IGV": DataGlosa.IGV,
+									"INAFECTO": DataGlosa.INAFECTO,
+									"TOTAL": DataGlosa.TOTAL,
+									"IND_IMP": DataGlosa.IND_IMP,
+									"imp": "",
+
 								}]
-								
+
 							}
 							arrayguardar_comp.push(estructura);
-						   
-				
-							Proyect.setProperty("/RegistroCompro" , sRegistroComprobante);
-							Proyect.setProperty("/GuardarComrpobantes" , arrayguardar_comp);
-							Proyect.setProperty("/ProductCollection",arrayguardar_comp);
-							Proyect.setProperty("/sRegistroComprobantes","");
-							Proyect.setProperty("/fecha_Comprobante1","");
-							Proyect.setProperty("/Key_comprobante","");
-							Proyect.setProperty("/tipoNif","");
-							Proyect.setProperty("/ruc","");
-							Proyect.setProperty("/razonSocial","");
-							Proyect.setProperty("/monedas","");
-							Proyect.setProperty("/Glosa","");						
+
+
+							Proyect.setProperty("/RegistroCompro", sRegistroComprobante);
+							Proyect.setProperty("/GuardarComrpobantes", arrayguardar_comp);
+							Proyect.setProperty("/ProductCollection", arrayguardar_comp);
+							Proyect.setProperty("/sRegistroComprobantes", "");
+							Proyect.setProperty("/fecha_Comprobante1", "");
+							Proyect.setProperty("/Key_comprobante", "");
+							Proyect.setProperty("/tipoNif", "");
+							Proyect.setProperty("/ruc", "");
+							Proyect.setProperty("/razonSocial", "");
+							Proyect.setProperty("/monedas", "");
+							Proyect.setProperty("/Glosa", "");
 							that.AgregarComprobante.close();
 							arrayguardar_comp = [];
 
-						
+						}
+					}
 
+				}
+			})
 
-			}	
-		}
-
-	}
-})
-		
 		},
 
-		userlog:function(){
-			var that=this;
+		userlog: function () {
+			var that = this;
 			var vista = this.getView();
 			var ModelProyect = vista.getModel("Proyect");
 			sap.ui.core.BusyIndicator.show(0);
-				$.ajax({
+			$.ajax({
 				type: "GET",
 				url: "/services/userapi/attributes",
 				dataType: "json",
@@ -1824,55 +1735,55 @@ sap.ui.define([
 					"Accept": "application/json"
 				},
 				success: function (response) {
-				
+
 					ModelProyect.setProperty("/DatosName", response.name);
 					ModelProyect.setProperty("/correouser", response.email);
 					// self._oStorage.put('currentUser', response.id);
-					that.infoaprobador();                              
-				
+					that.infoaprobador();
+
 				}
-			});	
+			});
 		},
-		servicioIgv:function(){
-		var oView = this.getView();
-		var ModelProyect = oView.getModel("Proyect");
-		// var url="/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_GET_IGVSet";
-		// 	jQuery.ajax({
-		// 		type: "GET",
-		// 		dataType: 'json',
-		// 		headers: {
-		// 			"Accept": "application/json"
-		// 		},
-		// 		contentType: "application/json",
-		// 		url: url,
-		// 		async: true,
-		// 		success: function (data, textStatus, jqXHR) {
-		// 			var datos = data.d.results;
-		// 			ModelProyect.setProperty("/IGV",datos[0].IGV);
-					
-		// 		},
-		// 		error: function () {
-		// 			MessageBox.error("Ocurrio un error al obtener los datos", {
-		// 			actions: ["Aceptar"],
-		// 						emphasizedAction: MessageBox.Action.OK,
-		// 						onClose: function (sAction) {
-		// 							if (sAction === "Aceptar") {
-		// 							location.reload();
-		// 							}
-		// 							sap.ui.core.BusyIndicator.hide();
-		// 							console.log(er);
-		// 						}
-		// 			});
-		// 		}
+		servicioIgv: function () {
+			var oView = this.getView();
+			var ModelProyect = oView.getModel("Proyect");
+			// var url="/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_GET_IGVSet";
+			// 	jQuery.ajax({
+			// 		type: "GET",
+			// 		dataType: 'json',
+			// 		headers: {
+			// 			"Accept": "application/json"
+			// 		},
+			// 		contentType: "application/json",
+			// 		url: url,
+			// 		async: true,
+			// 		success: function (data, textStatus, jqXHR) {
+			// 			var datos = data.d.results;
+			// 			ModelProyect.setProperty("/IGV",datos[0].IGV);
+
+			// 		},
+			// 		error: function () {
+			// 			MessageBox.error("Ocurrio un error al obtener los datos", {
+			// 			actions: ["Aceptar"],
+			// 						emphasizedAction: MessageBox.Action.OK,
+			// 						onClose: function (sAction) {
+			// 							if (sAction === "Aceptar") {
+			// 							location.reload();
+			// 							}
+			// 							sap.ui.core.BusyIndicator.hide();
+			// 							console.log(er);
+			// 						}
+			// 			});
+			// 		}
 			// });	
 			sap.ui.core.BusyIndicator.hide();
 		},
-		
-		ValidacionTipoCambio: function(){
+
+		ValidacionTipoCambio: function () {
 			var oView = this.getView();
 			var ModelProyect = oView.getModel("Proyect");
 			// var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_TIPO_CAMBIOSet";
-			
+
 			// jQuery.ajax({
 			// 	type: "GET",
 			// 	cache: false,
@@ -1884,7 +1795,7 @@ sap.ui.define([
 			// 	async: true,
 			// 	success: function (data, textStatus, jqXHR) {
 			// 		var datos = data.d.results;
-					
+
 			// 		ModelProyect.setProperty("/TipoCambio", datos);
 
 			// 	},
@@ -1892,9 +1803,9 @@ sap.ui.define([
 			// 		MessageBox.error("Ocurrio un error al obtener los datos del servicio ZET_TIPO_CAMBIOSet");
 			// 	}
 			// });	
-				
-			},
-			
+
+		},
+
 		filtroceco: function () {
 			var oView = this.getView();
 			var ModelProyect = oView.getModel("Proyect");
@@ -1910,13 +1821,13 @@ sap.ui.define([
 			// 	async: true,
 			// 	success: function (data, textStatus, jqXHR) {
 			// 		var datos = data.d.results;
-					
+
 			// 		for (var i = datos.length - 1; i >= 0; i--) {
 			// 		if (datos[i].CECO === "" && datos[i].NOMBRE === "") {
 			// 				datos.splice(i, 1);
 			// 		}
 			// 		}	
-					
+
 			// 		ModelProyect.setProperty("/datosCeco", datos);
 
 			// 	},
@@ -1932,18 +1843,18 @@ sap.ui.define([
 			// 						console.log(er);
 			// 					}
 			// 		});
-					
+
 			// 	}
 			// });
 			sap.ui.core.BusyIndicator.hide();
 		},
 
-		quitarGrupos:function(oEvent){
+		quitarGrupos: function (oEvent) {
 			var vista = this.getView();
 			var Proyect = vista.getModel("Proyect");
-			var that= this;
+			var that = this;
 			var selectSolicitudER = vista.byId("idProductsTable");
-			var selecciones   =       selectSolicitudER.getSelectedItems();
+			var selecciones = selectSolicitudER.getSelectedItems();
 			var ProductCollection = Proyect.getProperty("/ProductCollection");
 
 
@@ -1953,7 +1864,7 @@ sap.ui.define([
 					if (sAction === "Aceptar") {
 						sap.ui.core.BusyIndicator.show(0);
 
-						var posiciones	= selecciones.map(function (objeto) {
+						var posiciones = selecciones.map(function (objeto) {
 							var path = objeto.getBindingContext("Proyect").getPath();
 							var objetos = Proyect.getProperty(path);
 							return objetos;
@@ -1961,86 +1872,87 @@ sap.ui.define([
 
 
 						for (var i = 0; i < ProductCollection.length; i++) {
-							posiciones.forEach(function(obj){
+							posiciones.forEach(function (obj) {
 								if (ProductCollection[i] === obj) {
 									ProductCollection.splice(i, 1);
 								}
 							})
-							
+
 						}
 						MessageBox.success("El comprobante fue eliminado exitosamente");
 						sap.ui.core.BusyIndicator.hide();
 						Proyect.refresh(true);
-				}
-
 					}
-				})
 
-			
+				}
+			})
+
+
 		},
 
-		pressAgregarComproCR:function(){ //17.04.2025
+		pressAgregarComproCR: function () { //17.04.2025
 			var vista = this.getView();
 			var Proyect = vista.getModel("Proyect");
-			var that= this;
+			var that = this;
 			var ProductCollection = Proyect.getProperty("/ProductCollection");
-			var arrayEstructura =[];
+			var arrayEstructura = [];
 			var cont = "";
 
-			if(ProductCollection === undefined){
+			if (ProductCollection === undefined) {
 				cont = 0
-			}else{
+			} else {
 				cont = ProductCollection
 			}
 
 
 			var estructura = {
-									key				: cont + 1,
-									keySeg			:cont + 1,
-									NROD0			:"",
-									DOC_PAGO		:"",
-									COD_SAP			:"",
-									ID_DOC_SRV		:"",
-									COMPROBANTE		: "",
-				    				COD_TIPO_COMP	: "",
-				    				TIPO_COMP		: "",
-				    				TIPODOCI    	:  "",
-				    				FECHA_COMP		: "",
-				    				TIPO_NIF		: "",
-				    				RUC				: "",
-				    				RAZON_SOCIAL	: "",
-				    				WAERS			: "",
-				    				ESTADO			:"",
-				    				GLOSA   		: "",
-				    				ORDEN_INT		: "",
-				    				VIAJES			: "",
-				    				REF_FACTURA		: "",
-				    				EST_COMP		: "",
-				    				COD_EST_COMP	: "",
-				    			    DOC_COMP			:"",
-				    			    DOC_CONT			:"",
-				    			    DOC_PAGO_SOLICITUD  :"",
-				    			    FECHA_CONT			:"",
-									FECHA_COMPENSA		:"",
-									desglose: [{	
-									COMPROBANTE:"",
-									POSIC: 1,
-									COD_CONT: "",
-									centro: "",
-									BASE_IMP: "0.00",
-									IGV: "0.00",
-									INAFECTO: "0.00",
-									TOTAL: "0.00",
-									IND_IMP: "",
-									imp: ""}]
-									
+				key: cont + 1,
+				keySeg: cont + 1,
+				NROD0: "",
+				DOC_PAGO: "",
+				COD_SAP: "",
+				ID_DOC_SRV: "",
+				COMPROBANTE: "",
+				COD_TIPO_COMP: "",
+				TIPO_COMP: "",
+				TIPODOCI: "",
+				FECHA_COMP: "",
+				TIPO_NIF: "",
+				RUC: "",
+				RAZON_SOCIAL: "",
+				WAERS: "",
+				ESTADO: "",
+				GLOSA: "",
+				ORDEN_INT: "",
+				VIAJES: "",
+				REF_FACTURA: "",
+				EST_COMP: "",
+				COD_EST_COMP: "",
+				DOC_COMP: "",
+				DOC_CONT: "",
+				DOC_PAGO_SOLICITUD: "",
+				FECHA_CONT: "",
+				FECHA_COMPENSA: "",
+				desglose: [{
+					COMPROBANTE: "",
+					POSIC: 1,
+					COD_CONT: "",
+					centro: "",
+					BASE_IMP: "0.00",
+					IGV: "0.00",
+					INAFECTO: "0.00",
+					TOTAL: "0.00",
+					IND_IMP: "",
+					imp: ""
+				}]
+
 			};
 			arrayEstructura.push(estructura);
 
-			Proyect.setProperty("/AgregarComprobantes" , arrayEstructura);
-			Proyect.setProperty("/DataGlosa" , arrayEstructura[0].desglose);
-			Proyect.setProperty("/datostipoDoc" , models.oTipoDoc()); //18.06/2024
-			Proyect.setProperty("/datosmoneda" , models.oMoneda()); //20.06/2024
+			Proyect.setProperty("/AgregarComprobantes", arrayEstructura);
+			Proyect.setProperty("/DataGlosa", arrayEstructura[0].desglose);
+			Proyect.setProperty("/datostipoDoc", models.oTipoDoc()); //18.06/2024
+			Proyect.setProperty("/datosmoneda", models.oMoneda()); //20.06/2024
 			Proyect.setProperty("/editableBaseI", false);//07/09/2024
 			Proyect.setProperty("/editableBaseIGV", false);//07/09/2024
 			Proyect.setProperty("/editableInafecto", false);//07/09/2024
@@ -2052,25 +1964,25 @@ sap.ui.define([
 			that.AgregarComprobante.open();
 		},
 
-	
-		infoaprobador:function(){
-		var oView = this.getView();
-		var ModelInputs = oView.getModel("Proyect");
-		var correoUser	=	ModelInputs.getProperty("/correouser");
-		var that=this;
-		var correo_prueba="";
-		var queryString 	= window.location.host;
-		var urlPage ="";
-		
-		if(correoUser === "developer.scp1@talma.com.pe"){
-		correo_prueba = "katia.nicho@talma.com.pe"	;
-		}else{
-		correo_prueba =correoUser;	
-		}
-		
-			
+
+		infoaprobador: function () {
+			var oView = this.getView();
+			var ModelInputs = oView.getModel("Proyect");
+			var correoUser = ModelInputs.getProperty("/correouser");
+			var that = this;
+			var correo_prueba = "";
+			var queryString = window.location.host;
+			var urlPage = "";
+
+			if (correoUser === "developer.scp1@talma.com.pe") {
+				correo_prueba = "katia.nicho@talma.com.pe";
+			} else {
+				correo_prueba = correoUser;
+			}
+
+
 			// 	var url="/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_COLABORADORSet?$filter=CORREO eq '"+ correo_prueba +"'"; 
-			
+
 			// jQuery.ajax({
 			// 	type: "GET",
 			// 	cache: false,
@@ -2082,7 +1994,7 @@ sap.ui.define([
 			// 	async: true,
 			// 	success: function (data, textStatus, jqXHR) {
 			// 		var datos = data.d.results;
-					
+
 			// 		if(datos.length > 0 &&  datos !== undefined){
 			// 		ModelInputs.setProperty("/DatosDni", datos[0].DNI);
 			// 		ModelInputs.setProperty("/COD_SAP", datos[0].COD_SAP);
@@ -2092,37 +2004,37 @@ sap.ui.define([
 			// 		ModelInputs.setProperty("/txtCodBen","Código del Beneficiario");
 			// 		ModelInputs.setProperty("/areaAprob", false);
 			// 		ModelInputs.refresh(true);
-					
+
 			// 		//-----Cambios JRodriguez-----
 			// 		//&& parametroApp === "true"
 			// 		 if(datos[0].AREA !== "" && datos[0].AREA.includes("OBSERVACIONES") && parametroApp === "true" && ValidacionlevObs ===true){
-					 	
+
 			// 		 		ModelInputs.setProperty("/tituloTalma","Levantamiento de Observaciones");
 			// 				ModelInputs.setProperty("/beneficiarios", datos[0].NOMBRES +" "+datos[0].APELLIDOS );
 			// 				ModelInputs.setProperty("/txtCodBen","Código");
 			// 				ModelInputs.setProperty("/areaAprob", true);
 			// 				tipoUsr = "LO";
 			// 				ModelInputs.setProperty("/tipo_usuario",tipoUsr);	
-				
-			        	
+
+
 			// 				that.selectestado();
-						
+
 
 			// 		}else{
-						
+
 			// 			if(ValidacionRendiEr === true &&  parametroApp !== "true"){
 			// 			tipoUsr = "";
 			// 			ModelInputs.setProperty("/tipo_usuario",tipoUsr);
-					
+
 			// 			that.selectestado();	
 			// 			}else{
-							
+
 			// 				if(queryString.includes("n8pid6w2h2")){
 			// 					urlPage = "https://flpnwc-n8pid6w2h2.dispatcher.us2.hana.ondemand.com/sites?siteId=9a6f515e-eb45-4d6a-9a51-932c1dba144a&appState=lean#Shell-home";
 			// 				}else{
 			// 					urlPage = "https://flpnwc-dwc4zd7e0s.dispatcher.us2.hana.ondemand.com/sites?siteId=cd08e08d-5ca9-4e8b-a352-374cb609125d&appState=lean#Shell-home";
 			// 				}
-							
+
 			// 				MessageBox.error("Tu usuario no tiene acceso a este aplicativo.", {
 			// 				actions: ["Aceptar"],
 			// 					emphasizedAction: MessageBox.Action.OK,
@@ -2130,14 +2042,14 @@ sap.ui.define([
 			// 						if (sAction === "Aceptar") {
 			// 						window.open(urlPage, "_self","")
 			// 						}
-									
+
 			// 						sap.ui.core.BusyIndicator.hide();
-								
+
 			// 					}
 			// 		});
 			// 			}
-						
-						
+
+
 			// 		}
 			// 	}else{
 			// 		MessageBox.error("El usuario no se encuentra registrado en Sap .", {
@@ -2145,26 +2057,26 @@ sap.ui.define([
 			// 					emphasizedAction: MessageBox.Action.OK,
 			// 					onClose: function (sAction) {
 			// 						if (sAction === "Aceptar") {
-										
-									
+
+
 			// 						}
 			// 						sap.ui.core.BusyIndicator.hide();
-								
+
 			// 					}
 			// 		});	
 			// 	}
-				
+
 			// 	},
 			// 	error: function () {
 			// 	MessageBox.error("Ocurrio un error al obtener los datos");
-					
+
 			// 	}
 			// });	
 		},
-		selectestado:function(){
+		selectestado: function () {
 			var vista = this.getView();
-			var Proyect=vista.getModel("Proyect");
-			var that=this;
+			var Proyect = vista.getModel("Proyect");
+			var that = this;
 			//    var url= "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_ESTADOSSet";
 			// jQuery.ajax({
 			// 	type: "GET",
@@ -2177,7 +2089,7 @@ sap.ui.define([
 			// 	async: true,
 			// 	success: function (data, textStatus, jqXHR) {
 			// 		var datos = data.d.results;
-					
+
 			// 		Proyect.setProperty("/estadoSolic",datos);
 			// 		//-----Cambios JRodriguez-----
 			// 		//colocar AA como parámetro de función
@@ -2198,201 +2110,212 @@ sap.ui.define([
 			// 		});
 			// 	}
 			// });
-        
+
 		},
-		onBuscar: function () {
+		onBuscar: async function () {
 			var vista = this.getView();
-			var ModelInputss=vista.getModel("Proyect");
-		    var DatosDni=ModelInputss.getProperty("/DatosDni");
-		    var estadoSolic=ModelInputss.getProperty("/estadoSolic");
-    //         var estados= "(EPOS1 eq 'PR' or EPOS1 eq 'PAR' or EPOS1 eq 'R' or EPOS1 eq 'RCH' or EPOS1 eq 'RP' or EPOS1 eq 'CER')";
-    //         var datosSolic = [{"NROD0": "--- Seleccionar ---"}];
-            
-    //         sap.ui.core.BusyIndicator.show(0);
-            
-	//     	//-----Cambios JRodriguez-----
-	// 	    //colocar AA como parámetro de función
-	// 	    if(tipoUsr === "LO"){
-	// 	    	estados = "(EPOS1 eq 'O')";
-	// 	    	DatosDni = "";
-	// 	    }
-	// 	    //----------------------------
-    //         var selectSolicitudER	= vista.byId("selectSolicitudER")
-	// 		var seleccion			= selectSolicitudER.getSelectedItems();
-	// 		if(seleccion !== ""){
-	// 			var datosinf = seleccion.map(function(obj){
-	//             var dataSoc			= obj.getBindingContext("Proyect").getPath();
-	//  			var DataSelecSoc	= ModelInputss.getProperty(dataSoc);	
-	//             return 	DataSelecSoc;
-	//             });	
-	//              var datosol="";
-	//             var datossolic="";
-	            
-	//             if(datosol===""){
-	//             datosol="NROD0 eq ''";	
-	//             }
-	           
-	//             datosinf.forEach(function(its,i){
-	// 	            if (i> 0) {
-	// 					datosol += " or NROD0 eq '" + its.NROD0 + "'";
-	// 					if (datosinf.length === i + 1) {
-	// 						datosol = "(" + datosol + ")";
-	// 					}
-	// 				} else {
-	// 					datosol = "NROD0 eq '" + its.NROD0 + "'";
-	// 					// datossolic=its.ESTADO;
-	// 				}
-	//             });	
-	//         }else{
-	//         	datosol = "NROD0 eq ''";
-	//         }
-            
-    //         var array=[];
-    //         //ZFBDT ge '20151231' and ZFBDT le '20310101')
-    //         //var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_SOLICITUD_DETSet?$filter=(ZFBDT ge '' and ZFBDT le '') and "+datosol+" and DNI eq '"+DatosDni+"' and BUKRS eq '' and LIFNR eq '' and BENEFICIARIO eq ''";
-    //         var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_SOLICITUD_DETSet?$filter=(ZFBDT ge '' and ZFBDT le '') and "+estados+" and "+datosol+" and DNI eq '"+DatosDni+"' and BUKRS eq '' and LIFNR eq '' and BENEFICIARIO eq ''";
-	// 		jQuery.ajax({
-	// 			type: "GET",
-	// 			cache: false,
-	// 			headers: {
-	// 				"Accept": "application/json"
-	// 			},
-	// 			contentType: "application/json",
-	// 			url: url,
-	// 			async: true,
-	// 			success: function (data, textStatus, jqXHR) {
-	// 				sap.ui.core.BusyIndicator.hide(0);
-	// 				var datos = data.d.results;
-	// 				//if(datos.length >0 && datos !== undefined){
-					
-	// 				datos.forEach(function(rs){
-	// 					rs.Fecha=rs.ZFBDT.substring(6,8)+"/"+rs.ZFBDT.substring(4,6)+"/"+rs.ZFBDT.substring(0,4);
-	// 					// array.push(rs);
-	// 					// array.reverse();	
-	// 				});
-					
-	// 				var datas=ModelInputss.getProperty("/DataComprobanteConfirmacion");
-	// 					//-----Cambios JRodriguez-----
-	// 				datos.forEach(function(items){
-	// 					// if(items.EPOS1==="C"){
-	// 					//  items.EPOS2="PR";
-	// 					//  //Cambios de CR.
-	// 					//  switch(items.EPOS2){
-	// 					//  case "PR":
-    //   //                  items.estado="Warning";
-    //   //                  items.iconEstado="";
-    //   //              	items.habilitado=false;
-    //   //                  break;
-    //   //               	}
-    //   //               	ModelInputss.refresh(true);
-	// 					// }else{
-							
-	// 					switch(items.EPOS1){
-	// 					 case "PR":
-    //                     items.estado="Warning";
-    //                     items.iconEstado="";
-    //                 	items.habilitado=false;
-    //                     break;	
-	// 					 case "O":
-    //                     items.estado="Information";
-    //                     items.iconEstado="sap-icon://document-text";
-    //                 	items.habilitado=false;
-    //                     break;
-    //                      case "CER":
-    //                     items.estado="Indication01";
-    //                     items.iconEstado="";
-    //                 	items.habilitado=true;
-    //                     break;
-    //                 	  case "PAR":
-    //                     items.estado="Information";
-    //                     items.iconEstado="";
-    //                    items.habilitado=false;
-    //                     break;
-    //                     case "R":
-    //                     items.estado="Success";
-    //                     items.iconEstado="";
-    //                     items.habilitado=false;
-    //                     break;
-    //                     case "RCH":
-    //                     items.estado="Error";
-    //                     items.iconEstado="sap-icon://error";
-    //                     items.habilitado=false;
-    //                     break;
-                        
-                     		
-	// 				}
-	// 				 		items.EPOS2 = items.EPOS1;
-	// 					//}
-						
-	// 					estadoSolic.map(function(estados){
-	// 						if(items.EPOS2 === estados.ESTADO){
-	// 							items.descripcion = estados.DESCRIPCION ;      
-	// 						}
-	// 					});
-						
-	// 					items.IMP_RENDIDO = items.IMP_RENDIDO.replaceAll(" ", "");
-					
-	// 					if(items.IMP_RENDIDO === "" || parseFloat(items.IMP_RENDIDO) < 0.01 || items.IMP_RENDIDO === undefined){
-	// 						items.IMP_RENDIDO="0.00";
-	// 					}else{
-	// 						items.IMP_RENDIDO=parseFloat(items.IMP_RENDIDO).toFixed(2);
-	// 					}
-						
-	// 					var datosFiltros = {"NROD0": items.NROD0};
-	// 					datosSolic.push(datosFiltros);
-	// 				});	
-	// 				//----------------------------
-					
-	// 				sap.ui.core.BusyIndicator.hide(0);
-					
-	// 				if(consBusc){
-	// 					ModelInputss.setProperty("/Solicitudes",datosSolic);
-	// 					consBusc = false; 
-	// 				}
-					
-	// 				ModelInputss.setProperty("/ReporteHistoricoTable", datos);
-	// 				ModelInputss.refresh(true);
-	// 				ModelInputss.setProperty("/count", "(" + datos.length + ")");
-					
-	// 			//}
-	// 			sap.ui.core.BusyIndicator.hide();
-	// 			// else{
-	// 			// 	ModelInputss.refresh(true);
-	// 			// 	if(tipoUsr === ""){
-	// 			// 	MessageBox.warning("El usuario no cuenta con solicitudes creadas .", {
-	// 			// 		actions: ["Aceptar"],
-	// 			// 				emphasizedAction: MessageBox.Action.OK,
-	// 			// 				onClose: function (sAction) {
-	// 			// 					if (sAction === "Aceptar") {
-									
-	// 			// 					}
-	// 			// 					sap.ui.core.BusyIndicator.hide();
-								
-	// 			// 				}
-	// 			// 	});	
-	// 			// 	}else{
-	// 			// 	MessageBox.warning("No tiene observaciones pendientes.", {
-	// 			// 		actions: ["Aceptar"],
-	// 			// 				emphasizedAction: MessageBox.Action.OK,
-	// 			// 				onClose: function (sAction) {
-	// 			// 					if (sAction === "Aceptar") {
-									
-	// 			// 					}
-	// 			// 					sap.ui.core.BusyIndicator.hide();
-								
-	// 			// 				}
-	// 			// 	});	
-	// 			// 	}
-	// 			// }
-					
-	// 			},
-	// 			error: function () {
-	// 				MessageBox.error("Ocurrio un error al obtener los datos");
-	// 			}
-	// 		});
-		
+			var ModelInputss = vista.getModel("Proyect");
+			var DatosDni = ModelInputss.getProperty("/DatosDni");
+			var estadoSolic = ModelInputss.getProperty("/estadoSolic");
+
+			try {
+				const url = `/odata/v4/ComprobanteService/consultarComprobante(Numero_comprobante='${"01234567891024"}')`;
+				const response = await fetch(url);
+				const data = await response.json();
+
+				oView.getModel().setProperty("/results", data.value || []);
+			} catch (e) {
+				console.error(e);
+				MessageToast.show("Error al consultar el comprobante.");
+			}
+			//         var estados= "(EPOS1 eq 'PR' or EPOS1 eq 'PAR' or EPOS1 eq 'R' or EPOS1 eq 'RCH' or EPOS1 eq 'RP' or EPOS1 eq 'CER')";
+			//         var datosSolic = [{"NROD0": "--- Seleccionar ---"}];
+
+			//         sap.ui.core.BusyIndicator.show(0);
+
+			//     	//-----Cambios JRodriguez-----
+			// 	    //colocar AA como parámetro de función
+			// 	    if(tipoUsr === "LO"){
+			// 	    	estados = "(EPOS1 eq 'O')";
+			// 	    	DatosDni = "";
+			// 	    }
+			// 	    //----------------------------
+			//         var selectSolicitudER	= vista.byId("selectSolicitudER")
+			// 		var seleccion			= selectSolicitudER.getSelectedItems();
+			// 		if(seleccion !== ""){
+			// 			var datosinf = seleccion.map(function(obj){
+			//             var dataSoc			= obj.getBindingContext("Proyect").getPath();
+			//  			var DataSelecSoc	= ModelInputss.getProperty(dataSoc);	
+			//             return 	DataSelecSoc;
+			//             });	
+			//              var datosol="";
+			//             var datossolic="";
+
+			//             if(datosol===""){
+			//             datosol="NROD0 eq ''";	
+			//             }
+
+			//             datosinf.forEach(function(its,i){
+			// 	            if (i> 0) {
+			// 					datosol += " or NROD0 eq '" + its.NROD0 + "'";
+			// 					if (datosinf.length === i + 1) {
+			// 						datosol = "(" + datosol + ")";
+			// 					}
+			// 				} else {
+			// 					datosol = "NROD0 eq '" + its.NROD0 + "'";
+			// 					// datossolic=its.ESTADO;
+			// 				}
+			//             });	
+			//         }else{
+			//         	datosol = "NROD0 eq ''";
+			//         }
+
+			//         var array=[];
+			//         //ZFBDT ge '20151231' and ZFBDT le '20310101')
+			//         //var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_SOLICITUD_DETSet?$filter=(ZFBDT ge '' and ZFBDT le '') and "+datosol+" and DNI eq '"+DatosDni+"' and BUKRS eq '' and LIFNR eq '' and BENEFICIARIO eq ''";
+			//         var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_SOLICITUD_DETSet?$filter=(ZFBDT ge '' and ZFBDT le '') and "+estados+" and "+datosol+" and DNI eq '"+DatosDni+"' and BUKRS eq '' and LIFNR eq '' and BENEFICIARIO eq ''";
+			// 		jQuery.ajax({
+			// 			type: "GET",
+			// 			cache: false,
+			// 			headers: {
+			// 				"Accept": "application/json"
+			// 			},
+			// 			contentType: "application/json",
+			// 			url: url,
+			// 			async: true,
+			// 			success: function (data, textStatus, jqXHR) {
+			// 				sap.ui.core.BusyIndicator.hide(0);
+			// 				var datos = data.d.results;
+			// 				//if(datos.length >0 && datos !== undefined){
+
+			// 				datos.forEach(function(rs){
+			// 					rs.Fecha=rs.ZFBDT.substring(6,8)+"/"+rs.ZFBDT.substring(4,6)+"/"+rs.ZFBDT.substring(0,4);
+			// 					// array.push(rs);
+			// 					// array.reverse();	
+			// 				});
+
+			// 				var datas=ModelInputss.getProperty("/DataComprobanteConfirmacion");
+			// 					//-----Cambios JRodriguez-----
+			// 				datos.forEach(function(items){
+			// 					// if(items.EPOS1==="C"){
+			// 					//  items.EPOS2="PR";
+			// 					//  //Cambios de CR.
+			// 					//  switch(items.EPOS2){
+			// 					//  case "PR":
+			//   //                  items.estado="Warning";
+			//   //                  items.iconEstado="";
+			//   //              	items.habilitado=false;
+			//   //                  break;
+			//   //               	}
+			//   //               	ModelInputss.refresh(true);
+			// 					// }else{
+
+			// 					switch(items.EPOS1){
+			// 					 case "PR":
+			//                     items.estado="Warning";
+			//                     items.iconEstado="";
+			//                 	items.habilitado=false;
+			//                     break;	
+			// 					 case "O":
+			//                     items.estado="Information";
+			//                     items.iconEstado="sap-icon://document-text";
+			//                 	items.habilitado=false;
+			//                     break;
+			//                      case "CER":
+			//                     items.estado="Indication01";
+			//                     items.iconEstado="";
+			//                 	items.habilitado=true;
+			//                     break;
+			//                 	  case "PAR":
+			//                     items.estado="Information";
+			//                     items.iconEstado="";
+			//                    items.habilitado=false;
+			//                     break;
+			//                     case "R":
+			//                     items.estado="Success";
+			//                     items.iconEstado="";
+			//                     items.habilitado=false;
+			//                     break;
+			//                     case "RCH":
+			//                     items.estado="Error";
+			//                     items.iconEstado="sap-icon://error";
+			//                     items.habilitado=false;
+			//                     break;
+
+
+			// 				}
+			// 				 		items.EPOS2 = items.EPOS1;
+			// 					//}
+
+			// 					estadoSolic.map(function(estados){
+			// 						if(items.EPOS2 === estados.ESTADO){
+			// 							items.descripcion = estados.DESCRIPCION ;      
+			// 						}
+			// 					});
+
+			// 					items.IMP_RENDIDO = items.IMP_RENDIDO.replaceAll(" ", "");
+
+			// 					if(items.IMP_RENDIDO === "" || parseFloat(items.IMP_RENDIDO) < 0.01 || items.IMP_RENDIDO === undefined){
+			// 						items.IMP_RENDIDO="0.00";
+			// 					}else{
+			// 						items.IMP_RENDIDO=parseFloat(items.IMP_RENDIDO).toFixed(2);
+			// 					}
+
+			// 					var datosFiltros = {"NROD0": items.NROD0};
+			// 					datosSolic.push(datosFiltros);
+			// 				});	
+			// 				//----------------------------
+
+			// 				sap.ui.core.BusyIndicator.hide(0);
+
+			// 				if(consBusc){
+			// 					ModelInputss.setProperty("/Solicitudes",datosSolic);
+			// 					consBusc = false; 
+			// 				}
+
+			// 				ModelInputss.setProperty("/ReporteHistoricoTable", datos);
+			// 				ModelInputss.refresh(true);
+			// 				ModelInputss.setProperty("/count", "(" + datos.length + ")");
+
+			// 			//}
+			// 			sap.ui.core.BusyIndicator.hide();
+			// 			// else{
+			// 			// 	ModelInputss.refresh(true);
+			// 			// 	if(tipoUsr === ""){
+			// 			// 	MessageBox.warning("El usuario no cuenta con solicitudes creadas .", {
+			// 			// 		actions: ["Aceptar"],
+			// 			// 				emphasizedAction: MessageBox.Action.OK,
+			// 			// 				onClose: function (sAction) {
+			// 			// 					if (sAction === "Aceptar") {
+
+			// 			// 					}
+			// 			// 					sap.ui.core.BusyIndicator.hide();
+
+			// 			// 				}
+			// 			// 	});	
+			// 			// 	}else{
+			// 			// 	MessageBox.warning("No tiene observaciones pendientes.", {
+			// 			// 		actions: ["Aceptar"],
+			// 			// 				emphasizedAction: MessageBox.Action.OK,
+			// 			// 				onClose: function (sAction) {
+			// 			// 					if (sAction === "Aceptar") {
+
+			// 			// 					}
+			// 			// 					sap.ui.core.BusyIndicator.hide();
+
+			// 			// 				}
+			// 			// 	});	
+			// 			// 	}
+			// 			// }
+
+			// 			},
+			// 			error: function () {
+			// 				MessageBox.error("Ocurrio un error al obtener los datos");
+			// 			}
+			// 		});
+
 		},
-	
+
 		selectSociedad: function () {
 			var vista = this.getView();
 			var modelo = vista.getModel("Proyect");
@@ -2432,7 +2355,7 @@ sap.ui.define([
 			// 	}
 			// });
 		},
-			tipoGasto: function () {
+		tipoGasto: function () {
 			var oView = this.getView();
 			var ModelProyect = oView.getModel("Proyect");
 			// var url = "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV/ZET_TIPO_GASTOSet";
@@ -2478,66 +2401,66 @@ sap.ui.define([
 			this.limpiar();
 			this.oRouter.navTo("Home");
 		},
-		onPressSociedad:function(oEvent){
+		onPressSociedad: function (oEvent) {
 			var oView = this.getView();
 			var ModelProyect = oView.getModel("Proyect");
 			var Sociedades = oEvent.mParameters.selectedItem.mProperties.key;
-			ModelProyect.setProperty("/pressSociedad",Sociedades);
+			ModelProyect.setProperty("/pressSociedad", Sociedades);
 		},
-		
-		
+
+
 		onFilterSelect: function (oEvent) {
 			var oBinding = this.byId("table").getBinding("items"),
 				sKey = oEvent.getParameter("key"),
 				aFilters = [];
 			var count = 0;
 			var data = this.getView().getModel("Proyect").getProperty("/ReporteHistorico");
-			
+
 			for (var i = 0; i < data.length; i++) {
-			
+
 				aFilters.push(data[i]);
-				
+
 			}
-			
+
 			count = aFilters.length;
 			this.getView().getModel("Proyect").setProperty("/count", count);
 			this.getView().getModel("Proyect").setProperty("/ReporteHistoricoTable", aFilters);
 		},
 		handleSelectionChange: function (oEvent) {
-			var that					= this;
-			var oView					= this.getView();
-			var ModelProyect			= oView.getModel("Proyect");
-			var productPath 			= oEvent.getSource().getBindingContext("Proyect").getPath(),
-				product 				= productPath.split("/").slice(-1).pop();
-			var Sociedades				=ModelProyect.getProperty("/Sociedades");
-			var selected				= oView.getModel("Proyect").getProperty(productPath);
-			var TipoDocumento			=ModelProyect.getProperty("/TipoDocumento");
-			var datosGastos 			=ModelProyect.getProperty("/datosGastos");
-			var contadores				=0;
-			var mensajes				="";
-			var arrayTablas				=[];
-			var keyDesg					=1;
-			var comprobAnt				= "";
-			var indexAnt				 = 0;
-			var keyComp					 = 1;
-			var validar					=false;
-			var importeRen				=0;
-			var igv						=ModelProyect.getProperty("/IGV");
-			var restaSaldo				=0;
-			var estadoSolic				=ModelProyect.getProperty("/estadoSolic");
-			var suma_ren				=0;
-			var COD_SAP					=ModelProyect.getProperty("/COD_SAP");
-			var codigo_sap				="";
-			ModelProyect.setProperty("/datosComprobante",selected);
+			var that = this;
+			var oView = this.getView();
+			var ModelProyect = oView.getModel("Proyect");
+			var productPath = oEvent.getSource().getBindingContext("Proyect").getPath(),
+				product = productPath.split("/").slice(-1).pop();
+			var Sociedades = ModelProyect.getProperty("/Sociedades");
+			var selected = oView.getModel("Proyect").getProperty(productPath);
+			var TipoDocumento = ModelProyect.getProperty("/TipoDocumento");
+			var datosGastos = ModelProyect.getProperty("/datosGastos");
+			var contadores = 0;
+			var mensajes = "";
+			var arrayTablas = [];
+			var keyDesg = 1;
+			var comprobAnt = "";
+			var indexAnt = 0;
+			var keyComp = 1;
+			var validar = false;
+			var importeRen = 0;
+			var igv = ModelProyect.getProperty("/IGV");
+			var restaSaldo = 0;
+			var estadoSolic = ModelProyect.getProperty("/estadoSolic");
+			var suma_ren = 0;
+			var COD_SAP = ModelProyect.getProperty("/COD_SAP");
+			var codigo_sap = "";
+			ModelProyect.setProperty("/datosComprobante", selected);
 			sap.ui.core.BusyIndicator.show(0);
-			
-			if(tipoUsr === "LO"){
-			codigo_sap ="";	
-			}else{
-			codigo_sap = COD_SAP;	
+
+			if (tipoUsr === "LO") {
+				codigo_sap = "";
+			} else {
+				codigo_sap = COD_SAP;
 			}
 			// var datos={
-				
+
 			// 	"NROD0": selected.NROD0,
 			// 	"COD_REPO": "",
 			// 	"COD_REEM": "",
@@ -2590,14 +2513,14 @@ sap.ui.define([
 			//       "DOC_PAGO_SOLICITUD":"",
 			//       "FECHA_CONT" :"",
 			// 	  "FECHA_COMPENSA":"",
-			      
+
 			// 	}
 			// 	]
 			// };
 
 			// $.ajax({
 			// 	url: "/ERP/sap/opu/odata/sap/ZOD_RENDICIONES_SRV",
-				
+
 			// 	type: "GET",
 			// 	headers: {
 			// 		"x-CSRF-Token": "Fetch"
@@ -2624,42 +2547,42 @@ sap.ui.define([
 			// 		}
 			// 		}
 			// 		if(datos.length > 0){
-					
+
 			// 	//----------Modificado Por: Jeremy Rodriguez 18/02/2022--------------//
-					
+
 			// 		datos.map(function(items2){
-						
+
 			// 			var repite = false;
-						
+
 			// 			arrayTablas.map(function (comp, index) {
 			// 				if(comp.COMPROBANTE === items2.COMPROBANTE && comp.RUC === items2.RUC){//21/07/2022
 			// 					repite = true;
 			// 					indexAnt = index;
 			// 				}
 			// 			});
-					
+
 			// 			TipoDocumento.forEach(function(objec){
 			// 				if(objec.CLASE === items2.TIPO_COMP){
 			// 				items2.descripcion = objec.DENOMINACION ;         
 			// 				}
-							
+
 			// 			});
 			// 				estadoSolic.map(function(objectos_01){
 			// 				if( objectos_01.ESTADO  === items2.EST_COMP ){
 			// 					items2.DES_ESTADO_COMP =objectos_01.DESCRIPCION;
 			// 				}	
 			// 				});
-					
-						
+
+
 			// 			items2.POSIC		= (items2.POSIC*1).toString();
-					
+
 			// 			var fechaFormato	= items2.FECHA_COMP.substr(6,2) + "/" + items2.FECHA_COMP.substr(4,2) + "/" + items2.FECHA_COMP.substr(0,4);
 			// 			var baseImp 		= items2.BASE_IMP.replaceAll(" ","");
 			// 			var IGV 			= items2.IGV.replaceAll(" ","");
 			// 			var INAFECTO		= items2.INAFECTO.replaceAll(" ","");
 			// 			var TOTAL			= items2.TOTAL.replaceAll(" ","");
 			// 			// var IND_IMP 		= items2.IND_IMP.replaceAll(" ","");
-						
+
 			// 			if(baseImp === ""){
 			// 				baseImp = "0.00";
 			// 			}else{
@@ -2668,7 +2591,7 @@ sap.ui.define([
 			// 					baseImp = "0.00";
 			// 				}
 			// 			}
-						
+
 			// 			if(IGV === ""){
 			// 				IGV = "0.00";
 			// 			}else{
@@ -2677,7 +2600,7 @@ sap.ui.define([
 			// 					IGV = "0.00";
 			// 				}
 			// 			}
-						
+
 			// 			if(INAFECTO === ""){
 			// 				INAFECTO = "0.00";
 			// 			}else{
@@ -2686,7 +2609,7 @@ sap.ui.define([
 			// 					INAFECTO = "0.00";
 			// 				}
 			// 			}
-						
+
 			// 			if(TOTAL === ""){
 			// 				TOTAL = "0.00";
 			// 			}else{
@@ -2695,7 +2618,7 @@ sap.ui.define([
 			// 					TOTAL = "0.00";
 			// 				}
 			// 			}
-						
+
 			// 			// if(IND_IMP === ""){
 			// 			// 	IND_IMP = "0.00";
 			// 			// }else{
@@ -2704,9 +2627,9 @@ sap.ui.define([
 			// 			// 		IND_IMP = "0.00";
 			// 			// 	}
 			// 			// }
-						
+
 			// 			if(!repite){
-							
+
 			// 				var estructura = {
 			// 					NROD0			:items2.NROD0,
 			// 					DOC_PAGO		:items2.DOC_PAGO,
@@ -2764,7 +2687,7 @@ sap.ui.define([
 			//     			    DOC_PAGO_SOLICITUD  :items2.DOC_PAGO_SOLICITUD,
 			//     			    FECHA_CONT			:items2.FECHA_CONT,
 			// 					FECHA_COMPENSA		:items2.FECHA_COMPENSA,
-			    				
+
 			// 					desglose: [{
 			// 									stateCeco			: "",
 			// 									iconCeco			: "",
@@ -2795,7 +2718,7 @@ sap.ui.define([
 			// 				};
 			// 				arrayTablas.push(estructura);
 			// 				keyComp++;
-							
+
 			// 			}else{
 			// 				var desgloces = {
 			// 					stateCeco			: "",
@@ -2825,37 +2748,37 @@ sap.ui.define([
 			// 			}
 			// 			comprobAnt = items2.COMPROBANTE;
 			// 		});
-					
-					
+
+
 			// 		console.log(arrayTablas);
-					
+
 			// 		ModelProyect.refresh(true);
-				
+
 			// 	//------------------------------------------------------------------------//
-					
+
 			// 		var COD_SAP 		= ModelProyect.getProperty("/COD_SAP");
 			// 		let  Comprobantes	= arrayTablas.map(obj=> obj.COD_SAP+"."+obj.NROD0 +"."+obj.FECHA_COMP.split("/")[2] + "." + obj.ID_DOC_SRV );
 			// 		let	 Folders		= await that.BuscarFolder(Comprobantes);
-					
+
 			// 		if(Folders.length !== 0){
 			// 		let ComprobantesSinAdjuntos	= Folders.filter(obj=> obj.exception === "objectNotFound" || obj.objects.length === 0 ) ;
-					
+
 			// 		// if (ComprobantesSinAdjuntos.length !== 0){
 			// 		// MessageBox.error("Ocurrio un error al leer los datos");
 			// 		// sap.ui.core.BusyIndicator.hide(0);					
 			// 		// return ;
 			// 		// }
-					
+
 			// 		}
-					
+
 			// 		// let Folders1 = Folders.filter(obj=> !obj.exception );
-					
+
 			// 		arrayTablas.map(function(obj,index){
 			// 			Folders.map(function(obj2,index1){
-							
+
 			// 				if(!obj2.exception && index === index1){
 			// 				obj2.objects.map(function(obj3){
-							
+
 			// 				const archivo = { 
 			// 					Type	:obj3["object"]["properties"]["cmis:name"]["value"].split(".")[obj3["object"]["properties"]["cmis:name"]["value"].split(".").length-1],
 			// 					Name	:that.DecodeUTF8(obj3["object"]["properties"]["cmis:name"]["value"]),
@@ -2863,36 +2786,36 @@ sap.ui.define([
 			// 					Service :true
 			// 				};
 			// 				obj.archivoAd.push(JSON.parse(JSON.stringify(archivo)));	
-							
+
 			// 				});
-							
+
 			// 				obj.service = true ;
 			// 				}
 			// 			});
-						
+
 			// 			obj.DeleteArchivo = []; 
 			// 		});
-					
-				
+
+
 			// 		ModelProyect.setProperty("/DataComprobanteConfirmacion",arrayTablas);
 			// 		ModelProyect.setProperty("/Comprobantes_sap",arrayTablas);
-					
-					
+
+
 			// 		arrayTablas.forEach(function(rx){
 			// 			if(rx.COD_TIPO_COMP === "D5"){  ////Cambios de Claudia
 			// 			ModelProyect.setProperty("/Nombre_Boton","Registrar");	
 			// 			}else{
 			// 			ModelProyect.setProperty("/Nombre_Boton","Validar");	
 			// 			}	
-					
+
 			// 			var base01		=0;	//--------------actualizado
 			// 			var inafecto01	=0;
 			// 			var Impuesto	=0;
 			// 			rx.desglose.forEach(function(obj){
-				
+
 			// 			 base01		+=parseFloat(obj.BASE_IMP);
 			// 			 inafecto01	+=parseFloat(obj.INAFECTO);
-						
+
 			// 			if(obj.IND_IMP === "C0"){//---------Cambios nuevos
 			// 			base01		="0.00";//17/07/2022
 			// 			Impuesto	="0.00";
@@ -2901,11 +2824,11 @@ sap.ui.define([
 			// 			Impuesto	+= parseFloat(obj.IGV);
 			// 			rx.totales =  (parseFloat(base01) + parseFloat(Impuesto) + inafecto01).toFixed(2) ; //total por comprobante
 			// 			}
-						
-					
-				
+
+
+
 			// 		});
-					
+
 			// 			if(Impuesto === "0.00"){
 			// 			importeRen =parseFloat(inafecto01);
 			// 			}else{
@@ -2927,17 +2850,17 @@ sap.ui.define([
 			// 				rx.iconComp = "sap-icon://accept";
 			// 				rx.stateComp = "Success";
 			// 			}
-					
+
 			// 			ModelProyect.setProperty("/ESTADO_COMP"		,rx.EST_COMP);
-					
+
 			// 		});
-					
+
 			// 		if(rx.COD_EST_COMP === "CPA" || rx.COD_EST_COMP === "CR"){
 			// 		rx.HABILI_COMPRO = true;	
 			// 		}else{
 			// 		rx.HABILI_COMPRO = false;	
 			// 		}
-				
+
 			// 		});
 			// 		///////// Cambios de Claudia ///////////////
 			// 			var ImporteRendido	=suma_ren.toFixed(2);	
@@ -2945,8 +2868,8 @@ sap.ui.define([
 			// 		var SaldoTotal			= restaSaldo.toFixed(2);
 			// 			ModelProyect.setProperty("/ImporteRend"		,ImporteRendido);
 			// 		ModelProyect.setProperty("/Saldo"		,SaldoTotal);
-						
-					
+
+
 			// 		if(parseFloat(selected.WRBTR) < ImporteRendido){
 			// 			ModelProyect.setProperty("/estado_saldo" ,"Success");	// cambio de 04/06/2022
 			// 		}else if (ImporteRendido === "0.00"){
@@ -2955,11 +2878,11 @@ sap.ui.define([
 			// 			ModelProyect.setProperty("/estado_saldo" ,"Error");	
 			// 		}
 			// 		///////// Cambios de Claudia ///////////////
-					
-					
+
+
 			// 		}else{
-						
-						
+
+
 			// 			ModelProyect.setProperty("/DataComprobanteConfirmacion",[]);
 			// 			ModelProyect.setProperty("/ImporteRend"		,"0.00");
 			// 			ModelProyect.setProperty("/Saldo"		,"0.00");
@@ -2971,7 +2894,7 @@ sap.ui.define([
 			// 		var selectKeyCECO					=ModelProyect.getProperty("/selectKeyCECO");
 			// 		var datosCeco						=ModelProyect.getProperty("/datosCeco");
 			// 		var descripcionceco = "";
-					
+
 			// 		if(selectKeyCECO === "---Seleccionar---" ||selectKeyCECO === undefined || selectKeyCECO===""){
 			// 			ModelProyect.setProperty("/selectCeco","");
 			// 		}else{
@@ -2981,16 +2904,16 @@ sap.ui.define([
 			// 					 descripcionceco=items.descripcionCeco;
 			// 				}
 			// 			});
-						
+
 			// 			ModelProyect.setProperty("/selectCeco",descripcionceco);
 			// 		}
-					
+
 			// 		Sociedades.forEach(function(obj){
 			// 			if(obj.BUKRS=== selected.BUKRS){
 			// 				selected.descripcionsociedad=obj.BUTXT;
 			// 			}
 			// 		});	
-					 
+
 			// 		// ModelProyect.setProperty("/DataComprobanteConfirmacion",desglose);
 			// 		ModelProyect.setProperty("/descripcionSociedad", selected.BUKRS+"-"+selected.descripcionsociedad);
 			// 		ModelProyect.setProperty("/DniUsua",selected.DNI);
@@ -3002,7 +2925,7 @@ sap.ui.define([
 			// 		ModelProyect.setProperty("/nroSap",selected.COD_SAP);
 			// 		ModelProyect.setProperty("/descripcionEmpleados",selected.NOMBRES +" "+ selected.APELLIDOS);
 			// 		ModelProyect.setProperty("/FECHA_ABON",selected.FECHA_ABON);
-					
+
 			// 		ModelProyect.refresh(true);	
 			// 		sap.ui.core.BusyIndicator.hide(0);
 			// 	 	that.oRouter.navTo("DetalleSolicitudConER");
@@ -3012,99 +2935,99 @@ sap.ui.define([
 			// });
 
 		},
-		
-		BuscarFolder : async function (Sends){
+
+		BuscarFolder: async function (Sends) {
 			try {
-			const AmbienteRepository = location.hostname.includes("n8pid6w2h2") ? "/cmis/0586704171cab1ea3b1f93d5/root/QAS/AdjuntosER/": "/cmis/0586704171cab1ea3b1f93d5/root/PRD/AdjuntosER/"	
-			const results = await Promise.all(Sends.map(url=> 
-			// "/sap/fiori/irequestbvregistrodocliq"+
-				fetch(HostName+AmbienteRepository+ url,
-				{
-				method		:"GET",
-				processData	:false,
-				contentType	:false,
-				}
-				)
-			)) 
-			const finalData	   = await Promise.all(results.map(result => 
+				const AmbienteRepository = location.hostname.includes("n8pid6w2h2") ? "/cmis/0586704171cab1ea3b1f93d5/root/QAS/AdjuntosER/" : "/cmis/0586704171cab1ea3b1f93d5/root/PRD/AdjuntosER/"
+				const results = await Promise.all(Sends.map(url =>
+					// "/sap/fiori/irequestbvregistrodocliq"+
+					fetch(HostName + AmbienteRepository + url,
+						{
+							method: "GET",
+							processData: false,
+							contentType: false,
+						}
+					)
+				))
+				const finalData = await Promise.all(results.map(result =>
 					result.json()));
-				return 	finalData ;
+				return finalData;
 				console.log(finalData);
 			}
-			catch(err) {
+			catch (err) {
 				console.log(err);
 			}
-			
+
 		},
-		
-		pressSi:function(){
-			var oView			= this.getView();
-			var ModelProyect	=oView.getModel("Proyect");	
-			var id2				=sap.ui.getCore().byId("id2").sId;
-			
-			if(id2 ){
-				ModelProyect.setProperty("/seleccion_CECO",id2);	
-				ModelProyect.setProperty("/enableCeco",true);	
+
+		pressSi: function () {
+			var oView = this.getView();
+			var ModelProyect = oView.getModel("Proyect");
+			var id2 = sap.ui.getCore().byId("id2").sId;
+
+			if (id2) {
+				ModelProyect.setProperty("/seleccion_CECO", id2);
+				ModelProyect.setProperty("/enableCeco", true);
 			}
 		},
-		pressNo:function(){
-			var oView			= this.getView();
-			var that            =this;
-			var ModelProyect	= oView.getModel("Proyect");
-			var id1				=sap.ui.getCore().byId("id1").sId;
-			if(id1){
+		pressNo: function () {
+			var oView = this.getView();
+			var that = this;
+			var ModelProyect = oView.getModel("Proyect");
+			var id1 = sap.ui.getCore().byId("id1").sId;
+			if (id1) {
 				ModelProyect.setProperty("/selectKeyCECO", "");
 				ModelProyect.setProperty("/seleccion_CECO", id1);
-				ModelProyect.setProperty("/enableCeco", false);	
-			}	
+				ModelProyect.setProperty("/enableCeco", false);
+			}
 		},
-		onAceptar_Ceco:function(oEvent){
-		var oView							= this.getView();
-		var ModelProyect					= oView.getModel("Proyect");
-		var that            				=this;
-		var seleccion_CECO  				=ModelProyect.getProperty("/seleccion_CECO");
-		var selectKeyCECO					=ModelProyect.getProperty("/selectKeyCECO");
-		var datosCeco						=ModelProyect.getProperty("/datosCeco");
-		// var productPath 					= oEvent.getSource().getBindingContext("Proyect").getPath();
-		// var selected						= oView.getModel("Proyect").getProperty(productPath);
-		var DataComprobanteConfirmacion		=ModelProyect.getProperty("/DataComprobanteConfirmacion");
-		var descripcionceco					="";
-		sap.ui.core.BusyIndicator.show(0);
-		datosCeco.forEach(function(items){
-		if(items.CECO === selectKeyCECO){
-		 items.descripcionCeco=items.CECO+ "-"+items.NOMBRE;
-		 descripcionceco=items.descripcionCeco;
-		}
-	
-		});
-		if(seleccion_CECO === "id2"){
-		if(selectKeyCECO === "---Seleccionar---" ||selectKeyCECO === undefined || selectKeyCECO===""){
-		ModelProyect.setProperty("/selectCeco","");
-		 ModelProyect.setProperty("/selectKeyagre","---Seleccionar---");
-		MessageBox.error("Seleccionar el centro de costo .", {
-		actions: [MessageBox.Action.OK],
-		emphasizedAction: MessageBox.Action.OK,
-		onClose: function (sAction) {
-		}
-		});	
-		return;	
-		}else{
-		// items01.SELEC_CECO	=	descripcionceco;
-		
-		ModelProyect.setProperty("/selectCeco",descripcionceco);
-		 ModelProyect.setProperty("/selectKeyagre",selectKeyCECO);
-		sap.ui.core.BusyIndicator.hide(0);		
-		that.oRouter.navTo("DetalleSolicitudConER");	
-		}	
-		
-		}else {
-		ModelProyect.setProperty("/selectCeco","");
-		 ModelProyect.setProperty("/selectKeyagre","---Seleccionar---");
-		sap.ui.core.BusyIndicator.hide(0);		
-		that.oRouter.navTo("DetalleSolicitudConER");	
-		}
-	
+		onAceptar_Ceco: function (oEvent) {
+			var oView = this.getView();
+			var ModelProyect = oView.getModel("Proyect");
+			var that = this;
+			var seleccion_CECO = ModelProyect.getProperty("/seleccion_CECO");
+			var selectKeyCECO = ModelProyect.getProperty("/selectKeyCECO");
+			var datosCeco = ModelProyect.getProperty("/datosCeco");
+			// var productPath 					= oEvent.getSource().getBindingContext("Proyect").getPath();
+			// var selected						= oView.getModel("Proyect").getProperty(productPath);
+			var DataComprobanteConfirmacion = ModelProyect.getProperty("/DataComprobanteConfirmacion");
+			var descripcionceco = "";
+			sap.ui.core.BusyIndicator.show(0);
+			datosCeco.forEach(function (items) {
+				if (items.CECO === selectKeyCECO) {
+					items.descripcionCeco = items.CECO + "-" + items.NOMBRE;
+					descripcionceco = items.descripcionCeco;
+				}
+
+			});
+			if (seleccion_CECO === "id2") {
+				if (selectKeyCECO === "---Seleccionar---" || selectKeyCECO === undefined || selectKeyCECO === "") {
+					ModelProyect.setProperty("/selectCeco", "");
+					ModelProyect.setProperty("/selectKeyagre", "---Seleccionar---");
+					MessageBox.error("Seleccionar el centro de costo .", {
+						actions: [MessageBox.Action.OK],
+						emphasizedAction: MessageBox.Action.OK,
+						onClose: function (sAction) {
+						}
+					});
+					return;
+				} else {
+					// items01.SELEC_CECO	=	descripcionceco;
+
+					ModelProyect.setProperty("/selectCeco", descripcionceco);
+					ModelProyect.setProperty("/selectKeyagre", selectKeyCECO);
+					sap.ui.core.BusyIndicator.hide(0);
+					that.oRouter.navTo("DetalleSolicitudConER");
+				}
+
+			} else {
+				ModelProyect.setProperty("/selectCeco", "");
+				ModelProyect.setProperty("/selectKeyagre", "---Seleccionar---");
+				sap.ui.core.BusyIndicator.hide(0);
+				that.oRouter.navTo("DetalleSolicitudConER");
+			}
+
 		},
-	
+
 	});
 });

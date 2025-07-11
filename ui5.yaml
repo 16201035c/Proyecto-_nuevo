@@ -9,10 +9,14 @@ server:
       configuration:
         ignoreCertError: false
         backend:                 
-        - path: /SUNAT_COMPROBANTE
+        - path: /v1
           destination: SUNAT_COMPROBANTE
-           
-          
+
+        - path: /contribuyente
+          destination: SUNAT_SERIE
+
+        - path: /api
+          destination: SUNAT_RUC
         ui5:
           path:
             - /resources

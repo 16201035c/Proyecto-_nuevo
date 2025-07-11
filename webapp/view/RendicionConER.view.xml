@@ -12,10 +12,10 @@
 	<!--		<pages>-->
 	<Page id="page" title="{Proyect>/tituloTalma}" navButtonPress="onPressNavButton" showNavButton="false" >
 		<ObjectHeader icon="sap-icon://employee-pane" responsive="true" fullScreenOptimized="true" binding="{DetailModel>/Itinerario}"
-			backgroundDesign="Translucent" title="{Proyect>/beneficiarios}" intro="DNI: {Proyect>/DatosDni}">
+			backgroundDesign="Translucent" title="Claudia Romero" intro="DNI: 75058038">
 			<statuses>
 				<ObjectStatus title="{Proyect>/txtCodBen}" text="{Proyect>/COD_SAP}" />
-				<ObjectStatus title="Correo" text="{Proyect>/correouser}" state="Information"/>
+				<ObjectStatus title="Correo" text="claromeroa@uch.pe" state="Information"/>
 			</statuses>
 		</ObjectHeader>
 		<fb:FilterBar id="filter" showClearOnFB="false" clear="onClear" showFilterConfiguration="false" search="onBuscar" useToolbar="false"
